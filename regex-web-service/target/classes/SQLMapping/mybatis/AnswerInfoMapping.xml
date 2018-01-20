@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.AnswerInfoDAO">
+    <!-- AnswerInfoDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_AnswerInfoDTO_Map" type="com.regex.web.common.dto.info.AnswerInfoDTO">
+        <id column="id" property="id" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="is_del" property="isDel" />
+        <result column="answer_id" property="answerId" />
+        <result column="userId" property="userid" />
+        <result column="content" property="content" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_answer_info的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_answer_info_Column">
+        t_answer_info.id as id
+        ,t_answer_info.update_time as update_time
+        ,t_answer_info.create_time as create_time
+        ,t_answer_info.is_del as is_del
+        ,t_answer_info.answer_id as answer_id
+        ,t_answer_info.userId as userId
+        ,t_answer_info.content as content
+    </sql>
+
+    <!--获得类名为:AnswerInfoDTO对应的数据库表的数据总行数 -->
+    <select id="getAnswerInfoDTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_answer_info
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:AnswerInfoDTO对应数据库中表的数据集合 -->
+    <select id="selectAnswerInfoDTO" parameterType="com.regex.web.common.Assist"  resultMap="result_AnswerInfoDTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_answer_info_Column" /> 
+            </otherwise>
+        </choose>
+        from t_answer_info
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_answer_info
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_answer_info.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个AnswerInfoDTO对象,以参数AnswerInfoDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectAnswerInfoDTOByObj" parameterType="com.regex.web.common.dto.info.AnswerInfoDTO" resultMap="result_AnswerInfoDTO_Map">
+        select 
+            <include refid="t_answer_info_Column" /> 
+        from t_answer_info
+        <where>
+            <if test="content != null "> and t_answer_info.content = #{content}</if>
+            <if test="userid != null "> and t_answer_info.userId = #{userid}</if>
+            <if test="answerId != null "> and t_answer_info.answer_id = #{answerId}</if>
+            <if test="isDel != null "> and t_answer_info.is_del = #{isDel}</if>
+            <if test="createTime != null "> and t_answer_info.create_time = #{createTime}</if>
+            <if test="updateTime != null "> and t_answer_info.update_time = #{updateTime}</if>
+            <if test="id != null "> and t_answer_info.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过AnswerInfoDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectAnswerInfoDTOById" parameterType="java.lang.Long" resultMap="result_AnswerInfoDTO_Map">
+        select 
+            <include refid="t_answer_info_Column" /> 
+        from t_answer_info
+        where t_answer_info.id = #{id}
+    </select> 
+
+    <!-- 将AnswerInfoDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertAnswerInfoDTO" parameterType="com.regex.web.common.dto.info.AnswerInfoDTO">
+        insert into t_answer_info(id,update_time,create_time,is_del,answer_id,userId,content) 
+        values(#{id},#{updateTime},#{createTime},#{isDel},#{answerId},#{userid},#{content})
+    </insert>
+
+    <!-- 将AnswerInfoDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyAnswerInfoDTO" parameterType="com.regex.web.common.dto.info.AnswerInfoDTO">
+        insert into t_answer_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="answerId != null">answer_id,</if>
+            <if test="userid != null">userId,</if>
+            <if test="content != null">content,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="answerId != null"> #{answerId},</if>
+            <if test="userid != null"> #{userid},</if>
+            <if test="content != null"> #{content},</if>
+        </trim>
+    </insert>
+
+    <!-- 将AnswerInfoDTO批量插入到对应数据库的表中-->
+    <insert id="insertAnswerInfoDTOByBatch" parameterType="ArrayList">
+        insert into t_answer_info(id,update_time,create_time,is_del,answer_id,userId,content) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.updateTime},#{item.createTime},#{item.isDel},#{item.answerId},#{item.userid},#{item.content})
+        </foreach>
+    </insert>
+
+    <!-- 通过AnswerInfoDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteAnswerInfoDTOById" parameterType="java.lang.Long">
+        delete from t_answer_info
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将AnswerInfoDTO对应的数据库表的数据删除-->
+    <delete id="deleteAnswerInfoDTO" parameterType="com.regex.web.common.Assist">
+        delete from t_answer_info
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过AnswerInfoDTO的id将AnswerInfoDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateAnswerInfoDTOById" parameterType="com.regex.web.common.dto.info.AnswerInfoDTO">
+        update t_answer_info set
+            update_time=#{updateTime}
+            ,create_time=#{createTime}
+            ,is_del=#{isDel}
+            ,answer_id=#{answerId}
+            ,userId=#{userid}
+            ,content=#{content}
+        where id=#{id}
+    </update>
+
+    <!-- 通过AnswerInfoDTO的id将AnswerInfoDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyAnswerInfoDTOById" parameterType="com.regex.web.common.dto.info.AnswerInfoDTO">
+        update t_answer_info
+        <set>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="answerId != null">
+                answer_id=#{answerId},
+            </if>
+            <if test="userid != null">
+                userId=#{userid},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将AnswerInfoDTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateAnswerInfoDTO" parameterType="map">
+        update t_answer_info
+        <set>
+                id=#{enti.id},
+                update_time=#{enti.updateTime},
+                create_time=#{enti.createTime},
+                is_del=#{enti.isDel},
+                answer_id=#{enti.answerId},
+                userId=#{enti.userid},
+                content=#{enti.content},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将AnswerInfoDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyAnswerInfoDTO" parameterType="map">
+        update t_answer_info
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.isDel != null">
+                is_del=#{enti.isDel},
+            </if>
+            <if test="enti.answerId != null">
+                answer_id=#{enti.answerId},
+            </if>
+            <if test="enti.userid != null">
+                userId=#{enti.userid},
+            </if>
+            <if test="enti.content != null">
+                content=#{enti.content},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

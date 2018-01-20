@@ -1,0 +1,169 @@
+package com.regex.web.controller.admin.sys;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.info.AchievementDTO;
+import com.regex.web.service.info.AchievementService;
+import com.regex.web.utils.AjaxUtil;
+
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 成果展示
+ *
+ * @author admin
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+@Controller
+@RequestMapping("sys/achievement")
+public class AchievementController {
+    
+    @Autowired
+    private AchievementService achievementService;
+    
+    private static Map<String, String> typeMap = new HashMap<String, String>();
+    
+    static {
+        typeMap.put("0", "绿色发展");
+        typeMap.put("1", "节能减排");
+        typeMap.put("2", "典型项目");
+        typeMap.put("3", "园区循环化改造");
+        typeMap.put("4", "产业布局调整");
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 成果展示
+     *
+     * @param model
+     * @param assist
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("show")
+    public String show(Model model, @ModelAttribute("assist") Assist assist) {
+        assist.setRequires(Assist.andEq("type", "1"));
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<AchievementDTO> datas = achievementService.selectAchievementDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        return "admin/achievement/show";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 详情
+     *
+     * @param id
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("detial")
+    public String detial(Long id, Model model) {
+        try {
+            AchievementDTO AchievementDTO = achievementService.selectAchievementDTOById(id);
+            model.addAttribute("AchievementDTO", AchievementDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("typeMap", typeMap);
+        return "admin/achievement/detial";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 删除
+     *
+     * @param id
+     * @param response
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("del")
+    public void del(Long id, HttpServletResponse response) {
+        int n = 0;
+        AchievementDTO AchievementDTO = achievementService.selectAchievementDTOById(id);
+        AchievementDTO.setIsDel("1");
+        n = achievementService.updateNonEmptyAchievementDTOById(AchievementDTO);
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 修改/ 新增
+     *
+     * @param id
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("input")
+    public String input(Long id, Model model) {
+        if(id!= null && id > 0) {
+            AchievementDTO achievementDTO = achievementService.selectAchievementDTOById(id);
+            model.addAttribute("achievementDTO", achievementDTO);
+        }
+        model.addAttribute("typeMap", typeMap);
+        return "admin/achievement/input";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 保存
+     *
+     * @param AchievementDTO
+     * @param response
+     * @param request
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("save")
+    public void save(AchievementDTO AchievementDTO, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        try {
+        if(StringUtils.isNotEmpty(AchievementDTO.getTitle()) && StringUtils.isNotEmpty(AchievementDTO.getContent())
+                && StringUtils.isNotEmpty(AchievementDTO.getType())) {
+            AchievementDTO.setUpdateTime(new Date());
+            if(AchievementDTO.getId() > 0) {
+                n = achievementService.updateNonEmptyAchievementDTOById(AchievementDTO);
+            } else {
+                AchievementDTO.setIsDel("0");
+                AchievementDTO.setCreateTime(new Date());
+                n = achievementService.insertAchievementDTO(AchievementDTO);
+            }
+        } else {
+            n = 2;
+        }
+        } catch(Exception e) {
+            e.printStackTrace();
+            n = 3;
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+}

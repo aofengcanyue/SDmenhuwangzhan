@@ -1,0 +1,20 @@
+package com.regex.web.service.info;
+
+import java.io.Serializable;
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.regex.web.common.dto.info.NoticeDTO;
+
+public interface INoticeService {
+    
+    int insert(NoticeDTO noticeDTO);
+    
+    int update(NoticeDTO noticeDTO);
+    
+    NoticeDTO selectById(Serializable id);
+    
+    Page<NoticeDTO> getByPage(Page<NoticeDTO> page);
+    
+    void del(Serializable id);
+
+}

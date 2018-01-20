@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>成果展示</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style type="text/css">
+.px_nav li {
+    float: left;
+    width: 20%;
+    text-align: center;
+    position: relative;
+}
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>成果展示</p>
+	<div class="qypx">
+		<a href="${base}/">首页</a>>成果展示
+	</div>
+</div>
+
+<div class="px_nav">
+	<ul class="clearfix">
+	<#list typeMap?keys as key>
+		<li onclick="window.location.href='${base}/web/achievement/show.htm?type=${key}'" >
+			${typeMap[key]}
+			<span <#if type!=key>style="display: none;"</#if> ></span>
+			<#if key_has_next>
+			<em></em>
+			</#if>
+		</li>
+	</#list>
+		<!-- <li onclick="window.location.href='${base}/web/training/show.htm'" >
+			能源管理体系
+			<span <#if type!="0">style="display: none;"</#if> ></span>
+			<em></em>
+		</li>
+		<li onclick="window.location.href='${base}/web/training/show.htm?type=1'">
+			能源审计
+			<span <#if type!="1">style="display: none;"</#if>></span>
+			<em></em>
+		</li>
+		<li onclick="window.location.href='${base}/web/training/show.htm?type=2'">
+			清洁生产审核
+			<span  <#if type!="2">style="display: none;"</#if>></span>
+		</li> -->
+	</ul>
+</div>
+
+<div class="px_content">
+	<div>
+		<ul>
+			<#list result.datas as AchievementDTO>
+			<li class="px_content_li">
+				<div class="clearfix">
+					<em>${AchievementDTO.title}</em>
+					<a href="${base}/web/achievement/detial_${AchievementDTO.id}.htm"  target="_blank" >详情</a>
+				</div>
+				<p><#if policyDTO.content?length &gt; 200 >${AchievementDTO.content?substring(0,200)}<#else>${policyDTO.content}</#if></p>
+				<span>${AchievementDTO.createTime?datetime}</span>
+			</li>
+			</#list>
+		</ul>
+	</div>
+</div>
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script>
+	/* $(function(){
+		$(".px_nav li").click(function(){
+			$(this).find("span").show();
+			$(this).siblings("li").find("span").hide();
+			$(".px_content>div").eq($(this).index()).show().siblings().hide()
+		})
+	}) */
+</script>
+</html>

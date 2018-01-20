@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IEnergySaveDAO">
+	 <!-- EnergySaveDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_EnergySaveDTO_Map" type="com.regex.web.common.dto.info.EnergySaveDTO">
+        <id column="id" property="id" />
+        <result column="technical" property="technical" />
+        <result column="create_time" property="createTime" />
+        <result column="investment" property="investment" />
+        <result column="type" property="type" />
+        <result column="years" property="years" />
+        <result column="number" property="number" />
+        <result column="emission" property="emission" />
+        <result column="update_time" property="updateTime" />
+        <result column="save_energy" property="saveEnergy" />
+        <result column="application" property="application" />
+        <result column="is_del" property="isDel" />
+        <result column="technical_content" property="technicalContent" />
+        <result column="model" property="model" />
+        <result column="technical_conditions" property="technicalConditions" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_energy_save的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_energy_save_Column">
+        t_energy_save.id as id
+        ,t_energy_save.technical as technical
+        ,t_energy_save.create_time as create_time
+        ,t_energy_save.investment as investment
+        ,t_energy_save.type as type
+        ,t_energy_save.years as years
+        ,t_energy_save.number as number
+        ,t_energy_save.emission as emission
+        ,t_energy_save.update_time as update_time
+        ,t_energy_save.save_energy as save_energy
+        ,t_energy_save.application as application
+        ,t_energy_save.is_del as is_del
+        ,t_energy_save.technical_content as technical_content
+        ,t_energy_save.model as model
+        ,t_energy_save.technical_conditions as technical_conditions
+    </sql>
+
+    <!--获得类名为:EnergySaveDTO对应的数据库表的数据总行数 -->
+    <select id="getEnergySaveDTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_energy_save
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:EnergySaveDTO对应数据库中表的数据集合 -->
+    <select id="selectEnergySaveDTO" parameterType="com.regex.web.common.Assist"  resultMap="result_EnergySaveDTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_energy_save_Column" /> 
+            </otherwise>
+        </choose>
+        from t_energy_save
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_energy_save
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_energy_save.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个EnergySaveDTO对象,以参数EnergySaveDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectEnergySaveDTOByObj" parameterType="com.regex.web.common.dto.info.EnergySaveDTO" resultMap="result_EnergySaveDTO_Map">
+        select 
+            <include refid="t_energy_save_Column" /> 
+        from t_energy_save
+        <where>
+            <if test="technicalConditions != null "> and t_energy_save.technical_conditions = #{technicalConditions}</if>
+            <if test="model != null "> and t_energy_save.model = #{model}</if>
+            <if test="technicalContent != null "> and t_energy_save.technical_content = #{technicalContent}</if>
+            <if test="isDel != null "> and t_energy_save.is_del = #{isDel}</if>
+            <if test="application != null "> and t_energy_save.application = #{application}</if>
+            <if test="saveEnergy != null "> and t_energy_save.save_energy = #{saveEnergy}</if>
+            <if test="updateTime != null "> and t_energy_save.update_time = #{updateTime}</if>
+            <if test="emission != null "> and t_energy_save.emission = #{emission}</if>
+            <if test="number != null "> and t_energy_save.number = #{number}</if>
+            <if test="years != null "> and t_energy_save.years = #{years}</if>
+            <if test="type != null "> and t_energy_save.type = #{type}</if>
+            <if test="investment != null "> and t_energy_save.investment = #{investment}</if>
+            <if test="createTime != null "> and t_energy_save.create_time = #{createTime}</if>
+            <if test="technical != null "> and t_energy_save.technical = #{technical}</if>
+            <if test="id != null "> and t_energy_save.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过EnergySaveDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectEnergySaveDTOById" parameterType="java.lang.Long" resultMap="result_EnergySaveDTO_Map">
+        select 
+            <include refid="t_energy_save_Column" /> 
+        from t_energy_save
+        where t_energy_save.id = #{id}
+    </select> 
+
+    <!-- 将EnergySaveDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertEnergySaveDTO" parameterType="com.regex.web.common.dto.info.EnergySaveDTO">
+        insert into t_energy_save(id,technical,create_time,investment,type,years,number,emission,update_time,save_energy,application,is_del,technical_content,model,technical_conditions) 
+        values(#{id},#{technical},#{createTime},#{investment},#{type},#{years},#{number},#{emission},#{updateTime},#{saveEnergy},#{application},#{isDel},#{technicalContent},#{model},#{technicalConditions})
+    </insert>
+
+    <!-- 将EnergySaveDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyEnergySaveDTO" parameterType="com.regex.web.common.dto.info.EnergySaveDTO">
+        insert into t_energy_save
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="technical != null">technical,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="investment != null">investment,</if>
+            <if test="type != null">type,</if>
+            <if test="years != null">years,</if>
+            <if test="number != null">number,</if>
+            <if test="emission != null">emission,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="saveEnergy != null">save_energy,</if>
+            <if test="application != null">application,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="technicalContent != null">technical_content,</if>
+            <if test="model != null">model,</if>
+            <if test="technicalConditions != null">technical_conditions,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="technical != null"> #{technical},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="investment != null"> #{investment},</if>
+            <if test="type != null"> #{type},</if>
+            <if test="years != null"> #{years},</if>
+            <if test="number != null"> #{number},</if>
+            <if test="emission != null"> #{emission},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="saveEnergy != null"> #{saveEnergy},</if>
+            <if test="application != null"> #{application},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="technicalContent != null"> #{technicalContent},</if>
+            <if test="model != null"> #{model},</if>
+            <if test="technicalConditions != null"> #{technicalConditions},</if>
+        </trim>
+    </insert>
+
+    <!-- 将EnergySaveDTO批量插入到对应数据库的表中-->
+    <insert id="insertEnergySaveDTOByBatch" parameterType="ArrayList">
+        insert into t_energy_save(id,technical,create_time,investment,type,years,number,emission,update_time,save_energy,application,is_del,technical_content,model,technical_conditions) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.technical},#{item.createTime},#{item.investment},#{item.type},#{item.years},#{item.number},#{item.emission},#{item.updateTime},#{item.saveEnergy},#{item.application},#{item.isDel},#{item.technicalContent},#{item.model},#{item.technicalConditions})
+        </foreach>
+    </insert>
+
+    <!-- 通过EnergySaveDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteEnergySaveDTOById" parameterType="java.lang.Long">
+        delete from t_energy_save
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将EnergySaveDTO对应的数据库表的数据删除-->
+    <delete id="deleteEnergySaveDTO" parameterType="com.regex.web.common.Assist">
+        delete from t_energy_save
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过EnergySaveDTO的id将EnergySaveDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateEnergySaveDTOById" parameterType="com.regex.web.common.dto.info.EnergySaveDTO">
+        update t_energy_save set
+            technical=#{technical}
+            ,create_time=#{createTime}
+            ,investment=#{investment}
+            ,type=#{type}
+            ,years=#{years}
+            ,number=#{number}
+            ,emission=#{emission}
+            ,update_time=#{updateTime}
+            ,save_energy=#{saveEnergy}
+            ,application=#{application}
+            ,is_del=#{isDel}
+            ,technical_content=#{technicalContent}
+            ,model=#{model}
+            ,technical_conditions=#{technicalConditions}
+        where id=#{id}
+    </update>
+
+    <!-- 通过EnergySaveDTO的id将EnergySaveDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyEnergySaveDTOById" parameterType="com.regex.web.common.dto.info.EnergySaveDTO">
+        update t_energy_save
+        <set>
+            <if test="technical != null">
+                technical=#{technical},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="investment != null">
+                investment=#{investment},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="years != null">
+                years=#{years},
+            </if>
+            <if test="number != null">
+                number=#{number},
+            </if>
+            <if test="emission != null">
+                emission=#{emission},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="saveEnergy != null">
+                save_energy=#{saveEnergy},
+            </if>
+            <if test="application != null">
+                application=#{application},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="technicalContent != null">
+                technical_content=#{technicalContent},
+            </if>
+            <if test="model != null">
+                model=#{model},
+            </if>
+            <if test="technicalConditions != null">
+                technical_conditions=#{technicalConditions},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将EnergySaveDTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateEnergySaveDTO" parameterType="map">
+        update t_energy_save
+        <set>
+                id=#{enti.id},
+                technical=#{enti.technical},
+                create_time=#{enti.createTime},
+                investment=#{enti.investment},
+                type=#{enti.type},
+                years=#{enti.years},
+                number=#{enti.number},
+                emission=#{enti.emission},
+                update_time=#{enti.updateTime},
+                save_energy=#{enti.saveEnergy},
+                application=#{enti.application},
+                is_del=#{enti.isDel},
+                technical_content=#{enti.technicalContent},
+                model=#{enti.model},
+                technical_conditions=#{enti.technicalConditions},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将EnergySaveDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyEnergySaveDTO" parameterType="map">
+        update t_energy_save
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.technical != null">
+                technical=#{enti.technical},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.investment != null">
+                investment=#{enti.investment},
+            </if>
+            <if test="enti.type != null">
+                type=#{enti.type},
+            </if>
+            <if test="enti.years != null">
+                years=#{enti.years},
+            </if>
+            <if test="enti.number != null">
+                number=#{enti.number},
+            </if>
+            <if test="enti.emission != null">
+                emission=#{enti.emission},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.saveEnergy != null">
+                save_energy=#{enti.saveEnergy},
+            </if>
+            <if test="enti.application != null">
+                application=#{enti.application},
+            </if>
+            <if test="enti.isDel != null">
+                is_del=#{enti.isDel},
+            </if>
+            <if test="enti.technicalContent != null">
+                technical_content=#{enti.technicalContent},
+            </if>
+            <if test="enti.model != null">
+                model=#{enti.model},
+            </if>
+            <if test="enti.technicalConditions != null">
+                technical_conditions=#{enti.technicalConditions},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+	 <insert id="insert" parameterType="com.regex.web.common.dto.info.EnergySaveDTO"
+     useGeneratedKeys="true" keyProperty="id">
+    	insert into t_energy_save (technical,years,type,application,technical_content,technical_conditions,model,
+    	investment,save_energy,emission,is_del,create_time,update_time,number)values(#{technical},#{years},#{type},#{application},
+    	#{technicalContent},#{technicalConditions},#{model},#{investment},#{saveEnergy},#{emission},#{isDel},
+    	#{createTime},#{updateTime},#{number})
+    </insert>
+    
+     <select id="selectAll"  resultType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	select id as id,
+    	    technical as technical,
+    	    years as years,
+    	    type as type,
+    	    application as application,
+    	    technical_content as technicalContent,
+    	    technical_conditions as technicalConditions,
+    	    model as model,
+    	    investment as investment,
+    	    save_energy as saveEnergy,
+    	    emission as emission,
+    	    is_del as isDel,
+    	    number as number,
+    	    create_time as createTime,
+    	    update_time as updateTime
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1'	  
+    </select>
+    
+     <select id="selectById"  parameterType="long" resultType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	select id as id,
+    	    technical as technical,
+    	    years as years,
+    	    type as type,
+    	    application as application,
+    	    technical_content as technicalContent,
+    	    technical_conditions as technicalConditions,
+    	    model as model,
+    	    investment as investment,
+    	    save_energy as saveEnergy,
+    	    emission as emission,
+    	    is_del as isDel,
+    	    number as number,
+    	    create_time as createTime,
+    	    update_time as updateTime
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1'	  and id=#{id}
+    </select>
+    
+    <select id="selectByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	select id as id,
+    	    technical as technical,
+    	    years as years,
+    	    type as type,
+    	    application as application,
+    	    technical_content as technicalContent,
+    	    technical_conditions as technicalConditions,
+    	    model as model,
+    	    investment as investment,
+    	    save_energy as saveEnergy,
+    	    emission as emission,
+    	    is_del as isDel,
+    	    number as number,
+    	    create_time as createTime,
+    	    update_time as updateTime
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1' 
+ 			<if test="name !=null and name !=''" >
+ 			and  technical like concat('%',#{name},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and type=#{type}  
+ 			</if>	  
+ 			LIMIT #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="selectCountByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="int">
+    	select
+    		count(0)
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1'
+ 			<if test="name !=null and name !=''" >
+ 			and  technical like concat('%',#{name},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and type=#{type}  
+ 			</if>	   
+    </select>
+    
+    <update id="updateById" parameterType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	update t_energy_save set technical=#{technical},years=#{years},application=#{application},technical_content=#{technicalContent},technical_conditions=#{technicalConditions},
+    	model=#{model},investment=#{investment},save_energy=#{saveEnergy},emission=#{emission},update_time=#{updateTime},number=#{number},type=#{type} where id=#{id}
+    </update>
+    
+     <update id="del" parameterType="long">
+    	update t_energy_save set is_del='1' where id=#{id}
+    </update>
+</mapper>

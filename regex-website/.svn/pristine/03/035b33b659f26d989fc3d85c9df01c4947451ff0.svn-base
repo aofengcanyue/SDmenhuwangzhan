@@ -1,0 +1,62 @@
+package com.regex.web.controller.admin.sys;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.dto.info.SystemColumnDTO;
+import com.regex.web.common.utils.AjaxUtil;
+import com.regex.web.service.info.SystemColumnService;
+
+@Controller
+@RequestMapping("sys/systemColumn")
+public class SystemColumnController {
+    
+    @Autowired
+    private SystemColumnService systemColumnService;
+    
+    
+    @RequestMapping("input")
+    public String input(Model model,String id) {
+        if(StringUtils.isNotEmpty(id)) {
+            SystemColumnDTO systemColumnDTO = systemColumnService.selectSystemColumnDTOById(Long.parseLong(id));
+            model.addAttribute("column",systemColumnDTO);
+        }
+        return "admin/systemColumn/input";
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 链接列表
+     *
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("show")
+    public String show(Model model) {
+           
+        List<SystemColumnDTO> columnList = systemColumnService.selectSystemColumnDTO(null);
+        
+                model.addAttribute("columnList",columnList);
+        
+        return "admin/systemColumn/show";
+    }
+    
+    @RequestMapping("update")
+    public void update(HttpServletResponse response,SystemColumnDTO systemColumnDTO,String id) {
+        
+        int n = 0;
+        systemColumnDTO.setId(Long.parseLong(id));
+        n = systemColumnService.updateNonEmptySystemColumnDTOById(systemColumnDTO);
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+}

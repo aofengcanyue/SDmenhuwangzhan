@@ -1,0 +1,792 @@
+<#assign security=JspTaglibs["/WEB-INF/tlds/security.tld"] />
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${sysName}</title>
+
+		<meta name="description" content="Dynamic tables and grids using jqGrid plugin" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/jquery-ui.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/bootstrap-datepicker3.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/ui.jqgrid.min.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/fonts.googleapis.com.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="${resRoot}/assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+		<![endif]-->
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace-rtl.min.css" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="${resRoot}/assets/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+		<script src="${resRoot}/assets/js/ace-extra.min.js"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="${resRoot}/assets/js/html5shiv.min.js"></script>
+		<script src="${resRoot}/assets/js/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body class="no-skin">
+		<#include "/layout/navbar.html"> 
+
+		<div class="main-container ace-save-state" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.loadState('main-container')}catch(e){}
+			</script>
+
+			<#include "/layout/sidebar.html"> 
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					
+						
+				
+				
+					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon"></i>
+								<a href="${base}/index.htm">首页</a>
+							</li>
+
+							<li>
+								<a href="${base}/sys/ExpertAnswer/show.htm">专家咨询</a>
+							</li>
+							<li class="active">专家咨询</li>
+						</ul><!-- /.breadcrumb -->
+
+					</div>
+
+					<div class="page-content">
+
+						<div class="row">
+									<div class="col-xs-12">
+										<h3 class="header smaller lighter blue">专家咨询列表
+											<div class="pull-right tableTools-container"></div>
+										</h3>
+										<div class="table-header">
+											专家咨询
+										<!-- <div class="clearfix">
+										</div> -->
+										</div>
+
+										<!-- div.table-responsive -->
+
+										<!-- div.dataTables_borderWrap -->
+										<div>
+											<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+												<thead>
+													<tr>
+														<th class="center">序号</th>
+														<th>标题</th>
+														<th>类型</th>
+														<th>浏览量</th>
+														<th>是否置顶</th>
+														<th>审核状态</th>
+														<th>创建时间</th>
+														<th>操作</th>
+													</tr>
+												</thead>
+
+												<!-- <tbody>
+													<#list datas as data>
+													<tr>
+														<td class="center">
+															${data_index+1}
+														</td>
+
+														<td>
+															<a href="javascript:void(0);" onclick="showDetail('${data.id}')">${data.title}</a>
+														</td>
+														<td>${typeMap[data.type]}</td>
+														<td>${data.readCount}</td>
+														<td><#if data.isTop=="1">
+															<span class="label label-sm label-warning">置顶</span>
+															<#else>
+															<span class="label label-sm label-info arrowed arrowed-righ">未置顶</span>
+															</#if></td>
+															<td><#if data.audit=="1">审核通过<#elseif data.audit=="2">已驳回<#else>待审核</#if></td>
+														<td>${data.updateTime?datetime}</td>
+														<td>
+															<div class="hidden-sm hidden-xs action-buttons">
+																<a class="blue" href="javascript:void(0);" onclick="showDetail('${data.id}')">
+																	<i class="ace-icon fa fa-search-plus bigger-130"></i>
+																</a>
+
+																<a class="green" href="${base}/sys/ExpertAnswer/input.htm?id=${data.id}" >
+																	<i class="ace-icon fa fa-pencil bigger-130"></i>
+																</a>
+
+																<a class="red" href="javascript:void(0);" onclick="del('${data.id}');">
+																	<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																</a>
+																
+																<a class="red" href="javascript:void(0);" <#if data.isTop=="0">onclick="isTop('${data.id}');"  title="置顶"<#else>onclick="cacleIsTop('${data.id}');"  title="取消置顶"</#if> >
+																	<i class="ace-icon fa fa-check bigger-130"></i>
+																</a>
+																
+																<a class="red" href="javascript:void(0);" onclick="audit('${data.id}');">
+																	<i class="ace-icon fa fa-check bigger-130"></i>
+																</a>
+															</div>
+
+															<div class="hidden-md hidden-lg">
+																<div class="inline pos-rel">
+																	<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+																		<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+																	</button>
+
+																	<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+																		<li>
+																			<a href="javascript:void(0);" onclick="showDetail('${data.id}')" class="tooltip-info" data-rel="tooltip" title="查看">
+																				<span class="blue">
+																					<i class="ace-icon fa fa-search-plus bigger-120"></i>
+																				</span>
+																			</a>
+																		</li>
+
+																		<li>
+																			<a href="${base}/sys/ExpertAnswer/input.htm?id=${data.id}"  class="tooltip-success" data-rel="tooltip" title="编辑">
+																				<span class="green">
+																					<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+																				</span>
+																			</a>
+																		</li>
+
+																		<li>
+																			<a href="javascript:void(0);" onclick="del('${data.id}');"  class="tooltip-error" data-rel="tooltip" title="审核">
+																				<span class="red">
+																					<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																				</span>
+																			</a>
+																		</li>
+																		
+																		<li>
+																			<a href="javascript:void(0);" <#if data.isTop=="0">onclick="isTop('${data.id}');" title="置顶"<#else>onclick="cacleIsTop('${data.id}');" title="取消置顶"</#if>  class="tooltip-error" data-rel="tooltip" >
+																				<span class="red">
+																					<i class="ace-icon fa fa-check bigger-120"></i>
+																				</span>
+																			</a>
+																		</li>
+																		
+																		<li>
+																			<a href="javascript:void(0);" onclick="audit('${data.id}');"  class="tooltip-error" data-rel="tooltip" title="审核">
+																				<span class="red">
+																					<i class="ace-icon fa fa-check bigger-120"></i>
+																				</span>
+																			</a>
+																		</li>
+																	</ul>
+																</div>
+															</div>
+														</td>
+													</tr>
+													</#list>
+												</tbody> -->
+											</table>
+										</div>
+									</div>
+								</div>
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+
+			<#include "/layout/footer.html">
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="${resRoot}/assets/js/jquery-2.1.4.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="${resRoot}/assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='${resRoot}/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="${resRoot}/assets/js/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+		<script src="${resRoot}/assets/js/jquery.dataTables.min.js"></script>
+		<script src="${resRoot}/assets/js/jquery.dataTables.bootstrap.min.js"></script>
+		<script src="${resRoot}/assets/js/dataTables.buttons.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.flash.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.html5.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.print.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.colVis.min.js"></script>
+		<script src="${resRoot}/assets/js/dataTables.select.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="${resRoot}/assets/js/ace-elements.min.js"></script>
+		<script src="${resRoot}/assets/js/ace.min.js"></script>
+		<script src="${resRoot}/js/dateFormat.js"></script>
+
+	<script src="${resRoot}/layui/lay/dest/layui.all.js" charset="utf-8"></script>
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+		function showDetail(id) {
+			layer.open({
+			      type: 2,
+			      title: '专家回复详情',
+			      shadeClose: true,
+			      shade: false,
+			      maxmin: true, //开启最大化最小化按钮
+			      area: ['893px', '600px'],
+			      content: '${base}/sys/ExpertAnswer/detial.htm?id=' +id
+			    });
+
+		}
+		
+		function audit(id) {
+  			var flag = 0;
+  			layer.confirm('确定审核该条数据吗?',{btn: ['通过','驳回']}, function(index){
+  				$.ajax({
+  					type : "post",
+  					url : "${base}/sys/ExpertAnswer/audit.htm",
+  					data : {
+  						id : id
+  					},
+  					dataType : "json",
+  					async : false,
+  					success : function(data) {
+  						flag  = data.message;
+  						if(flag == 1) {
+  							layer.msg('审核成功！', {
+  							  icon: 1,
+  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+  							}, function(){
+  								window.location.reload();
+  							});   
+  						} else {
+  							layer.alert("服务器繁忙，请稍候再试！");
+  						}
+  					}
+  				});
+  			}, function(){
+  				$.ajax({
+  					type : "post",
+  					url : "${base}/sys/ExpertAnswer/reject.htm",
+  					data : {
+  						id : id
+  					},
+  					dataType : "json",
+  					async : false,
+  					success : function(data) {
+  						flag  = data.message;
+  						if(flag == 1) {
+  							layer.msg('驳回成功！', {
+  							  icon: 1,
+  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+  							}, function(){
+  								window.location.reload();
+  							});   
+  						} else {
+  							layer.alert("服务器繁忙，请稍候再试！");
+  						}
+  					}
+  				});
+  			  });
+  		}
+		
+		
+		function del(id) {
+  			var flag = 0;
+  			layer.confirm('确定删除该条数据吗?', function(index){
+  				$.ajax({
+  					type : "post",
+  					url : "${base}/sys/ExpertAnswer/del.htm",
+  					data : {
+  						id : id
+  					},
+  					dataType : "json",
+  					async : false,
+  					success : function(data) {
+  						flag  = data.message;
+  						if(flag == 1) {
+  							layer.msg('删除成功！', {
+  							  icon: 1,
+  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+  							}, function(){
+  								window.location.reload();
+  							});   
+  						} else {
+  							layer.alert("服务器繁忙，请稍候再试！");
+  						}
+  					}
+  				});
+  			});
+  		}
+		
+		function isTop(id) {
+  			var flag = 0;
+  			layer.confirm('确定置顶该条数据吗?', function(index){
+  				$.ajax({
+  					type : "post",
+  					url : "${base}/sys/ExpertAnswer/isTop.htm",
+  					data : {
+  						id : id
+  					},
+  					dataType : "json",
+  					async : false,
+  					success : function(data) {
+  						flag  = data.message;
+  						if(flag == 1) {
+  							layer.msg('置顶成功！', {
+  							  icon: 1,
+  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+  							}, function(){
+  								window.location.reload();
+  							});   
+  						} else {
+  							layer.alert("服务器繁忙，请稍候再试！");
+  						}
+  					}
+  				});
+  			});
+  		}
+		
+		function cacleIsTop(id) {
+  			var flag = 0;
+  			layer.confirm('确定取消置顶该条数据吗?', function(index){
+  				$.ajax({
+  					type : "post",
+  					url : "${base}/sys/ExpertAnswer/cacleIsTop.htm",
+  					data : {
+  						id : id
+  					},
+  					dataType : "json",
+  					async : false,
+  					success : function(data) {
+  						flag  = data.message;
+  						if(flag == 1) {
+  							layer.msg('取消置顶成功！', {
+  							  icon: 1,
+  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+  							}, function(){
+  								window.location.reload();
+  							});   
+  						} else {
+  							layer.alert("服务器繁忙，请稍候再试！");
+  						}
+  					}
+  				});
+  			});
+  		}
+		
+		
+			jQuery(function($) {
+				//initiate dataTables plugin
+				var myTable = 
+				$('#dynamic-table')
+				//.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
+				.DataTable( {
+					bAutoWidth: false,
+					"bFilter": true,
+					"oLanguage": {//下面是一些汉语翻译
+	                    "sSearch": "搜索",
+	                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+	                    "sZeroRecords": "没有检索到数据",
+	                    "sInfo": "显示 _START_ 至 _END_ 条 &nbsp;&nbsp;共 _TOTAL_ 条",
+	                    "sInfoFiltered": "(筛选自 _MAX_ 条数据)",
+	                    "sInfoEmtpy": "没有数据",
+	                    "sProcessing": "正在加载数据...",
+	                    "sProcessing": "<img src='${resRoot}/layui/css/modules/layer/default/loading-0.gif' />", //这里是给服务器发请求后到等待时间显示的 加载gif
+	                            "oPaginate":
+	                            {
+	                                "sFirst": "首页",
+	                                "sPrevious": "前一页",
+	                                "sNext": "后一页",
+	                                "sLast": "末页"
+	                            }
+	                },
+					
+					"bProcessing": true,
+			        "bServerSide": true,
+			        "sAjaxSource": "${base}/sys/ExpertAnswer/getPage.htm",
+			        "sServerMethod": "POST",
+					"aoColumns": [
+						  {"mData": "id", "bSortable": false },
+  						  {"mData": "title","render": function(data, type, full) {
+	                    	  
+	                    	  return "<a href='javascript:void(0);' onclick='showDetail("+ full.id +")'>"+ data +"</a>";
+	                      }},
+	                      {"mData": "type","render": function(data, type, full) { // 返回自定义内容
+	                          if(data=="0"){
+	                        	  return "能源计量与信息化";
+	                          }else if(data=="1"){
+	                        	  return "通用技术节能";
+	                          }else if(data=="2"){
+	                        	  return "循环经济与清洁生产";
+	                          }else if(data=="3"){
+	                        	  return "节能咨询";
+	                          }else if(data=="4"){
+	                        	  return "政策咨询";
+	                          }
+	                      }},
+						  {"mData": "readCount"},
+						  {"mData": "isTop","render": function(data, type, full) { // 返回自定义内容
+	                          if(data=="1")
+	                              return "<span class='label label-sm label-warning'>置顶</span>";
+	                              else 
+	                              return "<span class='label label-sm label-info arrowed arrowed-righ'>未置顶</span>";
+	                      }},
+	                      {"mData": "audit","render": function(data, type, full) { // 返回自定义内容
+	                          if(data=="1"){
+	                        	  return "审核通过";
+	                          }else if(data=="2"){
+	                        	  return "已驳回";
+	                          }else{
+	                        	  return "待审核";
+	                          }
+	                      }},
+	                      {"mData": "createTime","render": function(data, type, full) { // 返回自定义内容
+	                          return getFormatDateByLong(data, "yyyy-MM-dd hh:mm:ss");
+	                      }},
+						  {"mData": "id","render": function(data, type, full) {
+							  
+							  return "<div class='hidden-sm hidden-xs action-buttons'>\r\n" + 
+				                "                                                                <a class='blue' href='javascript:void(0);' onclick='showDetail("+ data +")'>\r\n" + 
+				                "                                                                    <i class='ace-icon fa fa-search-plus bigger-130'></i>\r\n" + 
+				                "                                                                </a>\r\n" + 
+				                "\r\n" + 
+				                "                                                                <a class='green' href='${base}/sys/ExpertAnswer/input.htm?id="+ data +"' >\r\n" + 
+				                "                                                                    <i class='ace-icon fa fa-pencil bigger-130'></i>\r\n" + 
+				                "                                                                </a>\r\n" + 
+				                "\r\n" + 
+				                "                                                                <a class='red' href='javascript:void(0);' onclick='del("+ data +");'>\r\n" + 
+				                "                                                                    <i class='ace-icon fa fa-trash-o bigger-130'></i>\r\n" + 
+				                "                                                                </a>\r\n" + 
+				                "                                                                \r\n" + 
+				                "                                                                <a class='red' href='javascript:void(0);' <#if data.isTop=='0'>onclick='isTop("+ data +");'  title='置顶'<#else>onclick='cacleIsTop('${data.id}');'  title='取消置顶'</#if> >\r\n" + 
+				                "                                                                    <i class='ace-icon fa fa-check bigger-130'></i>\r\n" + 
+				                "                                                                </a>\r\n" + 
+				                "                                                                \r\n" + 
+				                "                                                                <a class='red' href='javascript:void(0);' onclick='audit("+ data +");'>\r\n" + 
+				                "                                                                    <i class='ace-icon fa fa-check bigger-130'></i>\r\n" + 
+				                "                                                                </a>\r\n" + 
+				                "                                                            </div>\r\n" + 
+				                "\r\n" + 
+				                "                                                            <div class='hidden-md hidden-lg'>\r\n" + 
+				                "                                                                <div class='inline pos-rel'>\r\n" + 
+				                "                                                                    <button class='btn btn-minier btn-yellow dropdown-toggle' data-toggle='dropdown' data-position='auto'>\r\n" + 
+				                "                                                                        <i class='ace-icon fa fa-caret-down icon-only bigger-120'></i>\r\n" + 
+				                "                                                                    </button>\r\n" + 
+				                "\r\n" + 
+				                "                                                                    <ul class='dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close'>\r\n" + 
+				                "                                                                        <li>\r\n" + 
+				                "                                                                            <a href='javascript:void(0);' onclick='showDetail("+ data +")' class='tooltip-info' data-rel='tooltip' title='查看'>\r\n" + 
+				                "                                                                                <span class='blue'>\r\n" + 
+				                "                                                                                    <i class='ace-icon fa fa-search-plus bigger-120'></i>\r\n" + 
+				                "                                                                                </span>\r\n" + 
+				                "                                                                            </a>\r\n" + 
+				                "                                                                        </li>\r\n" + 
+				                "\r\n" + 
+				                "                                                                        <li>\r\n" + 
+				                "                                                                            <a href='${base}/sys/ExpertAnswer/input.htm?id="+ data +"'  class='tooltip-success' data-rel='tooltip' title='编辑'>\r\n" + 
+				                "                                                                                <span class='green'>\r\n" + 
+				                "                                                                                    <i class='ace-icon fa fa-pencil-square-o bigger-120'></i>\r\n" + 
+				                "                                                                                </span>\r\n" + 
+				                "                                                                            </a>\r\n" + 
+				                "                                                                        </li>\r\n" + 
+				                "\r\n" + 
+				                "                                                                        <li>\r\n" + 
+				                "                                                                            <a href='javascript:void(0);' onclick='del("+ data +");'  class='tooltip-error' data-rel='tooltip' title='审核'>\r\n" + 
+				                "                                                                                <span class='red'>\r\n" + 
+				                "                                                                                    <i class='ace-icon fa fa-trash-o bigger-120'></i>\r\n" + 
+				                "                                                                                </span>\r\n" + 
+				                "                                                                            </a>\r\n" + 
+				                "                                                                        </li>\r\n" + 
+				                "                                                                        \r\n" + 
+				                "                                                                        <li>\r\n" + 
+				                "                                                                            <a href='javascript:void(0);' <#if data.isTop=='0'>onclick='isTop("+ data +");' title='置顶'<#else>onclick='cacleIsTop('${data.id}');' title='取消置顶'</#if>  class='tooltip-error' data-rel='tooltip' >\r\n" + 
+				                "                                                                                <span class='red'>\r\n" + 
+				                "                                                                                    <i class='ace-icon fa fa-check bigger-120'></i>\r\n" + 
+				                "                                                                                </span>\r\n" + 
+				                "                                                                            </a>\r\n" + 
+				                "                                                                        </li>\r\n" + 
+				                "                                                                        \r\n" + 
+				                "                                                                        <li>\r\n" + 
+				                "                                                                            <a href='javascript:void(0);' onclick='audit("+ data +");'  class='tooltip-error' data-rel='tooltip' title='审核'>\r\n" + 
+				                "                                                                                <span class='red'>\r\n" + 
+				                "                                                                                    <i class='ace-icon fa fa-check bigger-120'></i>\r\n" + 
+				                "                                                                                </span>\r\n" + 
+				                "                                                                            </a>\r\n" + 
+				                "                                                                        </li>\r\n" + 
+				                "                                                                    </ul>\r\n" + 
+				                "                                                                </div>\r\n" + 
+				                "                                                            </div>";
+						  	}
+						  }
+					],
+					
+					"aoColumnDefs": [//和aoColums类似，但他可以给指定列附近爱属性
+	                    {"bSortable": false, "aTargets": [1,2,3,4,5,6,7]},  //这句话意思是第1,3,6,7,8,9列（从0开始算） 不能排序
+	                    {"bSearchable": false, "aTargets": [1]}, //bSearchable 这个属性表示是否可以全局搜索，其实在服务器端分页中是没用的
+	                ],
+					"aaSorting": [],
+					
+					//,
+					"sScrollY": "400px",
+					"bPaginate": true,
+			
+					"sScrollX": "100%",
+					"sScrollXInner": "100%",
+					"bScrollCollapse": true,
+					//Note: if you are applying horizontal scrolling (sScrollX) on a ".table-bordered"
+					//you may want to wrap the table inside a "div.dataTables_borderWrap" element
+			
+					"iDisplayLength": 10,
+					
+					"fnServerData": function (sSource, aoData, fnCallback, oSettings) {
+			            oSettings.jqXHR = $.ajax({
+			                "dataType": 'json',
+			                "type": "POST",
+			                "url": sSource,
+			                "data": aoData,
+			                "success": function (json) {
+			                    fnCallback(json.message);
+			                  　//这里。。。。
+			                }
+			            });
+			        },
+			
+					select: {
+						style: 'multi'
+					}
+			    } );
+			
+				
+				
+				$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+				
+				new $.fn.dataTable.Buttons( myTable, {
+					buttons: [
+					  {
+						"extend": "colvis",
+						"text": "<i class='fa fa-search bigger-110 blue'></i> <span class='hidden'>展示隐藏行</span>",
+						"className": "btn btn-white btn-primary btn-bold",
+						columns: ':not(:first):not(:last)'
+					  },
+					  {
+						"extend": "copy",
+						"text": "<i class='fa fa-copy bigger-110 pink'></i> <span class='hidden'>复制数据</span>",
+						"className": "btn btn-white btn-primary btn-bold"
+					  },
+					  {
+						"extend": "csv",
+						"text": "<i class='fa fa-database bigger-110 orange'></i> <span class='hidden'>导出 CSV</span>",
+						"className": "btn btn-white btn-primary btn-bold"
+					  },
+					  {
+						"extend": "excel",
+						"text": "<i class='fa fa-file-excel-o bigger-110 green'></i> <span class='hidden'>导出 Excel</span>",
+						"className": "btn btn-white btn-primary btn-bold"
+					  },
+					  {
+						"extend": "pdf",
+						"text": "<i class='fa fa-file-pdf-o bigger-110 red'></i> <span class='hidden'>导出pdf PDF</span>",
+						"className": "btn btn-white btn-primary btn-bold"
+					  },
+					  {
+						"extend": "print",
+						"text": "<i class='fa fa-print bigger-110 grey'></i> <span class='hidden'>打印</span>",
+						"className": "btn btn-white btn-primary btn-bold",
+						autoPrint: false,
+						message: '打印数据'
+					  }		  
+					]
+				} );
+				myTable.buttons().container().appendTo( $('.tableTools-container') );
+				
+				//style the message box
+				var defaultCopyAction = myTable.button(1).action();
+				myTable.button(1).action(function (e, dt, button, config) {
+					defaultCopyAction(e, dt, button, config);
+					$('.dt-button-info').addClass('gritter-item-wrapper gritter-info gritter-center white');
+				});
+				
+				
+				var defaultColvisAction = myTable.button(0).action();
+				myTable.button(0).action(function (e, dt, button, config) {
+					
+					defaultColvisAction(e, dt, button, config);
+					
+					
+					if($('.dt-button-collection > .dropdown-menu').length == 0) {
+						$('.dt-button-collection')
+						.wrapInner('<ul class="dropdown-menu dropdown-light dropdown-caret dropdown-caret" />')
+						.find('a').attr('href', '#').wrap("<li />")
+					}
+					$('.dt-button-collection').appendTo('.tableTools-container .dt-buttons')
+				});
+			
+				////
+			
+				setTimeout(function() {
+					$($('.tableTools-container')).find('a.dt-button').each(function() {
+						var div = $(this).find(' > div').first();
+						if(div.length == 1) div.tooltip({container: 'body', title: div.parent().text()});
+						else $(this).tooltip({container: 'body', title: $(this).text()});
+					});
+				}, 500);
+				
+				
+				
+				
+				
+				myTable.on( 'select', function ( e, dt, type, index ) {
+					if ( type === 'row' ) {
+						$( myTable.row( index ).node() ).find('input:checkbox').prop('checked', true);
+					}
+				} );
+				myTable.on( 'deselect', function ( e, dt, type, index ) {
+					if ( type === 'row' ) {
+						$( myTable.row( index ).node() ).find('input:checkbox').prop('checked', false);
+					}
+				} );
+			
+			
+			
+			
+				/////////////////////////////////
+				//table checkboxes
+				$('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
+				
+				//select/deselect all rows according to table header checkbox
+				$('#dynamic-table > thead > tr > th input[type=checkbox], #dynamic-table_wrapper input[type=checkbox]').eq(0).on('click', function(){
+					var th_checked = this.checked;//checkbox inside "TH" table header
+					
+					$('#dynamic-table').find('tbody > tr').each(function(){
+						var row = this;
+						if(th_checked) myTable.row(row).select();
+						else  myTable.row(row).deselect();
+					});
+				});
+				
+				//select/deselect a row when the checkbox is checked/unchecked
+				$('#dynamic-table').on('click', 'td input[type=checkbox]' , function(){
+					var row = $(this).closest('tr').get(0);
+					if(this.checked) myTable.row(row).deselect();
+					else myTable.row(row).select();
+				});
+			
+			
+			
+				$(document).on('click', '#dynamic-table .dropdown-toggle', function(e) {
+					e.stopImmediatePropagation();
+					e.stopPropagation();
+					e.preventDefault();
+				});
+				
+				
+				
+				//And for the first simple table, which doesn't have TableTools or dataTables
+				//select/deselect all rows according to table header checkbox
+				var active_class = 'active';
+				$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function(){
+					var th_checked = this.checked;//checkbox inside "TH" table header
+					
+					$(this).closest('table').find('tbody > tr').each(function(){
+						var row = this;
+						if(th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
+						else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
+					});
+				});
+				
+				//select/deselect a row when the checkbox is checked/unchecked
+				$('#simple-table').on('click', 'td input[type=checkbox]' , function(){
+					var $row = $(this).closest('tr');
+					if($row.is('.detail-row ')) return;
+					if(this.checked) $row.addClass(active_class);
+					else $row.removeClass(active_class);
+				});
+			
+				
+			
+				/********************************/
+				//add tooltip for small view action buttons in dropdown menu
+				$('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+				
+				//tooltip placement on right or left
+				function tooltip_placement(context, source) {
+					var $source = $(source);
+					var $parent = $source.closest('table')
+					var off1 = $parent.offset();
+					var w1 = $parent.width();
+			
+					var off2 = $source.offset();
+					//var w2 = $source.width();
+			
+					if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
+					return 'left';
+				}
+				
+				
+				
+				
+				/***************/
+				$('.show-details-btn').on('click', function(e) {
+					e.preventDefault();
+					$(this).closest('tr').next().toggleClass('open');
+					$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+				});
+				/***************/
+				
+				
+				
+				
+				
+				/**
+				//add horizontal scrollbars to a simple table
+				$('#simple-table').css({'width':'2000px', 'max-width': 'none'}).wrap('<div style="width: 1000px;" />').parent().ace_scroll(
+				  {
+					horizontal: true,
+					styleClass: 'scroll-top scroll-dark scroll-visible',//show the scrollbars on top(default is bottom)
+					size: 2000,
+					mouseWheelLock: true
+				  }
+				).css('padding-top', '12px');
+				*/
+			
+			
+			})
+			
+			layui.use('layer', function(){
+		
+				//调用示例
+				layer.photos({
+				  photos: '#layer-photos-demo'
+				  ,anim: 0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+				}); 
+				});
+		</script>
+	</body>
+</html>

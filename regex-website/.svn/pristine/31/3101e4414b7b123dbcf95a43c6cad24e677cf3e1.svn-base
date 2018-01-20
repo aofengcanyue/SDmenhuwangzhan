@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style type="text/css">
+	html,body{ background: #fff; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+
+<div class="container ">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/web/index.htm">首页</a>>我要提问</p>
+		</div>
+	</div>
+</div>
+
+<div class="ques">
+	 <h2 class="ques_title">我要提问</h2>
+	 <p class="ques_a">请准确描述您的问题，以便更快的获得准确的答案</p>
+	 <input type="hidden" id="expertId" value="${expertId}" >
+	 <input type="text" class="ques_sub" name="" id="title" placeholder="请输入问题标题" value="" />
+	 <select name="" id="type" class="ques_txt ques_sub" >
+	 	<option  value="">请选择类型</option>
+		<#list typeMap?keys as key>
+		<option <#if type??&& type==key>selected="selected"</#if> value="${key}">${typeMap[key]}</option>
+		</#list>
+	</select>
+	 <textarea name="" class="ques_txt" rows="6" id="content" cols="">请输入问题简介</textarea>
+	 <div class="ok_sub_btn clearfix">
+	 	 <a href="javascript:;" class="ok1" onclick="history.go(-1);" >取消</a>
+	 	 <a href="javascript:;" class="ok2" onclick="save();" >提问</a>
+	 </div>
+	 
+	 <div class="hot_title">热门问题</div>
+	 <div class="hot_list">
+	 		<ul>
+	 			<#list datas as expertAnswerDTO>
+	 			<li onclick="window.location.href='${base}/web/expertAnswer/detial_${expertAnswerDTO.id}.htm'">
+	 				<h3 class="hot_list_title">${expertAnswerDTO.title}</h3>
+	 				<p class="hot_list_p">
+	 					<span>${typeMap[expertAnswerDTO.type]}</span>
+	 					<span>${expertAnswerDTO.createTime?datetime}</span>
+	 					<span><i>${expertAnswerDTO.answerCount}</i>回答</span>
+	 				</p>
+	 			</li>
+	 			</#list>
+	 		</ul>
+	 </div>
+</div>
+	
+	
+</body>
+<script src="${resRoot}/layui/lay/dest/layui.all.js" charset="utf-8"></script>
+<script type="text/javascript">
+function save() {
+	var expertId = $("#expertId").val();
+	var title=$("#title").val();
+	var content=$("#content").val();
+	var type = $("#type").val();
+	var flag = true;
+	if(title==""|| title == null || title=="undifined") {
+		alert("请输入标题");
+		flag = false;
+		return false;
+	}
+	if(content==""|| content == null || content=="undifined"|| content=="请输入问题简介") {
+		alert("请输入回复内容");
+		flag = false;
+		return false;
+	}
+	if(flag) {
+		$.ajax({
+			type : "post",
+			url : "${base}/web/expertAnswer/publish.htm",
+			data : {
+				expertId : expertId,
+				title : title,
+				content : content,
+				type : type
+				},
+			dataType : "json",
+			async : false,
+			success : function(data) {
+				if(data.message == 2) {
+					layer.alert('请完善数据！');   
+						// return false;
+					} else if(data.message == 1) {
+						layer.msg('保存成功！', {
+						  icon: 1,
+						  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+						}, function(){
+							window.location.href='${base}/web/expertAnswer/show.htm';
+						});   
+					} else {
+						layer.msg('系统繁忙！'); 
+					}
+			}
+		}); 
+	}
+}
+</script>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+</html>

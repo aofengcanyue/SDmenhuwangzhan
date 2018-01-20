@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.green.GreenSupply2DAO">
+    <!-- GreenSupply2DTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_GreenSupply2DTO_Map" type="com.regex.web.common.dto.green.GreenSupply2DTO">
+        <id column="id" property="id" />
+        <result column="value6" property="value6" />
+        <result column="value5" property="value5" />
+        <result column="value8" property="value8" />
+        <result column="value20" property="value20" />
+        <result column="value7" property="value7" />
+        <result column="value2" property="value2" />
+        <result column="value1" property="value1" />
+        <result column="value4" property="value4" />
+        <result column="value3" property="value3" />
+        <result column="value9" property="value9" />
+        <result column="years" property="years" />
+        <result column="value19" property="value19" />
+        <result column="value18" property="value18" />
+        <result column="name" property="name" />
+        <result column="value15" property="value15" />
+        <result column="value14" property="value14" />
+        <result column="value17" property="value17" />
+        <result column="value16" property="value16" />
+        <result column="value11" property="value11" />
+        <result column="value10" property="value10" />
+        <result column="value13" property="value13" />
+        <result column="value12" property="value12" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_green_supply2的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_green_supply2_Column">
+        t_green_supply2.id as id
+        ,t_green_supply2.value6 as value6
+        ,t_green_supply2.value5 as value5
+        ,t_green_supply2.value8 as value8
+        ,t_green_supply2.value20 as value20
+        ,t_green_supply2.value7 as value7
+        ,t_green_supply2.value2 as value2
+        ,t_green_supply2.value1 as value1
+        ,t_green_supply2.value4 as value4
+        ,t_green_supply2.value3 as value3
+        ,t_green_supply2.value9 as value9
+        ,t_green_supply2.years as years
+        ,t_green_supply2.value19 as value19
+        ,t_green_supply2.value18 as value18
+        ,t_green_supply2.name as name
+        ,t_green_supply2.value15 as value15
+        ,t_green_supply2.value14 as value14
+        ,t_green_supply2.value17 as value17
+        ,t_green_supply2.value16 as value16
+        ,t_green_supply2.value11 as value11
+        ,t_green_supply2.value10 as value10
+        ,t_green_supply2.value13 as value13
+        ,t_green_supply2.value12 as value12
+    </sql>
+
+    <!--获得类名为:GreenSupply2DTO对应的数据库表的数据总行数 -->
+    <select id="getGreenSupply2DTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_green_supply2
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:GreenSupply2DTO对应数据库中表的数据集合 -->
+    <select id="selectGreenSupply2DTO" parameterType="com.regex.web.common.Assist"  resultMap="result_GreenSupply2DTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_green_supply2_Column" /> 
+            </otherwise>
+        </choose>
+        from t_green_supply2
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_green_supply2
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_green_supply2.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个GreenSupply2DTO对象,以参数GreenSupply2DTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectGreenSupply2DTOByObj" parameterType="com.regex.web.common.dto.green.GreenSupply2DTO" resultMap="result_GreenSupply2DTO_Map">
+        select 
+            <include refid="t_green_supply2_Column" /> 
+        from t_green_supply2
+        <where>
+            <if test="value12 != null "> and t_green_supply2.value12 = #{value12}</if>
+            <if test="value13 != null "> and t_green_supply2.value13 = #{value13}</if>
+            <if test="value10 != null "> and t_green_supply2.value10 = #{value10}</if>
+            <if test="value11 != null "> and t_green_supply2.value11 = #{value11}</if>
+            <if test="value16 != null "> and t_green_supply2.value16 = #{value16}</if>
+            <if test="value17 != null "> and t_green_supply2.value17 = #{value17}</if>
+            <if test="value14 != null "> and t_green_supply2.value14 = #{value14}</if>
+            <if test="value15 != null "> and t_green_supply2.value15 = #{value15}</if>
+            <if test="name != null "> and t_green_supply2.name = #{name}</if>
+            <if test="value18 != null "> and t_green_supply2.value18 = #{value18}</if>
+            <if test="value19 != null "> and t_green_supply2.value19 = #{value19}</if>
+            <if test="years != null "> and t_green_supply2.years = #{years}</if>
+            <if test="value9 != null "> and t_green_supply2.value9 = #{value9}</if>
+            <if test="value3 != null "> and t_green_supply2.value3 = #{value3}</if>
+            <if test="value4 != null "> and t_green_supply2.value4 = #{value4}</if>
+            <if test="value1 != null "> and t_green_supply2.value1 = #{value1}</if>
+            <if test="value2 != null "> and t_green_supply2.value2 = #{value2}</if>
+            <if test="value7 != null "> and t_green_supply2.value7 = #{value7}</if>
+            <if test="value20 != null "> and t_green_supply2.value20 = #{value20}</if>
+            <if test="value8 != null "> and t_green_supply2.value8 = #{value8}</if>
+            <if test="value5 != null "> and t_green_supply2.value5 = #{value5}</if>
+            <if test="value6 != null "> and t_green_supply2.value6 = #{value6}</if>
+            <if test="id != null "> and t_green_supply2.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过GreenSupply2DTO的id获得对应数据库中表的数据对象-->
+    <select id="selectGreenSupply2DTOById" parameterType="java.lang.Long" resultMap="result_GreenSupply2DTO_Map">
+        select 
+            <include refid="t_green_supply2_Column" /> 
+        from t_green_supply2
+        where t_green_supply2.id = #{id}
+    </select> 
+
+    <!-- 将GreenSupply2DTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertGreenSupply2DTO" parameterType="com.regex.web.common.dto.green.GreenSupply2DTO">
+        insert into t_green_supply2(id,value6,value5,value8,value20,value7,value2,value1,value4,value3,value9,years,value19,value18,name,value15,value14,value17,value16,value11,value10,value13,value12) 
+        values(#{id},#{value6},#{value5},#{value8},#{value20},#{value7},#{value2},#{value1},#{value4},#{value3},#{value9},#{years},#{value19},#{value18},#{name},#{value15},#{value14},#{value17},#{value16},#{value11},#{value10},#{value13},#{value12})
+    </insert>
+
+    <!-- 将GreenSupply2DTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyGreenSupply2DTO" parameterType="com.regex.web.common.dto.green.GreenSupply2DTO">
+        insert into t_green_supply2
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="value6 != null">value6,</if>
+            <if test="value5 != null">value5,</if>
+            <if test="value8 != null">value8,</if>
+            <if test="value20 != null">value20,</if>
+            <if test="value7 != null">value7,</if>
+            <if test="value2 != null">value2,</if>
+            <if test="value1 != null">value1,</if>
+            <if test="value4 != null">value4,</if>
+            <if test="value3 != null">value3,</if>
+            <if test="value9 != null">value9,</if>
+            <if test="years != null">years,</if>
+            <if test="value19 != null">value19,</if>
+            <if test="value18 != null">value18,</if>
+            <if test="name != null">name,</if>
+            <if test="value15 != null">value15,</if>
+            <if test="value14 != null">value14,</if>
+            <if test="value17 != null">value17,</if>
+            <if test="value16 != null">value16,</if>
+            <if test="value11 != null">value11,</if>
+            <if test="value10 != null">value10,</if>
+            <if test="value13 != null">value13,</if>
+            <if test="value12 != null">value12,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="value6 != null"> #{value6},</if>
+            <if test="value5 != null"> #{value5},</if>
+            <if test="value8 != null"> #{value8},</if>
+            <if test="value20 != null"> #{value20},</if>
+            <if test="value7 != null"> #{value7},</if>
+            <if test="value2 != null"> #{value2},</if>
+            <if test="value1 != null"> #{value1},</if>
+            <if test="value4 != null"> #{value4},</if>
+            <if test="value3 != null"> #{value3},</if>
+            <if test="value9 != null"> #{value9},</if>
+            <if test="years != null"> #{years},</if>
+            <if test="value19 != null"> #{value19},</if>
+            <if test="value18 != null"> #{value18},</if>
+            <if test="name != null"> #{name},</if>
+            <if test="value15 != null"> #{value15},</if>
+            <if test="value14 != null"> #{value14},</if>
+            <if test="value17 != null"> #{value17},</if>
+            <if test="value16 != null"> #{value16},</if>
+            <if test="value11 != null"> #{value11},</if>
+            <if test="value10 != null"> #{value10},</if>
+            <if test="value13 != null"> #{value13},</if>
+            <if test="value12 != null"> #{value12},</if>
+        </trim>
+    </insert>
+
+    <!-- 将GreenSupply2DTO批量插入到对应数据库的表中-->
+    <insert id="insertGreenSupply2DTOByBatch" parameterType="ArrayList">
+        insert into t_green_supply2(id,value6,value5,value8,value20,value7,value2,value1,value4,value3,value9,years,value19,value18,name,value15,value14,value17,value16,value11,value10,value13,value12) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.value6},#{item.value5},#{item.value8},#{item.value20},#{item.value7},#{item.value2},#{item.value1},#{item.value4},#{item.value3},#{item.value9},#{item.years},#{item.value19},#{item.value18},#{item.name},#{item.value15},#{item.value14},#{item.value17},#{item.value16},#{item.value11},#{item.value10},#{item.value13},#{item.value12})
+        </foreach>
+    </insert>
+
+    <!-- 通过GreenSupply2DTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteGreenSupply2DTOById" parameterType="java.lang.Long">
+        delete from t_green_supply2
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将GreenSupply2DTO对应的数据库表的数据删除-->
+    <delete id="deleteGreenSupply2DTO" parameterType="com.regex.web.common.Assist">
+        delete from t_green_supply2
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过GreenSupply2DTO的id将GreenSupply2DTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateGreenSupply2DTOById" parameterType="com.regex.web.common.dto.green.GreenSupply2DTO">
+        update t_green_supply2 set
+            value6=#{value6}
+            ,value5=#{value5}
+            ,value8=#{value8}
+            ,value20=#{value20}
+            ,value7=#{value7}
+            ,value2=#{value2}
+            ,value1=#{value1}
+            ,value4=#{value4}
+            ,value3=#{value3}
+            ,value9=#{value9}
+            ,years=#{years}
+            ,value19=#{value19}
+            ,value18=#{value18}
+            ,name=#{name}
+            ,value15=#{value15}
+            ,value14=#{value14}
+            ,value17=#{value17}
+            ,value16=#{value16}
+            ,value11=#{value11}
+            ,value10=#{value10}
+            ,value13=#{value13}
+            ,value12=#{value12}
+        where id=#{id}
+    </update>
+
+    <!-- 通过GreenSupply2DTO的id将GreenSupply2DTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyGreenSupply2DTOById" parameterType="com.regex.web.common.dto.green.GreenSupply2DTO">
+        update t_green_supply2
+        <set>
+            <if test="value6 != null">
+                value6=#{value6},
+            </if>
+            <if test="value5 != null">
+                value5=#{value5},
+            </if>
+            <if test="value8 != null">
+                value8=#{value8},
+            </if>
+            <if test="value20 != null">
+                value20=#{value20},
+            </if>
+            <if test="value7 != null">
+                value7=#{value7},
+            </if>
+            <if test="value2 != null">
+                value2=#{value2},
+            </if>
+            <if test="value1 != null">
+                value1=#{value1},
+            </if>
+            <if test="value4 != null">
+                value4=#{value4},
+            </if>
+            <if test="value3 != null">
+                value3=#{value3},
+            </if>
+            <if test="value9 != null">
+                value9=#{value9},
+            </if>
+            <if test="years != null">
+                years=#{years},
+            </if>
+            <if test="value19 != null">
+                value19=#{value19},
+            </if>
+            <if test="value18 != null">
+                value18=#{value18},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="value15 != null">
+                value15=#{value15},
+            </if>
+            <if test="value14 != null">
+                value14=#{value14},
+            </if>
+            <if test="value17 != null">
+                value17=#{value17},
+            </if>
+            <if test="value16 != null">
+                value16=#{value16},
+            </if>
+            <if test="value11 != null">
+                value11=#{value11},
+            </if>
+            <if test="value10 != null">
+                value10=#{value10},
+            </if>
+            <if test="value13 != null">
+                value13=#{value13},
+            </if>
+            <if test="value12 != null">
+                value12=#{value12},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将GreenSupply2DTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateGreenSupply2DTO" parameterType="map">
+        update t_green_supply2
+        <set>
+                id=#{enti.id},
+                value6=#{enti.value6},
+                value5=#{enti.value5},
+                value8=#{enti.value8},
+                value20=#{enti.value20},
+                value7=#{enti.value7},
+                value2=#{enti.value2},
+                value1=#{enti.value1},
+                value4=#{enti.value4},
+                value3=#{enti.value3},
+                value9=#{enti.value9},
+                years=#{enti.years},
+                value19=#{enti.value19},
+                value18=#{enti.value18},
+                name=#{enti.name},
+                value15=#{enti.value15},
+                value14=#{enti.value14},
+                value17=#{enti.value17},
+                value16=#{enti.value16},
+                value11=#{enti.value11},
+                value10=#{enti.value10},
+                value13=#{enti.value13},
+                value12=#{enti.value12},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将GreenSupply2DTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyGreenSupply2DTO" parameterType="map">
+        update t_green_supply2
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.value6 != null">
+                value6=#{enti.value6},
+            </if>
+            <if test="enti.value5 != null">
+                value5=#{enti.value5},
+            </if>
+            <if test="enti.value8 != null">
+                value8=#{enti.value8},
+            </if>
+            <if test="enti.value20 != null">
+                value20=#{enti.value20},
+            </if>
+            <if test="enti.value7 != null">
+                value7=#{enti.value7},
+            </if>
+            <if test="enti.value2 != null">
+                value2=#{enti.value2},
+            </if>
+            <if test="enti.value1 != null">
+                value1=#{enti.value1},
+            </if>
+            <if test="enti.value4 != null">
+                value4=#{enti.value4},
+            </if>
+            <if test="enti.value3 != null">
+                value3=#{enti.value3},
+            </if>
+            <if test="enti.value9 != null">
+                value9=#{enti.value9},
+            </if>
+            <if test="enti.years != null">
+                years=#{enti.years},
+            </if>
+            <if test="enti.value19 != null">
+                value19=#{enti.value19},
+            </if>
+            <if test="enti.value18 != null">
+                value18=#{enti.value18},
+            </if>
+            <if test="enti.name != null">
+                name=#{enti.name},
+            </if>
+            <if test="enti.value15 != null">
+                value15=#{enti.value15},
+            </if>
+            <if test="enti.value14 != null">
+                value14=#{enti.value14},
+            </if>
+            <if test="enti.value17 != null">
+                value17=#{enti.value17},
+            </if>
+            <if test="enti.value16 != null">
+                value16=#{enti.value16},
+            </if>
+            <if test="enti.value11 != null">
+                value11=#{enti.value11},
+            </if>
+            <if test="enti.value10 != null">
+                value10=#{enti.value10},
+            </if>
+            <if test="enti.value13 != null">
+                value13=#{enti.value13},
+            </if>
+            <if test="enti.value12 != null">
+                value12=#{enti.value12},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

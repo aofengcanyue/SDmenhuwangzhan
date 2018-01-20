@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IEliminationDAO">
+	
+	<insert id="insert" parameterType="com.regex.web.common.dto.info.EliminationDTO"
+     useGeneratedKeys="true" keyProperty="id">
+     insert into t_elimination(name,type,model,specification,reason,range_time,is_del,create_time,
+     update_time)values(#{name},#{type},#{model},#{specification},#{reason},#{rangeTime},#{isDel},
+     #{createTime},#{updateTime})
+     </insert>
+	<select id="selectByModel" parameterType="com.regex.web.common.utils.QueryConditions" resultType="com.regex.web.common.dto.info.EliminationDTO">
+		select id as id,
+			name as name,
+			type as type,
+			model as model,
+			specification as specification,
+			reason as reason,
+			range_time as rangeTime,
+			is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+ 			 t_elimination 	  
+ 		where 
+ 			is_del!='1' and  model like concat('%',#{model},'%')  and type=#{type}  LIMIT #{startIndex},#{pageSize}
+	</select>
+	
+	<select id="selectCountByModel" parameterType="com.regex.web.common.utils.QueryConditions" resultType="int">
+    	select
+    		count(0)
+ 		from
+ 			 t_elimination 	  
+ 		where 
+ 			is_del!='1' and  model like concat('%',#{model},'%')  and type=#{type}
+    </select>
+</mapper>

@@ -1,0 +1,63 @@
+package com.regex.web.service.info;
+import java.util.List;
+import com.regex.web.common.dto.info.SystemColumnDTO;
+public interface SystemColumnService{
+	/**
+	 * 获得SystemColumnDTO数据的总行数
+	 * @return
+	 */
+    long getSystemColumnDTORowCount();
+	/**
+	 * 获得SystemColumnDTO数据集合
+	 * @return
+	 */
+    List<SystemColumnDTO> selectSystemColumnDTO();
+	/**
+	 * 获得一个SystemColumnDTO对象,以参数SystemColumnDTO对象中不为空的属性作为条件进行查询
+	 * @param obj
+	 * @return
+	 */
+    SystemColumnDTO selectSystemColumnDTOByObj(SystemColumnDTO obj);
+	/**
+	 * 通过SystemColumnDTO的id获得SystemColumnDTO对象
+	 * @param id
+	 * @return
+	 */
+    SystemColumnDTO selectSystemColumnDTOById(String id);
+	/**
+	 * 插入SystemColumnDTO到数据库,包括null值
+	 * @param value
+	 * @return
+	 */
+    int insertSystemColumnDTO(SystemColumnDTO value);
+	/**
+	 * 插入SystemColumnDTO中属性值不为null的数据到数据库
+	 * @param value
+	 * @return
+	 */
+    int insertNonEmptySystemColumnDTO(SystemColumnDTO value);
+	/**
+	 * 批量插入SystemColumnDTO到数据库
+	 * @param value
+	 * @return
+	 */
+    int insertSystemColumnDTOByBatch(List<SystemColumnDTO> value);
+	/**
+	 * 通过SystemColumnDTO的id删除SystemColumnDTO
+	 * @param id
+	 * @return
+	 */
+    int deleteSystemColumnDTOById(String id);
+	/**
+	 * 通过SystemColumnDTO的id更新SystemColumnDTO中的数据,包括null值
+	 * @param enti
+	 * @return
+	 */
+    int updateSystemColumnDTOById(SystemColumnDTO enti);
+	/**
+	 * 通过SystemColumnDTO的id更新SystemColumnDTO中属性不为null的数据
+	 * @param enti
+	 * @return
+	 */
+    int updateNonEmptySystemColumnDTOById(SystemColumnDTO enti);
+}

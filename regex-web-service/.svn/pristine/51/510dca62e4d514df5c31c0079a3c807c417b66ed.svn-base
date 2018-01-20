@@ -1,0 +1,63 @@
+package com.regex.web.service.info.impl;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.regex.web.common.dto.info.SupplyDemandDTO;
+import com.regex.web.dao.info.SupplyDemandDao;
+import com.regex.web.service.info.SupplyDemandService;
+@Service
+public class SupplyDemandServiceImpl implements SupplyDemandService{
+    @Autowired
+    private SupplyDemandDao supplyDemandDao;
+    @Override
+    public long getSupplyDemandDTORowCount(){
+        return supplyDemandDao.getSupplyDemandDTORowCount();
+    }
+    @Override
+    public List<SupplyDemandDTO> selectSupplyDemandDTO(){
+        return supplyDemandDao.selectSupplyDemandDTO();
+    }
+    @Override
+    public SupplyDemandDTO selectSupplyDemandDTOByObj(SupplyDemandDTO obj){
+        return supplyDemandDao.selectSupplyDemandDTOByObj(obj);
+    }
+    @Override
+    public SupplyDemandDTO selectSupplyDemandDTOById(Long id){
+        return supplyDemandDao.selectSupplyDemandDTOById(id);
+    }
+    @Override
+    public int insertSupplyDemandDTO(SupplyDemandDTO value){
+        return supplyDemandDao.insertSupplyDemandDTO(value);
+    }
+    @Override
+    public int insertNonEmptySupplyDemandDTO(SupplyDemandDTO value){
+        return supplyDemandDao.insertNonEmptySupplyDemandDTO(value);
+    }
+    @Override
+    public int insertSupplyDemandDTOByBatch(List<SupplyDemandDTO> value){
+        return supplyDemandDao.insertSupplyDemandDTOByBatch(value);
+    }
+    @Override
+    public int deleteSupplyDemandDTOById(Long id){
+        return supplyDemandDao.deleteSupplyDemandDTOById(id);
+    }
+    @Override
+    public int updateSupplyDemandDTOById(SupplyDemandDTO enti){
+        return supplyDemandDao.updateSupplyDemandDTOById(enti);
+    }
+    @Override
+    public int updateNonEmptySupplyDemandDTOById(SupplyDemandDTO enti){
+        return supplyDemandDao.updateNonEmptySupplyDemandDTOById(enti);
+    }
+
+    public SupplyDemandDao getSupplyDemandDao() {
+        return this.supplyDemandDao;
+    }
+
+    public void setSupplyDemandDao(SupplyDemandDao supplyDemandDao) {
+        this.supplyDemandDao = supplyDemandDao;
+    }
+
+}

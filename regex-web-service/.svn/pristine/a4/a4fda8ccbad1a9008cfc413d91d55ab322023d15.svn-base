@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IExpertDAO">
+    <!-- ExpertDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_ExpertDTO_Map" type="com.regex.web.common.dto.info.ExpertDTO">
+        <id column="id" property="id" />
+        <result column="resume" property="resume" />
+        <result column="update_time" property="updateTime" />
+        <result column="technical_title" property="technicalTitle" />
+        <result column="create_time" property="createTime" />
+        <result column="phone" property="phone" />
+        <result column="origin" property="origin" />
+        <result column="name" property="name" />
+        <result column="is_del" property="isDel" />
+        <result column="head_pic" property="headPic" />
+        <result column="company" property="company" />
+        <result column="professional" property="professional" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_expert的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_expert_Column">
+        t_expert.id as id
+        ,t_expert.resume as resume
+        ,t_expert.update_time as update_time
+        ,t_expert.technical_title as technical_title
+        ,t_expert.create_time as create_time
+        ,t_expert.phone as phone
+        ,t_expert.origin as origin
+        ,t_expert.name as name
+        ,t_expert.is_del as is_del
+        ,t_expert.head_pic as head_pic
+        ,t_expert.company as company
+        ,t_expert.professional as professional
+    </sql>
+
+    <!--获得类名为:ExpertDTO对应的数据库表的数据总行数 -->
+    <select id="getExpertDTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_expert
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:ExpertDTO对应数据库中表的数据集合 -->
+    <select id="selectExpertDTO" parameterType="com.regex.web.common.Assist"  resultMap="result_ExpertDTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_expert_Column" /> 
+            </otherwise>
+        </choose>
+        from t_expert
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_expert
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_expert.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个ExpertDTO对象,以参数ExpertDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectExpertDTOByObj" parameterType="com.regex.web.common.dto.info.ExpertDTO" resultMap="result_ExpertDTO_Map">
+        select 
+            <include refid="t_expert_Column" /> 
+        from t_expert
+        <where>
+            <if test="professional != null "> and t_expert.professional = #{professional}</if>
+            <if test="company != null "> and t_expert.company = #{company}</if>
+            <if test="headPic != null "> and t_expert.head_pic = #{headPic}</if>
+            <if test="isDel != null "> and t_expert.is_del = #{isDel}</if>
+            <if test="name != null "> and t_expert.name = #{name}</if>
+            <if test="origin != null "> and t_expert.origin = #{origin}</if>
+            <if test="phone != null "> and t_expert.phone = #{phone}</if>
+            <if test="createTime != null "> and t_expert.create_time = #{createTime}</if>
+            <if test="technicalTitle != null "> and t_expert.technical_title = #{technicalTitle}</if>
+            <if test="updateTime != null "> and t_expert.update_time = #{updateTime}</if>
+            <if test="resume != null "> and t_expert.resume = #{resume}</if>
+            <if test="id != null "> and t_expert.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过ExpertDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectExpertDTOById" parameterType="java.lang.Long" resultMap="result_ExpertDTO_Map">
+        select 
+            <include refid="t_expert_Column" /> 
+        from t_expert
+        where t_expert.id = #{id}
+    </select> 
+
+    <!-- 将ExpertDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertExpertDTO" parameterType="com.regex.web.common.dto.info.ExpertDTO">
+        insert into t_expert(id,resume,update_time,technical_title,create_time,phone,origin,name,is_del,head_pic,company,professional) 
+        values(#{id},#{resume},#{updateTime},#{technicalTitle},#{createTime},#{phone},#{origin},#{name},#{isDel},#{headPic},#{company},#{professional})
+    </insert>
+
+    <!-- 将ExpertDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyExpertDTO" parameterType="com.regex.web.common.dto.info.ExpertDTO">
+        insert into t_expert
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="resume != null">resume,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="technicalTitle != null">technical_title,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="phone != null">phone,</if>
+            <if test="origin != null">origin,</if>
+            <if test="name != null">name,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="headPic != null">head_pic,</if>
+            <if test="company != null">company,</if>
+            <if test="professional != null">professional,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="resume != null"> #{resume},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="technicalTitle != null"> #{technicalTitle},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="phone != null"> #{phone},</if>
+            <if test="origin != null"> #{origin},</if>
+            <if test="name != null"> #{name},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="headPic != null"> #{headPic},</if>
+            <if test="company != null"> #{company},</if>
+            <if test="professional != null"> #{professional},</if>
+        </trim>
+    </insert>
+
+    <!-- 将ExpertDTO批量插入到对应数据库的表中-->
+    <insert id="insertExpertDTOByBatch" parameterType="ArrayList">
+        insert into t_expert(id,resume,update_time,technical_title,create_time,phone,origin,name,is_del,head_pic,company,professional) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.resume},#{item.updateTime},#{item.technicalTitle},#{item.createTime},#{item.phone},#{item.origin},#{item.name},#{item.isDel},#{item.headPic},#{item.company},#{item.professional})
+        </foreach>
+    </insert>
+
+    <!-- 通过ExpertDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteExpertDTOById" parameterType="java.lang.Long">
+        delete from t_expert
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将ExpertDTO对应的数据库表的数据删除-->
+    <delete id="deleteExpertDTO" parameterType="com.regex.web.common.Assist">
+        delete from t_expert
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过ExpertDTO的id将ExpertDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateExpertDTOById" parameterType="com.regex.web.common.dto.info.ExpertDTO">
+        update t_expert set
+            resume=#{resume}
+            ,update_time=#{updateTime}
+            ,technical_title=#{technicalTitle}
+            ,create_time=#{createTime}
+            ,phone=#{phone}
+            ,origin=#{origin}
+            ,name=#{name}
+            ,is_del=#{isDel}
+            ,head_pic=#{headPic}
+            ,company=#{company}
+            ,professional=#{professional}
+        where id=#{id}
+    </update>
+
+    <!-- 通过ExpertDTO的id将ExpertDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyExpertDTOById" parameterType="com.regex.web.common.dto.info.ExpertDTO">
+        update t_expert
+        <set>
+            <if test="resume != null">
+                resume=#{resume},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="technicalTitle != null">
+                technical_title=#{technicalTitle},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
+            <if test="origin != null">
+                origin=#{origin},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="headPic != null">
+                head_pic=#{headPic},
+            </if>
+            <if test="company != null">
+                company=#{company},
+            </if>
+            <if test="professional != null">
+                professional=#{professional},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将ExpertDTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateExpertDTO" parameterType="map">
+        update t_expert
+        <set>
+                id=#{enti.id},
+                resume=#{enti.resume},
+                update_time=#{enti.updateTime},
+                technical_title=#{enti.technicalTitle},
+                create_time=#{enti.createTime},
+                phone=#{enti.phone},
+                origin=#{enti.origin},
+                name=#{enti.name},
+                is_del=#{enti.isDel},
+                head_pic=#{enti.headPic},
+                company=#{enti.company},
+                professional=#{enti.professional},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将ExpertDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyExpertDTO" parameterType="map">
+        update t_expert
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.resume != null">
+                resume=#{enti.resume},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.technicalTitle != null">
+                technical_title=#{enti.technicalTitle},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.phone != null">
+                phone=#{enti.phone},
+            </if>
+            <if test="enti.origin != null">
+                origin=#{enti.origin},
+            </if>
+            <if test="enti.name != null">
+                name=#{enti.name},
+            </if>
+            <if test="enti.isDel != null">
+                is_del=#{enti.isDel},
+            </if>
+            <if test="enti.headPic != null">
+                head_pic=#{enti.headPic},
+            </if>
+            <if test="enti.company != null">
+                company=#{enti.company},
+            </if>
+            <if test="enti.professional != null">
+                professional=#{enti.professional},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

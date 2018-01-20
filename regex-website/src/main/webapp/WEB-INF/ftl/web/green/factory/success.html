@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style>
+	html,body{ background: #fff !important; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+		
+<div class="container bg_f">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2">
+			<div style="padding-top: 30px;"></div>
+				 <div class="big_d1 mato ">
+				 	<div class="big_d2">
+				 		<em>${value.point}<span>分</span></em>
+				 	</div>
+				 </div>
+			 <div style="padding-bottom: 30px;"></div>
+			 <h3 class="ok_title">已完成指标评价</h3>
+			 <p class="ok_num">本次测评结果打败<span>${percent}%</span>的企业，望继续努力</p>
+			 <a href="${base}/web/factoryEvaluation/result.htm" class="ok_ck">查看指标分析</a>
+		</div>
+	</div>
+	
+</div>
+
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+
+
+</html>

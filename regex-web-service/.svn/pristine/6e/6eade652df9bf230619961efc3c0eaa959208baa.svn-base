@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.PolicyDAO">
+    <!-- PolicyDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_PolicyDTO_Map" type="com.regex.web.common.dto.info.PolicyDTO">
+        <id column="id" property="id" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="is_del" property="isDel" />
+        <result column="title" property="title" />
+        <result column="type" property="type" />
+        <result column="content" property="content" />
+        <result column="is_top" property="isTop" />
+    </resultMap>
+
+    <!-- 数据库中表名为:t_policy的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_policy_Column">
+        t_policy.id as id
+        ,t_policy.update_time as update_time
+        ,t_policy.create_time as create_time
+        ,t_policy.is_del as is_del
+        ,t_policy.title as title
+        ,t_policy.type as type
+        ,t_policy.content as content
+        ,t_policy.is_top as is_top
+    </sql>
+
+    <!--获得类名为:PolicyDTO对应的数据库表的数据总行数 -->
+    <select id="getPolicyDTORowCount" resultType="java.lang.Long">
+        select count(id) from t_policy
+    </select>
+    <!-- 获得类名为:PolicyDTO对应数据库中表的数据集合 -->
+    <select id="selectPolicyDTO" resultMap="result_PolicyDTO_Map">
+        select 
+        <include refid="t_policy_Column" /> 
+        from t_policy
+    </select> 
+
+    <!-- 获得一个PolicyDTO对象,以参数PolicyDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectPolicyDTOByObj" parameterType="com.regex.web.common.dto.info.PolicyDTO" resultMap="result_PolicyDTO_Map">
+        select 
+            <include refid="t_policy_Column" /> 
+        from t_policy
+        <where>
+            <if test="isTop != null "> and t_policy.is_top = #{isTop}</if>
+            <if test="content != null "> and t_policy.content = #{content}</if>
+            <if test="type != null "> and t_policy.type = #{type}</if>
+            <if test="title != null "> and t_policy.title = #{title}</if>
+            <if test="isDel != null "> and t_policy.is_del = #{isDel}</if>
+            <if test="createTime != null "> and t_policy.create_time = #{createTime}</if>
+            <if test="updateTime != null "> and t_policy.update_time = #{updateTime}</if>
+            <if test="id != null "> and t_policy.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过PolicyDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectPolicyDTOById" parameterType="java.lang.Long" resultMap="result_PolicyDTO_Map">
+        select 
+            <include refid="t_policy_Column" /> 
+        from t_policy
+        where t_policy.id = #{id}
+    </select> 
+
+    <!-- 将PolicyDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertPolicyDTO" parameterType="com.regex.web.common.dto.info.PolicyDTO">
+        insert into t_policy(id,update_time,create_time,is_del,title,type,content,is_top) 
+        values(#{id},#{updateTime},#{createTime},#{isDel},#{title},#{type},#{content},#{isTop})
+    </insert>
+
+    <!-- 将PolicyDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyPolicyDTO" parameterType="com.regex.web.common.dto.info.PolicyDTO">
+        insert into t_policy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="title != null">title,</if>
+            <if test="type != null">type,</if>
+            <if test="content != null">content,</if>
+            <if test="isTop != null">is_top,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="title != null"> #{title},</if>
+            <if test="type != null"> #{type},</if>
+            <if test="content != null"> #{content},</if>
+            <if test="isTop != null"> #{isTop},</if>
+        </trim>
+    </insert>
+
+    <!-- 将PolicyDTO批量插入到对应数据库的表中-->
+    <insert id="insertPolicyDTOByBatch" parameterType="ArrayList">
+        insert into t_policy(id,update_time,create_time,is_del,title,type,content,is_top) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.updateTime},#{item.createTime},#{item.isDel},#{item.title},#{item.type},#{item.content},#{item.isTop})
+        </foreach>
+    </insert>
+
+    <!-- 通过PolicyDTO的id将数据库表中对应的数据删除-->
+    <delete id="deletePolicyDTOById" parameterType="java.lang.Long">
+        delete from t_policy
+        where id = #{id}
+    </delete>
+
+    <!-- 通过PolicyDTO的id将PolicyDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updatePolicyDTOById" parameterType="com.regex.web.common.dto.info.PolicyDTO">
+        update t_policy set
+            update_time=#{updateTime}
+            ,create_time=#{createTime}
+            ,is_del=#{isDel}
+            ,title=#{title}
+            ,type=#{type}
+            ,content=#{content}
+            ,is_top=#{isTop}
+        where id=#{id}
+    </update>
+
+    <!-- 通过PolicyDTO的id将PolicyDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyPolicyDTOById" parameterType="com.regex.web.common.dto.info.PolicyDTO">
+        update t_policy
+        <set>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="isTop != null">
+                is_top=#{isTop},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

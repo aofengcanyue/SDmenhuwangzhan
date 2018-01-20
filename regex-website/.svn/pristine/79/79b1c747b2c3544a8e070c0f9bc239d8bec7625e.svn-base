@@ -1,0 +1,200 @@
+package com.regex.web.controller.web;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.info.AchievementDTO;
+import com.regex.web.common.dto.info.IndustryInfoDTO;
+import com.regex.web.common.dto.info.NoticeDTO;
+import com.regex.web.common.dto.info.NoticeTypeDTO;
+import com.regex.web.common.dto.info.SupplyDemandDTO;
+import com.regex.web.common.dto.info.SystemColumnDTO;
+import com.regex.web.common.utils.Contant;
+import com.regex.web.common.utils.QueryParam;
+import com.regex.web.common.utils.QueryResult;
+import com.regex.web.service.info.AchievementService;
+import com.regex.web.service.info.INoticeService;
+import com.regex.web.service.info.IndustryInfoService;
+import com.regex.web.service.info.NoticeTypeService;
+import com.regex.web.service.info.SupplyDemandService;
+import com.regex.web.service.info.SystemColumnService;
+
+@Controller
+@RequestMapping("web")
+public class WebIndexController {
+    
+    @Autowired
+    private INoticeService noticeService;
+    
+    @Autowired
+    private SystemColumnService systemColumnService;
+    
+    @Autowired
+    private AchievementService achievementService;
+    
+    @Autowired
+    private SupplyDemandService supplyDemandService;
+    
+    @Autowired
+    private IndustryInfoService industryInfoService;
+    
+    private static Map<String, String> typeMap = new HashMap<String, String>();
+    
+    static {
+        
+        typeMap.put("1", "节能部分");
+        typeMap.put("2", "低碳部分");
+        
+}   
+        
+    @RequestMapping("index")
+    public String index(Model model,Assist assist) {
+        
+        Map<String, String> typeMap1 = new HashMap<String, String>();
+        List<IndustryInfoDTO> industryInfoList= industryInfoService.selectIndustryInfoDTO(null);
+        
+        for(IndustryInfoDTO industryInfoDTO: industryInfoList) {
+            typeMap1.put(industryInfoDTO.getIndustryId(), industryInfoDTO.getIndustryName());
+        }
+        model.addAttribute("typeMap1",typeMap1);
+       assist.setRequires(Assist.andEq("is_del", "0"));
+       assist.setOrder(Assist.order("is_top", false));
+       assist.setOrder(Assist.order("update_time", false));
+       List<NoticeDTO> noticeList = noticeService.selectNoticeDTO(assist);
+       
+       List<NoticeDTO> list1 = new ArrayList<NoticeDTO>();//工作动态
+       List<NoticeDTO> list2 = new ArrayList<NoticeDTO>();//新闻动态
+       List<NoticeDTO> list3 = new ArrayList<NoticeDTO>();//政策解读
+       List<NoticeDTO> list4 = new ArrayList<NoticeDTO>();//绿色制造
+       List<NoticeDTO> list5 = new ArrayList<NoticeDTO>();//节能减排
+       List<NoticeDTO> list6 = new ArrayList<NoticeDTO>();//清洁生产
+        
+       for(NoticeDTO noticeDTO : noticeList) {
+           
+           if(noticeDTO.getType().equals("1")) {
+               list1.add(noticeDTO);
+           }else if(noticeDTO.getType().equals("2")) {
+               list2.add(noticeDTO);
+           }else if(noticeDTO.getType().equals("3")) {
+               list3.add(noticeDTO);
+           }else if(noticeDTO.getType().equals("4")) {
+               list4.add(noticeDTO);
+           }else if(noticeDTO.getType().equals("5")) {
+               list5.add(noticeDTO);
+           }else if(noticeDTO.getType().equals("6")) {
+               list6.add(noticeDTO);
+           }
+       }
+       model.addAttribute("list1",list1);
+       model.addAttribute("list2",list2);
+       model.addAttribute("list3",list3);
+       model.addAttribute("list4",list4);
+       model.addAttribute("list5",list5);
+       model.addAttribute("list6",list6);
+       
+       model.addAttribute("typeMap",typeMap);
+       
+       List<SystemColumnDTO> List = systemColumnService.selectSystemColumnDTO(null);
+       String NYLY = "";
+       String GJZB = "";
+       String XHJJ = "";
+       String NYSJ = "";
+       String JNJP = "";
+       String QJSC = "";
+       String NYGL = "";
+       String JNHB = "";
+       
+       for(SystemColumnDTO columnDTO : List) {
+           
+           if(columnDTO.getId() == 1) {
+               NYLY = columnDTO.getUrl();
+           }else if(columnDTO.getId() == 2) {
+                GJZB = columnDTO.getUrl();
+           }else if(columnDTO.getId() == 3) {
+                XHJJ = columnDTO.getUrl();
+           }else if(columnDTO.getId() == 4) {
+                NYSJ = columnDTO.getUrl();
+           }else if(columnDTO.getId() == 5) {
+                JNJP = columnDTO.getUrl();
+           }else if(columnDTO.getId() == 6) {
+                QJSC = columnDTO.getUrl();
+           }else if(columnDTO.getId() == 7) {
+                NYGL = columnDTO.getUrl();
+           }else if(columnDTO.getId() == 8) {
+               JNHB = columnDTO.getUrl();
+           }
+
+       }
+       model.addAttribute("url1",NYLY);
+       model.addAttribute("url2",GJZB);
+       model.addAttribute("url3",XHJJ);
+       model.addAttribute("url4",NYSJ);
+       model.addAttribute("url5",JNJP);
+       model.addAttribute("url6",QJSC);
+       model.addAttribute("url7",NYGL);
+       model.addAttribute("url8",JNHB);
+       
+       Assist assist2 = new Assist();
+       assist2.setRequires(Assist.andEq("type", "1"));
+       assist2.setRequires(Assist.andEq("is_del", "0"));
+       assist2.setOrder(Assist.order("update_time", true));
+       List<AchievementDTO> datas = achievementService.selectAchievementDTO(assist2);
+       List<AchievementDTO> achievement1= new ArrayList<AchievementDTO>();//绿色发展
+       List<AchievementDTO> achievement2 = new ArrayList<AchievementDTO>();//节能减排
+       List<AchievementDTO> achievement3 = new ArrayList<AchievementDTO>();//典型项目
+       List<AchievementDTO> achievement4 = new ArrayList<AchievementDTO>();//园区循环改造
+       List<AchievementDTO> achievement5 = new ArrayList<AchievementDTO>();//产业布局调整
+       
+       for(AchievementDTO achievementDTO : datas) {
+           
+           if(achievementDTO.getType().equals("0")) {
+               achievement1.add(achievementDTO);
+           }else if(achievementDTO.getType().equals("1")) {
+               achievement2.add(achievementDTO);
+           }else if(achievementDTO.getType().equals("2")) {
+               achievement3.add(achievementDTO);
+           }else if(achievementDTO.getType().equals("3")) {
+               achievement4.add(achievementDTO);
+           }else if(achievementDTO.getType().equals("4")) {
+               achievement5.add(achievementDTO);
+           }
+       }
+       model.addAttribute("achievement1",achievement1);
+       model.addAttribute("achievement2",achievement2);
+       model.addAttribute("achievement3",achievement3);
+       model.addAttribute("achievement4",achievement4);
+       model.addAttribute("achievement5",achievement5);
+       
+       Assist assist3 = new Assist();
+       assist3.setOrder(Assist.order("update_time", false));
+       assist3.setRequires(Assist.andEq("audit", "1"));
+       assist3.setRequires(Assist.andEq("is_del", "0"));
+       List<SupplyDemandDTO> supplyDemandList = supplyDemandService.selectSupplyDemandDTO(assist3);
+       
+       List<SupplyDemandDTO> supplyList= new ArrayList<SupplyDemandDTO>();//供应
+       List<SupplyDemandDTO> demandList= new ArrayList<SupplyDemandDTO>();//求购
+       
+       for(SupplyDemandDTO supplyDemandDTO : supplyDemandList) {
+           
+           if(supplyDemandDTO.getType().equals("0")) {
+               supplyList.add(supplyDemandDTO);
+           }else if(supplyDemandDTO.getType().equals("1")) {
+               demandList.add(supplyDemandDTO);
+           }
+       }
+       model.addAttribute("supplyList",supplyList);
+       model.addAttribute("demandList",demandList);
+        return "web/index";
+    }
+
+}

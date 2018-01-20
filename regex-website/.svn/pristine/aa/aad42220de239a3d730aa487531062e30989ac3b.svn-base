@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title><#if obj?? && obj!=null>${obj.name}<#else>新闻列表</#if></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p></p>
+</div>
+
+		
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+		</div>
+	</div>
+	
+	
+	<div class="row" >
+		<div class="col-lg-12 mb_20">
+				<div class="col-lg-2 col-lg-offset-2" > 
+					<div><img src="${noticeDTO.imageUrl}"  alt="${noticeDTO.title}" style="max-width:200px;max-height:140px;" /></div>
+				</div>
+				
+					<h2 align="center">关于我们</h2>
+					<p align="center">${notice.content}</p>
+				
+		</div>
+	</div>
+	
+
+	
+	
+</div>
+
+
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+
+</html>

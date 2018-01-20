@@ -1,0 +1,45 @@
+package com.regex.web.service.info.impl;
+
+import java.io.Serializable;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.regex.web.common.dto.info.NoticeDTO;
+import com.regex.web.dao.info.INoticeDAO;
+import com.regex.web.service.info.INoticeService;
+
+@Service
+public class NoticeServiceImpl implements INoticeService {
+    
+    @Autowired
+    private INoticeDAO noticeDAO;
+
+    @Override
+    public int insert(NoticeDTO noticeDTO) {
+        return noticeDAO.insert(noticeDTO);
+    }
+
+    @Override
+    public int update(NoticeDTO noticeDTO) {
+        return noticeDAO.updateById(noticeDTO);
+    }
+
+    @Override
+    public NoticeDTO selectById(Serializable id) {
+        return noticeDAO.selectById(id);
+    }
+
+    @Override
+    public Page<NoticeDTO> getByPage(Page<NoticeDTO> page) {
+        page.setRecords(noticeDAO.getByPage(page, page.getCondition()));
+        return page;
+    }
+
+    @Override
+    public void del(Serializable id) {
+        noticeDAO.del(id);
+    }
+
+}

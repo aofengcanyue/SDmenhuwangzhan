@@ -1,0 +1,105 @@
+package com.regex.web.controller.web;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.info.CommonAccordEvaluateDTO;
+import com.regex.web.service.info.CommonAccordEvaluateService;
+
+@Controller
+@RequestMapping("web/factoryEvaluation")
+public class WebFactoryEvaluationController {
+
+//    @Autowired
+//    private IndexEvaluationService IndexEvaluationService;
+    
+    @Autowired
+    private CommonAccordEvaluateService CommonAccordEvaluateService;
+    
+    private static Map<String, String> typeMap = new HashMap<String, String>();
+    /**
+     * 一级指标
+     */
+    private static Map<String, String> classAMap = new HashMap<String, String>();
+    /**
+     * 二级指标
+     */
+    private static Map<String, String> classBMap = new HashMap<String, String>();
+    
+    static {
+        typeMap.put("-", "-"); // 绿色工厂 要求类型  一票否决
+        typeMap.put("0", "基本要求"); // 绿色工厂 要求类型 
+        typeMap.put("1", "预期性要求"); // 绿色工厂 要求类型
+    }
+    
+    static {
+        classAMap.put("0", "一般要求");
+        classAMap.put("1", "基础设施");
+        classAMap.put("2", "管理体系");
+        classAMap.put("3", "能源资源投入");
+        classAMap.put("4", "产品");
+        classAMap.put("5", "环境排放");
+        classAMap.put("6", "绩效");
+    }
+    
+    static {
+        classBMap.put("0", "合规性与相关方要求");
+        classBMap.put("1", "管理职责");
+        classBMap.put("10", "建筑");
+        classBMap.put("11", "计量设备");
+        classBMap.put("12", "照明");
+        classBMap.put("20", "管理体系基本要求");
+        classBMap.put("21", "环境管理体系");
+        classBMap.put("22", "能源管理体系");
+        classBMap.put("23", "社会责任");
+        classBMap.put("30", "能源投入");
+        classBMap.put("31", "资源投入");
+        classBMap.put("32", "采购");
+        classBMap.put("40", "生态设计");
+        classBMap.put("41", "节能");
+        classBMap.put("42", "碳足迹");
+        classBMap.put("43", "有害物质限制使用");
+        classBMap.put("50", "污染物处理设备");
+        classBMap.put("51", "大气污染物排放");
+        classBMap.put("52", "水体污染物排放");
+        classBMap.put("53", "固体废物排放");
+        classBMap.put("54", "噪声排放");
+        classBMap.put("55", "温室气体排放");
+        classBMap.put("60", "用地集约化");
+        classBMap.put("61", "生产洁净化");
+        classBMap.put("62", "废物资源化");
+        classBMap.put("63", "能源低碳化");
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 成果展示
+     *
+     * @param model
+     * @param assist
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("accord")
+    public String accord(Model model, @ModelAttribute("assist") Assist assist) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("evaluate_type", "0"));
+        assist.setOrder(Assist.order("update_time", false));
+        List<CommonAccordEvaluateDTO> datas = CommonAccordEvaluateService.selectCommonAccordEvaluateDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        return "web/green/factory/evaluate";
+    }
+    
+    
+}

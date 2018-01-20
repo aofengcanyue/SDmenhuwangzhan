@@ -1,0 +1,602 @@
+package com.regex.web.controller.web;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.green.GreenParkDTO;
+import com.regex.web.common.dto.green.GreenParkEvaluationDTO;
+import com.regex.web.common.dto.green.ParkAssessmentDTO;
+import com.regex.web.common.dto.info.CommonAccordEvaluateDTO;
+import com.regex.web.common.dto.info.ParkAccordDTO;
+import com.regex.web.service.green.GreenParkEvaluationService;
+import com.regex.web.service.green.GreenParkService;
+import com.regex.web.service.green.ParkAssessmentService;
+import com.regex.web.service.info.CommonAccordEvaluateService;
+import com.regex.web.service.info.ParkAccordService;
+import com.regex.web.utils.AjaxUtil;
+
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 绿色园区评价
+ *
+ * @author admin
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+@Controller
+@RequestMapping("web/greenPark")
+public class WebGreenParkController {
+
+    @Autowired
+    private GreenParkService GreenParkService;
+    
+    @Autowired
+    private CommonAccordEvaluateService CommonAccordEvaluateService;
+    
+    @Autowired
+    private ParkAccordService parkAccordService;
+    
+    @Autowired
+    private GreenParkEvaluationService greenParkEvaluationService;
+    
+    @Autowired
+    private ParkAssessmentService parkAssessmentService;
+    /**
+     * 一级指标
+     */
+    private static Map<String, String> classAMap = new HashMap<String, String>();
+    /**
+     * 二级指标
+     */
+    private static Map<String, String> classBMap = new HashMap<String, String>();
+    /**
+     * 单位
+     */
+    private static Map<String, String> unitMap = new HashMap<String, String>();
+    
+    
+    static {
+      unitMap.put("0", "万元/tce"); // d单位
+      unitMap.put("1", "%"); // 单位 
+      unitMap.put("2", "元/m3"); // 单位 
+      unitMap.put("3", "亿元/km2"); // 单位 
+      unitMap.put("4", "-"); // 单位 
+      unitMap.put("5", "万元/人"); // 单位 
+      unitMap.put("6", "t/万元"); // 单位 
+  }
+    
+    static {
+        classAMap.put("x1", "能源利用绿色化指标（EG）");
+        classAMap.put("x2", "能源利用绿色化指标（RG）");
+        classAMap.put("x3", "基础设施绿色指标(IG)");
+        classAMap.put("x4", "产业绿色指标（CG）");
+        classAMap.put("x5", "生态环境绿色指标（HG）");
+        classAMap.put("x6", "运行管理绿色指标（MG）");
+    }
+    
+    static {
+        classBMap.put("11", "能源产出率");
+        classBMap.put("12", "可再生能源使用比例");
+        classBMap.put("13", "清洁能源使用率");
+        classBMap.put("21", "水资源产出率");
+        classBMap.put("22", "土地资源产出率");
+        classBMap.put("23", "工业固体废弃物综合利用率");
+        classBMap.put("24", "工业用水重复利用率");
+        classBMap.put("25", "中水回用率");
+        classBMap.put("26", "余热资源回收利用率");
+        classBMap.put("27", "废气资源回收利用率");
+        classBMap.put("28", "再生资源回收利用率");
+        classBMap.put("31", "污水集中处理设施");
+        classBMap.put("32", "新建工业建筑中绿色建筑的比例");
+        classBMap.put("33", "新建公共建筑中绿色建筑的比例");
+        classBMap.put("34", "500米公交站点覆盖率");
+        classBMap.put("35", "节能与新能源公交车比例");
+        classBMap.put("41", "高新技术产业产值占园区工业总产值比例");
+        classBMap.put("42", "绿色产业增加值占园区工业增加值比例");
+        classBMap.put("43", "人均工业增加值");
+        classBMap.put("44", "现代服务业比例");
+        classBMap.put("51", "工业固体废弃物（含危废）处置利用率");
+        classBMap.put("52", "万元工业增加值碳排放量消减率");
+        classBMap.put("53", "单位工业增加值废水排放量");
+        classBMap.put("54", "主要污染物弹性系数");
+        classBMap.put("55", "园区空气质量优良率");
+        classBMap.put("56", "绿化覆盖率");
+        classBMap.put("57", "道路遮荫比例");
+        classBMap.put("58", "露天停车场遮荫比例");
+        classBMap.put("61", "绿色园区标准体系完善程度");
+        classBMap.put("62", "编制绿色园区发展规划");
+        classBMap.put("63", "绿色园区信息平台完善程度");
+    }
+    
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 修改/ 新增
+     *
+     * @param id
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("input")
+    public String input(Model model) {
+        return "web/green/park/park_input";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 保存
+     *
+     * @param GreenParkDTO
+     * @param response
+     * @param request
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("save")
+    public void save(GreenParkDTO GreenParkDTO, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        try {
+        if(StringUtils.isNotEmpty(GreenParkDTO.getLevel())
+                && StringUtils.isNotEmpty(GreenParkDTO.getType())
+                && StringUtils.isNotEmpty(GreenParkDTO.getName())
+                && StringUtils.isNotEmpty(GreenParkDTO.getHeader())
+                && StringUtils.isNotEmpty(GreenParkDTO.getTel())
+                && StringUtils.isNotEmpty(GreenParkDTO.getJob())
+                && StringUtils.isNotEmpty(GreenParkDTO.getApplyor())
+                && StringUtils.isNotEmpty(GreenParkDTO.getApplyTel())
+                && StringUtils.isNotEmpty(GreenParkDTO.getApplyJob())
+                && StringUtils.isNotEmpty(GreenParkDTO.getAddress())
+                && StringUtils.isNotEmpty(GreenParkDTO.getIntroduction())) {
+                GreenParkDTO.setUpdateTime(new Date());
+                GreenParkDTO.setIsDel("0");
+                GreenParkDTO.setCreateTime(new Date());
+                n = GreenParkService.insertGreenParkDTO(GreenParkDTO);
+                request.getSession().setAttribute("park_id", GreenParkDTO.getId()+"");
+        } else {
+            n = 2;
+        }
+        } catch(Exception e) {
+            e.printStackTrace();
+            n = 3;
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+
+    /**
+     * 
+     * 功能描述: <br>
+     * 符合性评价
+     *
+     * @param model
+     * @param assist
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("accord")
+    public String accord(Model model, @ModelAttribute("assist") Assist assist) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("evaluate_type", "2"));
+        assist.setOrder(Assist.order("update_time", false));
+        List<CommonAccordEvaluateDTO> datas = CommonAccordEvaluateService.selectCommonAccordEvaluateDTO(assist);
+        model.addAttribute("datas", datas);
+        Calendar now = Calendar.getInstance();  
+        model.addAttribute("nowYear", now.get(Calendar.YEAR));
+        return "web/green/park/evaluate";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 符合性评价
+     *
+     * @param selectedValue
+     * @param response
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("saveZero")
+    public void submitZero(String selectedValue,String year, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        try {
+        request.getSession().setAttribute("park_year", year);
+        String parkId = (String) request.getSession().getAttribute("park_id");
+        String[] selectedValueArry = selectedValue.split("#");
+        ParkAccordDTO ParkAccordDTO = new ParkAccordDTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    ParkAccordDTO.setValue1(selectedValueArry[i]);
+                    break;
+                case 1:
+                    ParkAccordDTO.setValue2(selectedValueArry[i]);
+                    break;
+                case 2:
+                    ParkAccordDTO.setValue3(selectedValueArry[i]);
+                    break;
+                case 3:
+                    ParkAccordDTO.setValue4(selectedValueArry[i]);
+                    break;
+                case 4:
+                    ParkAccordDTO.setValue5(selectedValueArry[i]);
+                    break;
+                case 5:
+                    ParkAccordDTO.setValue6(selectedValueArry[i]);
+                    break;
+                case 6:
+                    ParkAccordDTO.setValue7(selectedValueArry[i]);
+                    break;
+                case 7:
+                    ParkAccordDTO.setValue8(selectedValueArry[i]);
+                    break;
+            }
+        }
+        ParkAccordDTO.setYear(year);
+        ParkAccordDTO.setParkId(parkId);
+        n = parkAccordService.insertParkAccordDTO(ParkAccordDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index1")
+    public String index1(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x1"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenParkEvaluationDTO> datas = greenParkEvaluationService.selectGreenParkEvaluationDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("unitMap", unitMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        return "web/green/park/index_1";
+    }
+    
+    @RequestMapping("saveIndex1")
+    public void saveIndex1(String point1Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point1Arr.split("#");
+        ParkAssessmentDTO ParkAssessmentDTO = new ParkAssessmentDTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    ParkAssessmentDTO.setValue1(selectedValueArry[i]);
+                    break;
+                case 1:
+                    ParkAssessmentDTO.setValue2(selectedValueArry[i]);
+                    break;
+                case 2:
+                    ParkAssessmentDTO.setValue3(selectedValueArry[i]);
+                    break;
+            }
+        }
+        String year = (String) request.getSession().getAttribute("park_year");
+        String parkId = (String) request.getSession().getAttribute("park_id");
+        ParkAssessmentDTO.setYears(year);
+        ParkAssessmentDTO.setName(parkId);
+        ParkAssessmentDTO obj = new ParkAssessmentDTO();
+        obj.setName(parkId);
+        obj.setYears(year);
+        ParkAssessmentDTO ParkAssessmentDTOTmp = parkAssessmentService.selectParkAssessmentDTOByObj(obj);
+        if(ParkAssessmentDTOTmp==null) {
+            n = parkAssessmentService.insertParkAssessmentDTO(ParkAssessmentDTO);
+        } else {
+            ParkAssessmentDTO.setId(ParkAssessmentDTOTmp.getId());
+            n = parkAssessmentService.updateNonEmptyParkAssessmentDTOById(ParkAssessmentDTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index2")
+    public String index2(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x2"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenParkEvaluationDTO> datas = greenParkEvaluationService.selectGreenParkEvaluationDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("unitMap", unitMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        return "web/green/park/index_2";
+    }
+    
+    @RequestMapping("saveIndex2")
+    public void saveIndex2(String point2Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point2Arr.split("#");
+        ParkAssessmentDTO ParkAssessmentDTO = new ParkAssessmentDTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    ParkAssessmentDTO.setValue4(selectedValueArry[i]);
+                    break;
+                case 1:
+                    ParkAssessmentDTO.setValue5(selectedValueArry[i]);
+                    break;
+                case 2:
+                    ParkAssessmentDTO.setValue6(selectedValueArry[i]);
+                    break;
+                case 3:
+                    ParkAssessmentDTO.setValue7(selectedValueArry[i]);
+                    break;
+                case 4:
+                    ParkAssessmentDTO.setValue8(selectedValueArry[i]);
+                    break;
+                case 5:
+                    ParkAssessmentDTO.setValue9(selectedValueArry[i]);
+                    break;
+                case 6:
+                    ParkAssessmentDTO.setValue10(selectedValueArry[i]);
+                    break;
+                case 7:
+                    ParkAssessmentDTO.setValue11(selectedValueArry[i]);
+                    break;
+            }
+        }
+        String year = (String) request.getSession().getAttribute("park_year");
+        String parkId = (String) request.getSession().getAttribute("park_id");
+        ParkAssessmentDTO.setYears(year);
+        ParkAssessmentDTO.setName(parkId);
+        ParkAssessmentDTO obj = new ParkAssessmentDTO();
+        obj.setName(parkId);
+        obj.setYears(year);
+        ParkAssessmentDTO ParkAssessmentDTOTmp = parkAssessmentService.selectParkAssessmentDTOByObj(obj);
+        if(ParkAssessmentDTOTmp==null) {
+            n = parkAssessmentService.insertParkAssessmentDTO(ParkAssessmentDTO);
+        } else {
+            ParkAssessmentDTO.setId(ParkAssessmentDTOTmp.getId());
+            n = parkAssessmentService.updateNonEmptyParkAssessmentDTOById(ParkAssessmentDTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index3")
+    public String index3(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x3"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenParkEvaluationDTO> datas = greenParkEvaluationService.selectGreenParkEvaluationDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("unitMap", unitMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        return "web/green/park/index_3";
+    }
+    
+    @RequestMapping("saveIndex3")
+    public void saveIndex3(String point3Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point3Arr.split("#");
+        ParkAssessmentDTO ParkAssessmentDTO = new ParkAssessmentDTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    ParkAssessmentDTO.setValue12(selectedValueArry[i]);
+                    break;
+                case 1:
+                    ParkAssessmentDTO.setValue13(selectedValueArry[i]);
+                    break;
+                case 2:
+                    ParkAssessmentDTO.setValue14(selectedValueArry[i]);
+                    break;
+                case 3:
+                    ParkAssessmentDTO.setValue15(selectedValueArry[i]);
+                    break;
+                case 4:
+                    ParkAssessmentDTO.setValue16(selectedValueArry[i]);
+                    break;
+            }
+        }
+        String year = (String) request.getSession().getAttribute("park_year");
+        String parkId = (String) request.getSession().getAttribute("park_id");
+        ParkAssessmentDTO.setYears(year);
+        ParkAssessmentDTO.setName(parkId);
+        ParkAssessmentDTO obj = new ParkAssessmentDTO();
+        obj.setName(parkId);
+        obj.setYears(year);
+        ParkAssessmentDTO ParkAssessmentDTOTmp = parkAssessmentService.selectParkAssessmentDTOByObj(obj);
+        if(ParkAssessmentDTOTmp==null) {
+            n = parkAssessmentService.insertParkAssessmentDTO(ParkAssessmentDTO);
+        } else {
+            ParkAssessmentDTO.setId(ParkAssessmentDTOTmp.getId());
+            n = parkAssessmentService.updateNonEmptyParkAssessmentDTOById(ParkAssessmentDTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index4")
+    public String index4(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x4"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenParkEvaluationDTO> datas = greenParkEvaluationService.selectGreenParkEvaluationDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("unitMap", unitMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        return "web/green/park/index_4";
+    }
+    
+    @RequestMapping("saveIndex4")
+    public void saveIndex4(String point4Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point4Arr.split("#");
+        ParkAssessmentDTO ParkAssessmentDTO = new ParkAssessmentDTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    ParkAssessmentDTO.setValue17(selectedValueArry[i]);
+                    break;
+                case 1:
+                    ParkAssessmentDTO.setValue18(selectedValueArry[i]);
+                    break;
+                case 2:
+                    ParkAssessmentDTO.setValue19(selectedValueArry[i]);
+                    break;
+                case 3:
+                    ParkAssessmentDTO.setValue20(selectedValueArry[i]);
+                    break;
+            }
+        }
+        String year = (String) request.getSession().getAttribute("park_year");
+        String parkId = (String) request.getSession().getAttribute("park_id");
+        ParkAssessmentDTO.setYears(year);
+        ParkAssessmentDTO.setName(parkId);
+        ParkAssessmentDTO obj = new ParkAssessmentDTO();
+        obj.setName(parkId);
+        obj.setYears(year);
+        ParkAssessmentDTO ParkAssessmentDTOTmp = parkAssessmentService.selectParkAssessmentDTOByObj(obj);
+        if(ParkAssessmentDTOTmp==null) {
+            n = parkAssessmentService.insertParkAssessmentDTO(ParkAssessmentDTO);
+        } else {
+            ParkAssessmentDTO.setId(ParkAssessmentDTOTmp.getId());
+            n = parkAssessmentService.updateNonEmptyParkAssessmentDTOById(ParkAssessmentDTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index5")
+    public String index5(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x5"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenParkEvaluationDTO> datas = greenParkEvaluationService.selectGreenParkEvaluationDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("unitMap", unitMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        return "web/green/park/index_5";
+    }
+    
+    @RequestMapping("saveIndex5")
+    public void saveIndex5(String point5Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point5Arr.split("#");
+        ParkAssessmentDTO ParkAssessmentDTO = new ParkAssessmentDTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    ParkAssessmentDTO.setValue21(selectedValueArry[i]);
+                    break;
+                case 1:
+                    ParkAssessmentDTO.setValue22(selectedValueArry[i]);
+                    break;
+                case 2:
+                    ParkAssessmentDTO.setValue23(selectedValueArry[i]);
+                    break;
+                case 3:
+                    ParkAssessmentDTO.setValue24(selectedValueArry[i]);
+                    break;
+                case 4:
+                    ParkAssessmentDTO.setValue25(selectedValueArry[i]);
+                    break;
+                case 5:
+                    ParkAssessmentDTO.setValue26(selectedValueArry[i]);
+                    break;
+                case 6:
+                    ParkAssessmentDTO.setValue27(selectedValueArry[i]);
+                    break;
+                case 7:
+                    ParkAssessmentDTO.setValue28(selectedValueArry[i]);
+                    break;
+            }
+        }
+        String year = (String) request.getSession().getAttribute("park_year");
+        String parkId = (String) request.getSession().getAttribute("park_id");
+        ParkAssessmentDTO.setYears(year);
+        ParkAssessmentDTO.setName(parkId);
+        ParkAssessmentDTO obj = new ParkAssessmentDTO();
+        obj.setName(parkId);
+        obj.setYears(year);
+        ParkAssessmentDTO ParkAssessmentDTOTmp = parkAssessmentService.selectParkAssessmentDTOByObj(obj);
+        if(ParkAssessmentDTOTmp==null) {
+            n = parkAssessmentService.insertParkAssessmentDTO(ParkAssessmentDTO);
+        } else {
+            ParkAssessmentDTO.setId(ParkAssessmentDTOTmp.getId());
+            n = parkAssessmentService.updateNonEmptyParkAssessmentDTOById(ParkAssessmentDTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index6")
+    public String index6(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x6"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenParkEvaluationDTO> datas = greenParkEvaluationService.selectGreenParkEvaluationDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("unitMap", unitMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        return "web/green/park/index_6";
+    }
+    
+    @RequestMapping("saveIndex6")
+    public void saveIndex6(String point6Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point6Arr.split("#");
+        ParkAssessmentDTO ParkAssessmentDTO = new ParkAssessmentDTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    ParkAssessmentDTO.setValue29(selectedValueArry[i]);
+                    break;
+                case 1:
+                    ParkAssessmentDTO.setValue30(selectedValueArry[i]);
+                    break;
+                case 2:
+                    ParkAssessmentDTO.setValue31(selectedValueArry[i]);
+                    break;
+            }
+        }
+        String year = (String) request.getSession().getAttribute("park_year");
+        String parkId = (String) request.getSession().getAttribute("park_id");
+        ParkAssessmentDTO.setYears(year);
+        ParkAssessmentDTO.setName(parkId);
+        ParkAssessmentDTO obj = new ParkAssessmentDTO();
+        obj.setName(parkId);
+        obj.setYears(year);
+        ParkAssessmentDTO ParkAssessmentDTOTmp = parkAssessmentService.selectParkAssessmentDTOByObj(obj);
+        if(ParkAssessmentDTOTmp==null) {
+            n = parkAssessmentService.insertParkAssessmentDTO(ParkAssessmentDTO);
+        } else {
+            ParkAssessmentDTO.setId(ParkAssessmentDTOTmp.getId());
+            n = parkAssessmentService.updateNonEmptyParkAssessmentDTOById(ParkAssessmentDTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("success")
+    public String success() {
+        return "web/green/park/success";
+    }
+
+}

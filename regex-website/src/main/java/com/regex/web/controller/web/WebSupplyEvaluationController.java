@@ -1,0 +1,657 @@
+package com.regex.web.controller.web;
+
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.green.GreenSupply1DTO;
+import com.regex.web.common.dto.green.GreenSupply2DTO;
+import com.regex.web.common.dto.green.GreenSupplyChainEvaluation;
+import com.regex.web.common.dto.info.CommonAccordEvaluateDTO;
+import com.regex.web.common.dto.info.SupplyEvaluationResultDTO;
+import com.regex.web.common.utils.AjaxUtil;
+import com.regex.web.service.green.GreenSupply1Service;
+import com.regex.web.service.green.GreenSupply2Service;
+import com.regex.web.service.green.GreenSupplyChainEvaluationService;
+import com.regex.web.service.info.CommonAccordEvaluateService;
+import com.regex.web.service.info.SupplyEvaluationResultService;
+
+@Controller
+@RequestMapping("web/supplyEvaluation")
+public class WebSupplyEvaluationController {
+
+    @Autowired
+    private CommonAccordEvaluateService CommonAccordEvaluateService;
+    
+    @Autowired
+    private GreenSupply1Service greenSupply1Service;
+    
+    @Autowired
+    private GreenSupply2Service greenSupply2Service;
+    
+    @Autowired
+    private SupplyEvaluationResultService supplyEvaluationResultService;
+    
+    @Autowired
+    private GreenSupplyChainEvaluationService GreenSupplyChainEvaluationService;
+    /**
+     * 指标类型
+     */
+    private static Map<String, String> typeMap = new HashMap<String, String>();
+    /**
+     * 一级指标
+     */
+    private static Map<String, String> classAMap = new HashMap<String, String>();
+    /**
+     * 二级指标
+     */
+    private static Map<String, String> classBMap = new HashMap<String, String>();
+    /**
+     * 单位
+     */
+    private static Map<String, String> unitMap = new HashMap<String, String>();
+    
+    static {
+        typeMap.put("2", "定性"); // 绿色供应链 指标类型
+        typeMap.put("3", "定量"); // 绿色供应链 指标类型
+    }
+    
+    static {
+      unitMap.put("-", "-"); // d单位
+      unitMap.put("%", "%"); // 单位 
+  }
+    
+    static {
+        classAMap.put("x1", "绿色供应链管理战略");
+        classAMap.put("x2", "实施绿色供应商管理");
+        classAMap.put("x3", "绿色生产");
+        classAMap.put("x4", "绿色回收");
+        classAMap.put("x5", "绿色信息平台建设");
+        classAMap.put("x6", "绿色信息披露");
+    }
+    
+    static {
+        classBMap.put("11", "纳入公司发展规划");
+        classBMap.put("12", "制定绿色供应链管理目标");
+        classBMap.put("13", "设置专门管理机构");
+        classBMap.put("21", "绿色采购标准制度完善");
+        classBMap.put("22", "供应商认证体系完善");
+        classBMap.put("23", "对供应商定期审核");
+        classBMap.put("24", "供应商绩效评估制度健全");
+        classBMap.put("25", "定期对供应商进行培训");
+        classBMap.put("26", "低风险供应商占比");
+        classBMap.put("31", "节能减排环保合规");
+        classBMap.put("32", "符合有害物质限制使用管理办法");
+        classBMap.put("41", "产品回收率");
+        classBMap.put("42", "包装回收率");
+        classBMap.put("43", "回收体系完善（含自建、与第三方联合回收）");
+        classBMap.put("44", "指导下游企业回收拆解");
+        classBMap.put("51", "绿色供应链管理信息平台完善");
+        classBMap.put("61", "披露企业节能减排减碳信息");
+        classBMap.put("62", "披露高、中风险供应商审核率及低风险供应商占比");
+        classBMap.put("63", "披露供应商节能减排信息");
+        classBMap.put("64", "发布企业社会责任报告（含绿色采购信息）");
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 符合性评价
+     *
+     * @param model
+     * @param assist
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("accord")
+    public String accord(Model model, @ModelAttribute("assist") Assist assist) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("evaluate_type", "1"));
+        assist.setOrder(Assist.order("update_time", false));
+        List<CommonAccordEvaluateDTO> datas = CommonAccordEvaluateService.selectCommonAccordEvaluateDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        Calendar now = Calendar.getInstance();  
+        model.addAttribute("nowYear", now.get(Calendar.YEAR));
+        return "web/green/supply/evaluate";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 符合性评价
+     *
+     * @param selectedValue
+     * @param response
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("saveZero")
+    public void submitZero(String selectedValue,String year, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        try {
+        request.getSession().setAttribute("supply_year", year);
+        String uuid = UUID.randomUUID().toString(); 
+        String name = uuid.replaceAll("-", "");
+        request.getSession().setAttribute("supply_name", name);
+        String[] selectedValueArry = selectedValue.split("#");
+        GreenSupply1DTO greenSupply1DTO = new GreenSupply1DTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    greenSupply1DTO.setValue1(selectedValueArry[i]);
+                    break;
+                case 1:
+                    greenSupply1DTO.setValue2(selectedValueArry[i]);
+                    break;
+                case 2:
+                    greenSupply1DTO.setValue3(selectedValueArry[i]);
+                    break;
+                case 3:
+                    greenSupply1DTO.setValue4(selectedValueArry[i]);
+                    break;
+                case 4:
+                    greenSupply1DTO.setValue5(selectedValueArry[i]);
+                    break;
+                case 5:
+                    greenSupply1DTO.setValue6(selectedValueArry[i]);
+                    break;
+                case 6:
+                    greenSupply1DTO.setValue7(selectedValueArry[i]);
+                    break;
+            }
+        }
+        greenSupply1DTO.setYears(year);
+        greenSupply1DTO.setName(name);
+        n = greenSupply1Service.insertGreenSupply1DTO(greenSupply1DTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index1")
+    public String index1(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x1"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/index_1";
+    }
+    
+    @RequestMapping("saveIndex1")
+    public void saveIndex1(String point1Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point1Arr.split("#");
+        GreenSupply2DTO GreenSupply2DTO = new GreenSupply2DTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    GreenSupply2DTO.setValue1(selectedValueArry[i]);
+                    break;
+                case 1:
+                    GreenSupply2DTO.setValue2(selectedValueArry[i]);
+                    break;
+                case 2:
+                    GreenSupply2DTO.setValue3(selectedValueArry[i]);
+                    break;
+            }
+        }
+//        GreenSupply2DTO.setIsDel("0");
+//        GreenSupply2DTO.setCreateTime(new Date());
+//        GreenSupply2DTO.setUpdateTime(new Date());
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply2DTO.setYears(year);
+        GreenSupply2DTO.setName(name);
+        GreenSupply2DTO obj = new GreenSupply2DTO();
+        obj.setName(name);
+        obj.setYears(year);
+        GreenSupply2DTO greenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj);
+        if(greenSupply2DTOTmp==null) {
+            n = greenSupply2Service.insertGreenSupply2DTO(GreenSupply2DTO);
+        } else {
+            GreenSupply2DTO.setId(greenSupply2DTOTmp.getId());
+            n = greenSupply2Service.updateNonEmptyGreenSupply2DTOById(GreenSupply2DTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    
+    @RequestMapping("index2")
+    public String index2(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x2"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/index_2";
+    }
+    
+    @RequestMapping("saveIndex2")
+    public void saveIndex2(String point2Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point2Arr.split("#");
+        GreenSupply2DTO GreenSupply2DTO = new GreenSupply2DTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    GreenSupply2DTO.setValue4(selectedValueArry[i]);
+                    break;
+                case 1:
+                    GreenSupply2DTO.setValue5(selectedValueArry[i]);
+                    break;
+                case 2:
+                    GreenSupply2DTO.setValue6(selectedValueArry[i]);
+                    break;
+                case 3:
+                    GreenSupply2DTO.setValue7(selectedValueArry[i]);
+                    break;
+                case 4:
+                    GreenSupply2DTO.setValue8(selectedValueArry[i]);
+                    break;
+                case 5:
+                    GreenSupply2DTO.setValue9(selectedValueArry[i]);
+                    break;
+            }
+        }
+//        GreenSupply2DTO.setIsDel("0");
+//        GreenSupply2DTO.setCreateTime(new Date());
+//        GreenSupply2DTO.setUpdateTime(new Date());
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply2DTO.setYears(year);
+        GreenSupply2DTO.setName(name);
+        GreenSupply2DTO obj = new GreenSupply2DTO();
+        obj.setName(name);
+        obj.setYears(year);
+        GreenSupply2DTO GreenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj);
+        if(GreenSupply2DTOTmp==null) {
+            n = greenSupply2Service.insertGreenSupply2DTO(GreenSupply2DTO);
+        } else {
+            GreenSupply2DTO.setId(GreenSupply2DTOTmp.getId());
+            n = greenSupply2Service.updateNonEmptyGreenSupply2DTOById(GreenSupply2DTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index3")
+    public String index3(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x3"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/index_3";
+    }
+    
+    @RequestMapping("saveIndex3")
+    public void saveIndex3(String point3Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point3Arr.split("#");
+        GreenSupply2DTO GreenSupply2DTO = new GreenSupply2DTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    GreenSupply2DTO.setValue10(selectedValueArry[i]);
+                    break;
+                case 1:
+                    GreenSupply2DTO.setValue11(selectedValueArry[i]);
+                    break;
+            }
+        }
+//        GreenSupply2DTO.setIsDel("0");
+//        GreenSupply2DTO.setCreateTime(new Date());
+//        GreenSupply2DTO.setUpdateTime(new Date());
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply2DTO.setYears(year);
+        GreenSupply2DTO.setName(name);
+        GreenSupply2DTO obj = new GreenSupply2DTO();
+        obj.setName(name);
+        obj.setYears(year);
+        GreenSupply2DTO GreenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj);
+        if(GreenSupply2DTOTmp==null) {
+            n = greenSupply2Service.insertGreenSupply2DTO(GreenSupply2DTO);
+        } else {
+            GreenSupply2DTO.setId(GreenSupply2DTOTmp.getId());
+            n = greenSupply2Service.updateNonEmptyGreenSupply2DTOById(GreenSupply2DTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    
+    @RequestMapping("index4")
+    public String index4(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x4"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/index_4";
+    }
+    
+    @RequestMapping("saveIndex4")
+    public void saveIndex4(String point4Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point4Arr.split("#");
+        GreenSupply2DTO GreenSupply2DTO = new GreenSupply2DTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    GreenSupply2DTO.setValue12(selectedValueArry[i]);
+                    break;
+                case 1:
+                    GreenSupply2DTO.setValue13(selectedValueArry[i]);
+                    break;
+                case 2:
+                    GreenSupply2DTO.setValue14(selectedValueArry[i]);
+                    break;
+                case 3:
+                    GreenSupply2DTO.setValue15(selectedValueArry[i]);
+                    break;
+            }
+        }
+//        GreenSupply2DTO.setIsDel("0");
+//        GreenSupply2DTO.setCreateTime(new Date());
+//        GreenSupply2DTO.setUpdateTime(new Date());
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply2DTO.setYears(year);
+        GreenSupply2DTO.setName(name);
+        GreenSupply2DTO obj = new GreenSupply2DTO();
+        obj.setName(name);
+        obj.setYears(year);
+        GreenSupply2DTO GreenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj);
+        if(GreenSupply2DTOTmp==null) {
+            n = greenSupply2Service.insertGreenSupply2DTO(GreenSupply2DTO);
+        } else {
+            GreenSupply2DTO.setId(GreenSupply2DTOTmp.getId());
+            n = greenSupply2Service.updateNonEmptyGreenSupply2DTOById(GreenSupply2DTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index5")
+    public String index5(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x5"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/index_5";
+    }
+    
+    @RequestMapping("saveIndex5")
+    public void saveIndex5(String point5Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point5Arr.split("#");
+        GreenSupply2DTO GreenSupply2DTO = new GreenSupply2DTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    GreenSupply2DTO.setValue16(selectedValueArry[i]);
+                    break;
+            }
+        }
+//        GreenSupply2DTO.setIsDel("0");
+//        GreenSupply2DTO.setCreateTime(new Date());
+//        GreenSupply2DTO.setUpdateTime(new Date());
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply2DTO.setYears(year);
+        GreenSupply2DTO.setName(name);
+        GreenSupply2DTO obj = new GreenSupply2DTO();
+        obj.setName(name);
+        obj.setYears(year);
+        GreenSupply2DTO GreenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj);
+        if(GreenSupply2DTOTmp==null) {
+            n = greenSupply2Service.insertGreenSupply2DTO(GreenSupply2DTO);
+        } else {
+            GreenSupply2DTO.setId(GreenSupply2DTOTmp.getId());
+            n = greenSupply2Service.updateNonEmptyGreenSupply2DTOById(GreenSupply2DTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("index6")
+    public String index6(@ModelAttribute("assist") Assist assist, Model model) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x6"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/index_6";
+    }
+    
+    @RequestMapping("saveIndex6")
+    public void saveIndex6(String point6Arr, String itemIdArr, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        String[] selectedValueArry = point6Arr.split("#");
+        GreenSupply2DTO GreenSupply2DTO = new GreenSupply2DTO();
+        for(int i=0; i< selectedValueArry.length; i++) {
+            switch(i) {
+                case 0:
+                    GreenSupply2DTO.setValue17(selectedValueArry[i]);
+                    break;
+                case 1:
+                    GreenSupply2DTO.setValue18(selectedValueArry[i]);
+                    break;
+                case 2:
+                    GreenSupply2DTO.setValue19(selectedValueArry[i]);
+                    break;
+                case 3:
+                    GreenSupply2DTO.setValue20(selectedValueArry[i]);
+                    break;
+            }
+        }
+//        GreenSupply2DTO.setIsDel("0");
+//        GreenSupply2DTO.setCreateTime(new Date());
+//        GreenSupply2DTO.setUpdateTime(new Date());
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply2DTO.setYears(year);
+        GreenSupply2DTO.setName(name);
+        GreenSupply2DTO obj = new GreenSupply2DTO();
+        obj.setName(name);
+        obj.setYears(year);
+        GreenSupply2DTO GreenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj);
+        if(GreenSupply2DTOTmp==null) {
+            n = greenSupply2Service.insertGreenSupply2DTO(GreenSupply2DTO);
+        } else {
+            GreenSupply2DTO.setId(GreenSupply2DTOTmp.getId());
+            n = greenSupply2Service.updateNonEmptyGreenSupply2DTOById(GreenSupply2DTO);
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    @RequestMapping("success")
+    public String success(HttpServletRequest request, Model model) {
+        try {
+            
+        
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply2DTO obj1 = new GreenSupply2DTO();
+        obj1.setName(name);
+        obj1.setYears(year);
+        GreenSupply2DTO GreenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj1);
+        Assist assist = new Assist();
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("class_a", "x1"));
+        assist.setOrder(Assist.order("update_time", true));
+//        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        double totalPoint = 0;
+        totalPoint = Double.parseDouble(GreenSupply2DTOTmp.getValue1())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue2())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue3())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue4())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue5())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue6())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue7())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue8())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue9())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue10())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue11())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue12())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue13())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue14())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue15())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue16())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue17())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue18())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue19())
+                + Double.parseDouble(GreenSupply2DTOTmp.getValue20());
+        SupplyEvaluationResultDTO value = new SupplyEvaluationResultDTO();
+        value.setName(name);
+        value.setYear(year);
+        value.setIsDel("0");
+        value.setPoint((int)totalPoint + "");
+        value.setUpdateTime(new Date());
+        value.setCreateTime(new Date());
+        SupplyEvaluationResultDTO obj11 = new SupplyEvaluationResultDTO();
+        obj11.setName(name);
+        obj11.setYear(year);
+        obj11.setIsDel("0");
+        SupplyEvaluationResultDTO objTmp = supplyEvaluationResultService.selectSupplyEvaluationResultDTOByObj(obj11);
+        if(objTmp!= null) {
+            supplyEvaluationResultService.updateNonEmptySupplyEvaluationResultDTOById(value);
+        } else {
+            supplyEvaluationResultService.insertSupplyEvaluationResultDTO(value);
+        }
+        long totalCount = supplyEvaluationResultService.getSupplyEvaluationResultDTORowCount(null);
+        Assist assistT = new Assist();
+        assistT.setRequires(Assist.andLte("point", totalPoint+""));
+        long selectCount = supplyEvaluationResultService.getSupplyEvaluationResultDTORowCount(assistT);
+        model.addAttribute("value", value);
+        DecimalFormat df=new DecimalFormat("0.00");
+        String percent = df.format((float)selectCount/(float)totalCount *100);
+        model.addAttribute("percent", percent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "web/green/supply/success";
+    }
+    
+    
+    @RequestMapping("result")
+    public String result(Model model, HttpServletRequest request) {
+        String year = (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        GreenSupply1DTO obj0 = new GreenSupply1DTO();
+        obj0.setName(name);
+        obj0.setYears(year);
+        GreenSupply1DTO GreenSupply1DTO = greenSupply1Service.selectGreenSupply1DTOByObj(obj0);
+        Assist assist = new Assist();
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setRequires(Assist.andEq("evaluate_type", "1"));
+        assist.setOrder(Assist.order("update_time", false));
+        List<CommonAccordEvaluateDTO> datas0 = CommonAccordEvaluateService.selectCommonAccordEvaluateDTO(assist);
+        model.addAttribute("GreenSupply1DTO", GreenSupply1DTO);
+        model.addAttribute("datas0", datas0);
+
+        SupplyEvaluationResultDTO SupplyEvaluationResultDTO = new SupplyEvaluationResultDTO();
+        SupplyEvaluationResultDTO.setName(name);
+        SupplyEvaluationResultDTO.setYear(year);
+        SupplyEvaluationResultDTO supplyEvaluationResultDTO = supplyEvaluationResultService.selectSupplyEvaluationResultDTOByObj(SupplyEvaluationResultDTO);
+        long totalCount = supplyEvaluationResultService.getSupplyEvaluationResultDTORowCount(null);
+        Assist assistT = new Assist();
+        assistT.setRequires(Assist.andLte("point", supplyEvaluationResultDTO.getPoint()));
+        long selectCount = supplyEvaluationResultService.getSupplyEvaluationResultDTORowCount(assistT);
+        model.addAttribute("value", supplyEvaluationResultDTO);
+        DecimalFormat df=new DecimalFormat("0.00");
+        String percent = df.format((float)selectCount/(float)totalCount *100);
+        model.addAttribute("percent", percent);
+        
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/result1";
+    }
+    
+    @RequestMapping("result2")
+    public String result2(Model model, HttpServletRequest request) {
+        String year =  (String) request.getSession().getAttribute("supply_year");
+        String name = (String) request.getSession().getAttribute("supply_name");
+        
+        GreenSupply2DTO obj = new GreenSupply2DTO ();
+        obj.setName(name);
+        obj.setYears(year);
+        GreenSupply2DTO GreenSupply2DTOTmp = greenSupply2Service.selectGreenSupply2DTOByObj(obj);
+        model.addAttribute("GreenSupply2DTOTmp", GreenSupply2DTOTmp);
+        Assist assist = new Assist();
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenSupplyChainEvaluation> datas = GreenSupplyChainEvaluationService.selectGreenSupplyChainEvaluation(assist);
+        model.addAttribute("datas", datas);
+        
+        SupplyEvaluationResultDTO SupplyEvaluationResultDTO = new SupplyEvaluationResultDTO();
+        SupplyEvaluationResultDTO.setName(name);
+        SupplyEvaluationResultDTO.setYear(year);
+        SupplyEvaluationResultDTO supplyEvaluationResultDTO = supplyEvaluationResultService.selectSupplyEvaluationResultDTOByObj(SupplyEvaluationResultDTO);
+        long totalCount = supplyEvaluationResultService.getSupplyEvaluationResultDTORowCount(null);
+        Assist assistT = new Assist();
+        assistT.setRequires(Assist.andLte("point", supplyEvaluationResultDTO.getPoint()));
+        long selectCount = supplyEvaluationResultService.getSupplyEvaluationResultDTORowCount(assistT);
+        model.addAttribute("value", supplyEvaluationResultDTO);
+        DecimalFormat df=new DecimalFormat("0.00");
+        String percent = df.format((float)selectCount/(float)totalCount *100);
+        model.addAttribute("percent", percent);
+        
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("typeMap", typeMap);
+        model.addAttribute("unitMap", unitMap);
+        return "web/green/supply/result2";
+    }
+    
+    
+}

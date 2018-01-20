@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${noticeDTO.title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>新闻中心</p>
+</div>
+
+		
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/">首页</a>><a href="${base}/web/notice/show.htm">新闻列表</a>><#if noticeDTO.title?length &gt; 20 >${noticeDTO.title?substring(0,20)}...<#else>${noticeDTO.title}</#if></p>
+		</div>
+	</div>
+	<div class="col-lg-8 col-lg-offset-2">
+			<h3 class="n_list_t">${noticeDTO.title}</h3>
+			<div class="n_list_div">
+				<span>作者：${noticeDTO.createBy}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<em>发布时间：<#if noticeDTO.createTime??>${noticeDTO.createTime?date}</#if></em>
+			</div>
+	</div>
+	
+	<div class="col-lg-8 col-lg-offset-2 n_list_c">
+			<div><#if noticeDTO.imageUrl?? && noticeDTO.imageUrl!= ""><img class="center-block" src="${picUrl}${noticeDTO.imageUrl}" alt="" /></#if></div>
+			${noticeDTO.content}
+			<#if List?? && List?size gt 0>
+				<#list List as list>
+					<p>附件${list_index+1}  <a href="${picUrl}${list.url}">${list.name} 下载</a></p>
+				</#list>
+			</#if>
+	</div>
+	
+</div>
+
+
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+
+</html>
+

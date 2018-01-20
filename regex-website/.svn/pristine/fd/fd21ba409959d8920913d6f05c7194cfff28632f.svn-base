@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${AchievementDTO.title}-成果展示</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>成果展示</p>
+</div>
+
+		
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/">首页</a>><a href="${base}/web/achievement/show.htm?type=${AchievementDTO.type}">${typeMap[AchievementDTO.type]}</a>>${AchievementDTO.title}</p>
+		</div>
+	</div>
+	<div class="col-lg-8 col-lg-offset-2">
+			<h3 class="n_list_t">${AchievementDTO.title}</h3>
+			<div class="n_list_div">
+				<span>类别：${typeMap[AchievementDTO.type]}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<em>发布时间：${AchievementDTO.createTime?datetime}</em>
+			</div>
+	</div>
+	
+	<div class="col-lg-8 col-lg-offset-2 n_list_c">
+			<div></div>
+			${AchievementDTO.content}
+			<#if List?? && List?size gt 0>
+				<#list List as list>
+					<p>${list.name}</p><a href="${picUrl}${list.url}">下载</a>
+				</#list>
+			</#if>
+	</div>
+	
+</div>
+
+
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+
+</html>
+

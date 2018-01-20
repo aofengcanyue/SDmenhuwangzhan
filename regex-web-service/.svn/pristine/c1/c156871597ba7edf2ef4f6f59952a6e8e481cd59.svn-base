@@ -1,0 +1,15 @@
+package com.regex.web.service.info;
+
+import java.util.List;
+
+import com.regex.web.common.dto.info.WaterDTO;
+import com.regex.web.common.utils.QueryConditions;
+
+public interface IWaterService {
+    
+    int insert(WaterDTO waterDTO);
+    
+    List<WaterDTO> selectByName(QueryConditions params);
+    
+    int selectCountByName(QueryConditions params);
+}

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.green.GreenParkDAO">
+    <!-- GreenParkDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_GreenParkDTO_Map" type="com.regex.web.common.dto.green.GreenParkDTO">
+        <id column="id" property="id" />
+        <result column="apply_job" property="applyJob" />
+        <result column="apply_fax" property="applyFax" />
+        <result column="apply_email" property="applyEmail" />
+        <result column="address" property="address" />
+        <result column="create_time" property="createTime" />
+        <result column="level" property="level" />
+        <result column="apply_tel" property="applyTel" />
+        <result column="applyor" property="applyor" />
+        <result column="type" property="type" />
+        <result column="update_time" property="updateTime" />
+        <result column="name" property="name" />
+        <result column="is_del" property="isDel" />
+        <result column="header" property="header" />
+        <result column="tel" property="tel" />
+        <result column="postal_code" property="postalCode" />
+        <result column="job" property="job" />
+        <result column="fax" property="fax" />
+        <result column="email" property="email" />
+        <result column="introduction" property="introduction" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_green_park的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_green_park_Column">
+        t_green_park.id as id
+        ,t_green_park.apply_job as apply_job
+        ,t_green_park.apply_fax as apply_fax
+        ,t_green_park.apply_email as apply_email
+        ,t_green_park.address as address
+        ,t_green_park.create_time as create_time
+        ,t_green_park.level as level
+        ,t_green_park.apply_tel as apply_tel
+        ,t_green_park.applyor as applyor
+        ,t_green_park.type as type
+        ,t_green_park.update_time as update_time
+        ,t_green_park.name as name
+        ,t_green_park.is_del as is_del
+        ,t_green_park.header as header
+        ,t_green_park.tel as tel
+        ,t_green_park.postal_code as postal_code
+        ,t_green_park.job as job
+        ,t_green_park.fax as fax
+        ,t_green_park.email as email
+        ,t_green_park.introduction as introduction
+    </sql>
+
+    <!--获得类名为:GreenParkDTO对应的数据库表的数据总行数 -->
+    <select id="getGreenParkDTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_green_park
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:GreenParkDTO对应数据库中表的数据集合 -->
+    <select id="selectGreenParkDTO" parameterType="com.regex.web.common.Assist"  resultMap="result_GreenParkDTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_green_park_Column" /> 
+            </otherwise>
+        </choose>
+        from t_green_park
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_green_park
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_green_park.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个GreenParkDTO对象,以参数GreenParkDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectGreenParkDTOByObj" parameterType="com.regex.web.common.dto.green.GreenParkDTO" resultMap="result_GreenParkDTO_Map">
+        select 
+            <include refid="t_green_park_Column" /> 
+        from t_green_park
+        <where>
+            <if test="introduction != null "> and t_green_park.introduction = #{introduction}</if>
+            <if test="email != null "> and t_green_park.email = #{email}</if>
+            <if test="fax != null "> and t_green_park.fax = #{fax}</if>
+            <if test="job != null "> and t_green_park.job = #{job}</if>
+            <if test="postalCode != null "> and t_green_park.postal_code = #{postalCode}</if>
+            <if test="tel != null "> and t_green_park.tel = #{tel}</if>
+            <if test="header != null "> and t_green_park.header = #{header}</if>
+            <if test="isDel != null "> and t_green_park.is_del = #{isDel}</if>
+            <if test="name != null "> and t_green_park.name = #{name}</if>
+            <if test="updateTime != null "> and t_green_park.update_time = #{updateTime}</if>
+            <if test="type != null "> and t_green_park.type = #{type}</if>
+            <if test="applyor != null "> and t_green_park.applyor = #{applyor}</if>
+            <if test="applyTel != null "> and t_green_park.apply_tel = #{applyTel}</if>
+            <if test="level != null "> and t_green_park.level = #{level}</if>
+            <if test="createTime != null "> and t_green_park.create_time = #{createTime}</if>
+            <if test="address != null "> and t_green_park.address = #{address}</if>
+            <if test="applyEmail != null "> and t_green_park.apply_email = #{applyEmail}</if>
+            <if test="applyFax != null "> and t_green_park.apply_fax = #{applyFax}</if>
+            <if test="applyJob != null "> and t_green_park.apply_job = #{applyJob}</if>
+            <if test="id != null "> and t_green_park.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过GreenParkDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectGreenParkDTOById" parameterType="java.lang.Long" resultMap="result_GreenParkDTO_Map">
+        select 
+            <include refid="t_green_park_Column" /> 
+        from t_green_park
+        where t_green_park.id = #{id}
+    </select> 
+
+    <!-- 将GreenParkDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertGreenParkDTO" parameterType="com.regex.web.common.dto.green.GreenParkDTO">
+        insert into t_green_park(id,apply_job,apply_fax,apply_email,address,create_time,level,apply_tel,applyor,type,update_time,name,is_del,header,tel,postal_code,job,fax,email,introduction) 
+        values(#{id},#{applyJob},#{applyFax},#{applyEmail},#{address},#{createTime},#{level},#{applyTel},#{applyor},#{type},#{updateTime},#{name},#{isDel},#{header},#{tel},#{postalCode},#{job},#{fax},#{email},#{introduction})
+    </insert>
+
+    <!-- 将GreenParkDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyGreenParkDTO" parameterType="com.regex.web.common.dto.green.GreenParkDTO">
+        insert into t_green_park
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="applyJob != null">apply_job,</if>
+            <if test="applyFax != null">apply_fax,</if>
+            <if test="applyEmail != null">apply_email,</if>
+            <if test="address != null">address,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="level != null">level,</if>
+            <if test="applyTel != null">apply_tel,</if>
+            <if test="applyor != null">applyor,</if>
+            <if test="type != null">type,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="name != null">name,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="header != null">header,</if>
+            <if test="tel != null">tel,</if>
+            <if test="postalCode != null">postal_code,</if>
+            <if test="job != null">job,</if>
+            <if test="fax != null">fax,</if>
+            <if test="email != null">email,</if>
+            <if test="introduction != null">introduction,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="applyJob != null"> #{applyJob},</if>
+            <if test="applyFax != null"> #{applyFax},</if>
+            <if test="applyEmail != null"> #{applyEmail},</if>
+            <if test="address != null"> #{address},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="level != null"> #{level},</if>
+            <if test="applyTel != null"> #{applyTel},</if>
+            <if test="applyor != null"> #{applyor},</if>
+            <if test="type != null"> #{type},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="name != null"> #{name},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="header != null"> #{header},</if>
+            <if test="tel != null"> #{tel},</if>
+            <if test="postalCode != null"> #{postalCode},</if>
+            <if test="job != null"> #{job},</if>
+            <if test="fax != null"> #{fax},</if>
+            <if test="email != null"> #{email},</if>
+            <if test="introduction != null"> #{introduction},</if>
+        </trim>
+    </insert>
+
+    <!-- 将GreenParkDTO批量插入到对应数据库的表中-->
+    <insert id="insertGreenParkDTOByBatch" parameterType="ArrayList">
+        insert into t_green_park(id,apply_job,apply_fax,apply_email,address,create_time,level,apply_tel,applyor,type,update_time,name,is_del,header,tel,postal_code,job,fax,email,introduction) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.applyJob},#{item.applyFax},#{item.applyEmail},#{item.address},#{item.createTime},#{item.level},#{item.applyTel},#{item.applyor},#{item.type},#{item.updateTime},#{item.name},#{item.isDel},#{item.header},#{item.tel},#{item.postalCode},#{item.job},#{item.fax},#{item.email},#{item.introduction})
+        </foreach>
+    </insert>
+
+    <!-- 通过GreenParkDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteGreenParkDTOById" parameterType="java.lang.Long">
+        delete from t_green_park
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将GreenParkDTO对应的数据库表的数据删除-->
+    <delete id="deleteGreenParkDTO" parameterType="com.regex.web.common.Assist">
+        delete from t_green_park
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过GreenParkDTO的id将GreenParkDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateGreenParkDTOById" parameterType="com.regex.web.common.dto.green.GreenParkDTO">
+        update t_green_park set
+            apply_job=#{applyJob}
+            ,apply_fax=#{applyFax}
+            ,apply_email=#{applyEmail}
+            ,address=#{address}
+            ,create_time=#{createTime}
+            ,level=#{level}
+            ,apply_tel=#{applyTel}
+            ,applyor=#{applyor}
+            ,type=#{type}
+            ,update_time=#{updateTime}
+            ,name=#{name}
+            ,is_del=#{isDel}
+            ,header=#{header}
+            ,tel=#{tel}
+            ,postal_code=#{postalCode}
+            ,job=#{job}
+            ,fax=#{fax}
+            ,email=#{email}
+            ,introduction=#{introduction}
+        where id=#{id}
+    </update>
+
+    <!-- 通过GreenParkDTO的id将GreenParkDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyGreenParkDTOById" parameterType="com.regex.web.common.dto.green.GreenParkDTO">
+        update t_green_park
+        <set>
+            <if test="applyJob != null">
+                apply_job=#{applyJob},
+            </if>
+            <if test="applyFax != null">
+                apply_fax=#{applyFax},
+            </if>
+            <if test="applyEmail != null">
+                apply_email=#{applyEmail},
+            </if>
+            <if test="address != null">
+                address=#{address},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="level != null">
+                level=#{level},
+            </if>
+            <if test="applyTel != null">
+                apply_tel=#{applyTel},
+            </if>
+            <if test="applyor != null">
+                applyor=#{applyor},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="header != null">
+                header=#{header},
+            </if>
+            <if test="tel != null">
+                tel=#{tel},
+            </if>
+            <if test="postalCode != null">
+                postal_code=#{postalCode},
+            </if>
+            <if test="job != null">
+                job=#{job},
+            </if>
+            <if test="fax != null">
+                fax=#{fax},
+            </if>
+            <if test="email != null">
+                email=#{email},
+            </if>
+            <if test="introduction != null">
+                introduction=#{introduction},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将GreenParkDTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateGreenParkDTO" parameterType="map">
+        update t_green_park
+        <set>
+                id=#{enti.id},
+                apply_job=#{enti.applyJob},
+                apply_fax=#{enti.applyFax},
+                apply_email=#{enti.applyEmail},
+                address=#{enti.address},
+                create_time=#{enti.createTime},
+                level=#{enti.level},
+                apply_tel=#{enti.applyTel},
+                applyor=#{enti.applyor},
+                type=#{enti.type},
+                update_time=#{enti.updateTime},
+                name=#{enti.name},
+                is_del=#{enti.isDel},
+                header=#{enti.header},
+                tel=#{enti.tel},
+                postal_code=#{enti.postalCode},
+                job=#{enti.job},
+                fax=#{enti.fax},
+                email=#{enti.email},
+                introduction=#{enti.introduction},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将GreenParkDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyGreenParkDTO" parameterType="map">
+        update t_green_park
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.applyJob != null">
+                apply_job=#{enti.applyJob},
+            </if>
+            <if test="enti.applyFax != null">
+                apply_fax=#{enti.applyFax},
+            </if>
+            <if test="enti.applyEmail != null">
+                apply_email=#{enti.applyEmail},
+            </if>
+            <if test="enti.address != null">
+                address=#{enti.address},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.level != null">
+                level=#{enti.level},
+            </if>
+            <if test="enti.applyTel != null">
+                apply_tel=#{enti.applyTel},
+            </if>
+            <if test="enti.applyor != null">
+                applyor=#{enti.applyor},
+            </if>
+            <if test="enti.type != null">
+                type=#{enti.type},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.name != null">
+                name=#{enti.name},
+            </if>
+            <if test="enti.isDel != null">
+                is_del=#{enti.isDel},
+            </if>
+            <if test="enti.header != null">
+                header=#{enti.header},
+            </if>
+            <if test="enti.tel != null">
+                tel=#{enti.tel},
+            </if>
+            <if test="enti.postalCode != null">
+                postal_code=#{enti.postalCode},
+            </if>
+            <if test="enti.job != null">
+                job=#{enti.job},
+            </if>
+            <if test="enti.fax != null">
+                fax=#{enti.fax},
+            </if>
+            <if test="enti.email != null">
+                email=#{enti.email},
+            </if>
+            <if test="enti.introduction != null">
+                introduction=#{enti.introduction},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

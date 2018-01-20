@@ -1,0 +1,97 @@
+package com.regex.web.common.dto.info;
+public class ExpertAnswerDTO implements java.io.Serializable {
+    
+    /**
+     */
+    private static final long serialVersionUID = -8806744673179004277L;
+    private Long id;
+    private java.util.Date updateTime;
+    private java.util.Date createTime;
+    private String name;//名字
+    private String isDel;//0正常 1删除
+    private String replyType;//答复类型 0提问 1回答
+    private String type;//提问类型 0能源计量与信息化 1通用技术节能 2循环经济与清洁生产 3节能咨询 4政策咨询
+    private String content;//答复内容
+    private String isTop;//置顶 0正常 1置顶
+    private String readCount;//浏览量
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public java.util.Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(java.util.Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public java.util.Date getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(java.util.Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIsDel() {
+        return this.isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
+
+    public String getReplyType() {
+        return this.replyType;
+    }
+
+    public void setReplyType(String replyType) {
+        this.replyType = replyType;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getIsTop() {
+        return this.isTop;
+    }
+
+    public void setIsTop(String isTop) {
+        this.isTop = isTop;
+    }
+
+    public String getReadCount() {
+        return this.readCount;
+    }
+
+    public void setReadCount(String readCount) {
+        this.readCount = readCount;
+    }
+
+}

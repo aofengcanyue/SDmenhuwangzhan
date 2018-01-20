@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>绿色工厂一般要求符合性评价表</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style>
+	.table > tbody > tr > td{ line-height: 2.4; }
+	.btn_sl{ width: 150px; }
+	.btn_sl i{ float: left; }
+	.btn_sl span{ float: right;margin-top: 8px; }
+	.btn_sub:hover{ background: #004EB7; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>绿色工厂一般要求符合性评价表</p>
+</div>
+
+		
+<div class="container bg_f">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/web/index.htm">首页</a>>绿色工厂一般要求符合性评价表</p>
+		</div>
+		<div class="col-lg-12">
+			<p class="pj_t">绿色工厂一般要求符合性评价表</p>
+		</div>
+	</div>
+	<select name="year" id="year" style="margin-left: 47%;margin-bottom: 10px;width: 80px;height: 35px;" >
+		<option value="">请选择年份</option>
+		<#list 2015..nowYear as selectYear>
+		<option value="${selectYear}">${selectYear}</option>
+		</#list>
+	</select>
+	<div class="row " >
+		
+			<div class="col-lg-8 col-lg-offset-2">
+		
+			<table class="table table-hover table-bordered ">
+				  
+				  <thead>
+				    <tr>
+				      <th class="td_blue col-lg-8">一般要求</th>
+				      <th class="td_blue col-lg-4">是否符合</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  	<#list datas as data>
+				    <tr>
+				      <td>${data.content}</td>
+				      <td>
+				      	<div class="btn-group">
+								<select name="valueSelect" id="value_${data_index+1}" >
+									<option value="">请选择</option>
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+						</div>
+				      </td>
+				    </tr>
+				  	</#list>
+				   
+				   
+				   
+				  </tbody>
+			</table>
+		
+		</div>
+	
+	</div>
+	<div class="row">
+		  
+		  <div class="col-lg-2 col-md-push-8 col-sm-push-8 col-xs-push-8">
+		  		<button type="button" class="btn btn-primary btn_sub" onclick="submitSelect();" >提交评价</button>
+		  		<div style="padding-bottom: 20px;"></div>
+		  </div>
+	</div>
+</div>
+
+<div class="al_box">
+	<div class="al_box_content">
+		 <h3>绿色评价说明</h3>
+		 <ul>
+		 	<li class="clearfix"><em></em><span>根据实际数据自评</span></li>
+		 	<li class="clearfix"><em></em><span>无法取得的数据根据经验填写</span></li>
+		 	<li class="clearfix"><em></em><span>政府不保留过程和结果数据</span></li>
+		 	<li class="clearfix"><em></em><span>自评结果作为企业自身改进之用，不作为考评依据</span></li>
+		 </ul>
+		 <div>
+		 	<a href="javascript:;" onclick="history.go(-1);" class="agree">不同意</a>
+		 	<a href="javascript:;"  onclick="closeWin();" class="n_agree">同意！开始评价</a>
+		 </div>
+	</div>
+</div>
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script src="${resRoot}/layui/lay/dest/layui.all.js" charset="utf-8"></script>
+<script>
+$(function(){
+	
+	var oH = $(window).height();
+	$(".al_box").height(oH)
+});
+
+function closeWin() {
+	$(".al_box").hide();
+}
+function submitSelect() {
+	var selectedValue = "";
+	var year = $("#year").val();
+	var flag = true; 
+	if(year=="" || year==null || year=="undefined") {
+		alert("请选择年份！")
+		flag=false;
+		return false;
+	}
+	$("select[name='valueSelect']").each(function(){
+		var tmp = $(this).val();
+		if(flag && tmp != "" && tmp != null && tmp!= "undefined") {
+			selectedValue = selectedValue + $(this).val() + "#";
+		} else {
+			alert("请选择完成所有选项后提交！");
+			flag=false;
+			return false;
+		}
+		});
+	if(flag) {
+		$.ajax({
+			type : "post",
+			url : "${base}/web/factoryEvaluation/saveZero.htm",
+			data : {
+				selectedValue : selectedValue,
+				year : year
+				},
+			dataType : "json",
+			async : false,
+			success : function(data) {
+				if(data.message == 2) {
+					layer.alert('请完善数据');   
+						// return false;
+					} else if(data.message == 1) {
+						layer.msg('保存成功！', {
+						  icon: 1,
+						  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+						}, function(){
+							window.location.href="${base}/web/factoryEvaluation/index1.htm";
+						});   
+					} else {
+						layer.msg('系统繁忙！'); 
+					}
+			}
+		}); 
+	}
+}
+
+</script>
+
+</html>

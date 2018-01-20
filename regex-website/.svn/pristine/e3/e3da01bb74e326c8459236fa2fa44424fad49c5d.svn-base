@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>资源交易大厅</title>
+
+<title>${supply.name}</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<link rel="stylesheet" href="${resRoot}/layui/css/layui.css" media="all" />
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>资源交易大厅</p>
+	
+</div>
+
+<div class="res_nav">
+	<ul class="clearfix">
+		<li onclick="window.location.href='${base}/web/supplyShow.htm'" >
+			供应大厅
+			<span <#if type==1>style="display: none;"</#if> ></span>
+			<em></em>
+		</li>
+		<li onclick="window.location.href='${base}/web/demandShow.htm'" >
+			需求大厅
+			<span <#if type==0>style="display: none;"</#if> ></span>
+		</li>
+
+	</ul>
+</div>
+<div class="container ">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/web/index.htm">首页</a>>交易大厅</p>
+		</div>
+	</div>
+</div>
+
+<div class="">
+	<div class="res_content ">
+			<ul>
+		<div>
+				<#list result.datas as supply>
+				<li class="clearfix bg_f bg_pd">
+					<div class="res_content_img">
+						<#if supply.imgUrl?? && supply.imgUrl!="">
+						<img src="${picUrl}${supply.imgUrl}"/>
+						<#else>
+						<img src="${resRoot}/project/images/pic6.png"/>
+						</#if>
+					</div>
+					<div class="res_content_info">
+						<h3 class="res_content_info_title">${supply.name}</h3>
+						<p class="res_content_info_num">${supply.quantity}<em><#if supply.transport=="1">配送<#else>自提</#if></em></p>
+						<p class="res_content_info_p">${supply.introduction}</p>
+						<p class="res_content_info_m">
+							<span>${supply.company}</span>
+							<span>联系人：${supply.contact}</span>
+							<span>联系电话：${supply.phone}</span>
+						</p>
+						<p class="res_content_info_r">${supply.price} <span></span></p>
+					</div>
+				</li>
+				</#list>
+			</ul>
+		</div>
+		<!-- <div style="display: none;">
+			<ul>
+				<#list result.datas as demand>
+				<li class="clearfix bg_f bg_pd">
+					<div class="res_content_img">
+						<img src="${resRoot}/project/images/pic6.png"/>
+					</div>
+					<div class="res_content_info">
+						<h3 class="res_content_info_title">${demand.name}</h3>
+						<p class="res_content_info_num">${demand.quantity}吨<em>${demand.transport}</em></p>
+						<p class="res_content_info_p">${demand.introduction}</p>
+						<p class="res_content_info_m">
+							<span>${demand.company}</span>
+							<span>联系人：${demand.contact}</span>
+							<span>联系电话：${demand.phone}</span>
+						</p>
+						<p class="res_content_info_r">${demand.price} <span>元</span></p>
+					</div>
+				</li>
+				</#list>
+			</ul>
+		</div> -->
+	</div>
+</div>
+<div id="page"></div>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script type="text/javascript" src="${resRoot}/layui/layui.js"></script>
+<#if type==0>
+<#assign pageUrl=base+'/web/supplyShow.htm?type=${type}&'>
+<#else>
+<#assign pageUrl=base+'/web/demandShow.htm?type=${type}&'>
+</#if>
+<#include "/page/page.html">
+	
+	
+</body>
+
+<!-- <script>
+	$(function(){
+		$(".res_nav li").click(function(){
+			$(this).find("span").show();
+			$(this).siblings("li").find("span").hide();
+			$(".res_content>div").eq($(this).index()).show().siblings().hide()
+		})
+	})
+</script> -->
+</html>

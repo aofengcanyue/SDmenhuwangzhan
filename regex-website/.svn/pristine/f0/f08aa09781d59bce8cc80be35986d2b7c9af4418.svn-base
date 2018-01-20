@@ -1,0 +1,20 @@
+package com.regex.web.controller.admin.notice;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("admin/notice")
+public class AdminNoticeController {
+    
+    @RequestMapping("show")
+    public String show() {
+        return "admin/notice/show";
+    }
+    
+    @RequestMapping("input")
+    public String input() {
+        return "admin/notice/input";
+    }
+
+}

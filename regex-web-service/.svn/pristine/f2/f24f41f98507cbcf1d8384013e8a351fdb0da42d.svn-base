@@ -1,0 +1,22 @@
+package com.regex.web.dao.info;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.regex.web.common.dto.info.NoticeDTO;
+
+public interface INoticeDAO {
+    
+    int insert(NoticeDTO noticeDTO);
+    
+    int updateById(NoticeDTO noticeDTO);
+    
+    NoticeDTO selectById(Serializable id);
+    
+    List<NoticeDTO> getByPage(Page<NoticeDTO> page, Map<String, Object> map);
+    
+    void del(Serializable id);
+
+}

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>首页</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style type="text/css">
+	.add_select{ height: 34px;
+				 line-height: 34px;
+				 width:200px;
+				 display: block;
+				 border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-4  col-lg-4">
+			<div class="find_div">
+				<h1 class="title">国家重点节能低碳技术推广目录查询</h1>
+				<div class="form-group mar clearfix">
+					<form action="${base}/web/energySave/show.htm" method="POST">
+					<div class="dropdown pull-left">
+					   <select class="add_select" name="type" >
+					    <option  value="">请选择</option>
+						<#list typeMap?keys as key>
+						<option  value="${key}">${typeMap[key]}</option>
+						</#list>
+					   </select>
+					</div>
+					
+					<input type="text" class="form-control pull-right w60" name="name" placeholder="输入关键字搜索相关技术">
+				</div>
+				<div class="hot_search">
+					<p>热门搜索：能源管控技术、煤炭锅炉技术</p>
+					<button class="btn pull-right btn_search">  
+				        <span class="glyphicon glyphicon-search"></span> 搜索  
+				    </button>  
+				    </form>
+				</div>			
+			</div>
+			<div class="find_div">
+				<h1 class="title">高性能落后机电设备(产品)淘汰目录查询</h1>
+				<div class="form-group mar clearfix">
+					
+					<div class="dropdown pull-left">
+					<form action="${base}/web/elimination/show.htm" method="POST">
+					   <select class="add_select" name="type" >
+						<option value="" >请选择</option>
+						<option  value="0">电动机</option>
+						<option  value="1">变压器</option>
+						<option  value="2">风机</option>
+						<option  value="3">水泵</option>
+						<option  value="4">锅炉</option>
+						<option  value="5">落后工艺、设备和产品</option>
+						<option  value="6">电焊机、电阻炉</option>
+					   </select>
+					</div>
+					<input type="text" class="form-control pull-right w60" name="model" placeholder="输入产品名称" >
+					
+				</div>
+				<div class="hot_search">
+					<p>热门搜索：能源管控技术、煤炭锅炉技术</p>
+					<button class="btn pull-right btn_search" type="submit">  
+				        <span class="glyphicon glyphicon-search"></span> 搜索  
+				    </button> 
+				    </form>
+				</div>			
+			</div>
+			<div class="find_div">
+				<h1 class="title">聊城市主要工业产品取水定额查询</h1>
+					<form action="${base}/web/water/show.htm" method="POST">
+				<div class="form-group mar clearfix">
+					
+					<div class="dropdown pull-left" style="margin-top: 10px;">
+					    <select class="add_select" name="category" >
+					    <option  value="">请选择</option>
+						<#list typeMap1?keys as key>
+						<option  value="${key}">${typeMap1[key]}</option>
+						</#list>
+					   </select>
+					</div>
+					
+					<input type="text" style="margin-top: 10px;" class="form-control pull-right w60" name="name" placeholder="输入产品名称" >
+					
+				</div>
+				<div class="hot_search">
+					<p>热门搜索：能源管控技术、煤炭锅炉技术</p>
+					<button class="btn pull-right btn_search" type="submit">  
+				        <span class="glyphicon glyphicon-search"></span> 搜索  
+				    </button> 
+				</div>			
+				    </form>
+			</div>
+			<div class="group">
+				<div class="list_div">
+					<a href="${base}/web/factoryEvaluation/accord.htm">
+						<em><img src="${resRoot}/project/images/icon3.png"/></em>
+						绿色工厂评价
+					</a>
+				</div>
+				<div class="list_div">
+					<a href="${base}/web/supplyEvaluation/accord.htm">
+						<em><img src="${resRoot}/project/images/icon4.png"/></em>
+						绿色供应链管理
+					</a>
+				</div>
+				<div class="list_div">
+					<a href="${base}/web/greenPark/input.htm">
+						<em><img src="${resRoot}/project/images/icon5.png"/></em>
+						绿色园区评价
+					</a>
+				</div>
+			</div>
+			<div class="group">
+				<div class="group_pic_1 pull-left">
+					<img src="${resRoot}/project/images/img1.png" width="100%"/>
+					<div>
+						<h1>绿色金融</h1>
+						<ul>
+							<li><a href="${base}/web/Mechanism/show.htm">金融机构推介</a></li>
+							<li><a href="${base}/web/policy/show.htm">金融政策介绍 </a></li>
+							<li><a href="${base}/web/financing/show.htm">项目需求发布</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="group_pic_2 pull-right">
+					<img src="${resRoot}/project/images/img2.png" width="100%"/>
+					<div>
+						<h1>企业培训</h1>
+						<ul>
+							<li><a href="${base}/web/training/show.htm">能源管理体系</a></li>
+							<li><a href="${base}/web/training/show.htm?type=1">能源审计</a></li>
+							<li><a href="${base}/web/training/show.htm?type=2">清洁生产审核</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 col-lg-4">
+			 <div class="tt_nav clearfix">
+			 	 <p>信息头条</p>
+			 	 <ul class="nav nav-pills pull-right nav_info">
+					  <li role=""><a href="javascript:;"  class="active">工作动态</a></li>
+					  <li role=""><a href="javascript:;">新闻动态</a></li>
+					  <li role=""><a href="javascript:;">政策解读</a></li>
+					  <li role=""><a href="javascript:;">绿色制造</a></li>
+					  <li role=""><a href="javascript:;">节能减排</a></li>
+					  <li role=""><a href="javascript:;">清洁生产</a></li>
+				</ul>
+			 </div>
+			 <div class="tt_nav_content">
+			 	<div class="tt_nav_content_div">
+			 		<ul>
+			 			<#list list1 as list>
+			 			<#if list_index lt 7>
+			 			<li class="clearfix">
+			 				<em></em>
+			 				<span><a href="${base}/web/notice/detial_${list.id}.htm">${list.title}</a></span>
+			 			</li>
+			 			</#if>
+			 			</#list>
+			 		</ul>
+			 		<div class="clearfix">
+			 			<a href="${base}/web/notice/show.htm?type=1" class="ck_more pull-right">查看更多</a>
+			 		</div>
+			 	</div>
+			 	<div style="display: none;" class="tt_nav_content_div">
+			 		<ul>
+			 			<#list list2 as list>
+			 			<#if list_index lt 7>
+			 			<li class="clearfix">
+			 				<em></em>
+			 				<span><a href="${base}/web/notice/detial_${list.id}.htm">${list.title}</a></span>
+			 			</li>
+			 			</#if>
+			 			</#list>
+			 		</ul>
+			 		<div class="clearfix">
+			 			<a href="${base}/web/notice/show.htm?type=2" class="ck_more pull-right">查看更多</a>
+			 		</div>
+			 	</div>
+			 	<div style="display: none;" class="tt_nav_content_div">
+			 		<ul>
+			 			<#list list3 as list>
+			 			<#if list_index lt 7>
+			 			<li class="clearfix">
+			 				<em></em>
+			 				<span><a href="${base}/web/notice/detial_${list.id}.htm">${list.title}</a></span>
+			 			</li>
+			 			</#if>
+			 			</#list>
+			 		</ul>
+			 		<div class="clearfix">
+			 			<a href="${base}/web/notice/show.htm?type=3" class="ck_more pull-right">查看更多</a>
+			 		</div>
+			 	</div>
+			 	<div style="display: none;" class="tt_nav_content_div">
+			 		<ul>
+			 			<#list list4 as list>
+			 			<#if list_index lt 7>
+			 			<li class="clearfix">
+			 				<em></em>
+			 				<span><a href="${base}/web/notice/detial_${list.id}.htm">${list.title}</a></span>
+			 			</li>
+			 			</#if>
+			 			</#list>
+			 		</ul>
+			 		<div class="clearfix">
+			 			<a href="${base}/web/notice/show.htm?type=4" class="ck_more pull-right">查看更多</a>
+			 		</div>
+			 	</div>
+			 	<div style="display: none;" class="tt_nav_content_div">
+			 		<ul>
+			 			<#list list5 as list>
+			 			<#if list_index lt 7>
+			 			<li class="clearfix">
+			 					<em></em>
+			 				<span><a href="${base}/web/notice/detial_${list.id}.htm">${list.title}</a></span>
+			 			</li>
+			 			</#if>
+			 			</#list>
+			 		</ul>
+			 		<div class="clearfix">
+			 			<a href="${base}/web/notice/show.htm?type=5" class="ck_more pull-right">查看更多</a>
+			 		</div>
+			 	</div>
+			 	<div style="display: none;" class="tt_nav_content_div">
+			 		<ul>
+			 			<#list list6 as list>
+			 			<#if list_index lt 7>
+			 			<li class="clearfix">
+			 				<em></em>
+			 				<span><a href="${base}/web/notice/detial_${list.id}.htm">${list.title}</a></span>
+			 			</li>
+			 			</#if>
+			 			</#list>
+			 		</ul>
+			 		<div class="clearfix">
+			 			<a href="${base}/web/notice/show.htm?type=6" class="ck_more pull-right">查看更多</a>
+			 		</div>
+			 	</div>
+			 </div>
+			 
+			 
+			 <div class="busi">
+			 	<div class="col-lg-6 ">
+			 		<div class="busi_nav clearfix">
+			 			<p class="pull-left">资源交易</p>
+			 			<ul>
+			 				<li class="current">供应</li>
+			 				<li>需求</li>
+			 			</ul>
+			 		</div>
+			 		<div class="busi_nav_content">
+			 			<div>
+			 				 <ul>
+			 				 	<#list supplyList as supply>
+			 				 	<#if supply_index lt 11>
+			 				 	<li class="busi_nav_content_li">
+			 				 		<em>${supply.time}</em>
+			 				 		<a href="${base}/web/supplyShow.htm">
+			 				 			${supply.name}
+			 				 		</a>
+			 				 	</li>
+			 				 	</#if>
+			 				 	</#list>
+			 				 </ul>
+			 				 <div class="clearfix">
+			 				 	<a href="${base}/web/supplyShow.htm" class="ck_more pull-right">查看更多</a>
+			 				 </div>
+			 			</div>
+			 			<div style="display: none;">
+			 				 <ul>
+			 				 	<#list demandList as demand>
+			 				 	<#if demand_index lt 11>
+			 				 	<li class="busi_nav_content_li">
+			 				 		<em>${demand.time}</em>
+			 				 		<a href="${base}/web/supplyShow.htm">
+			 				 			${demand.name}
+			 				 		</a>
+			 				 	</li>
+			 				 	</#if>
+			 				 	</#list>
+			 				 </ul>
+			 				 <div class="clearfix">
+			 				 	<a href="${base}/web/demandShow.htm" class="ck_more pull-right">查看更多</a>
+			 				 </div>
+			 			</div>
+			 		</div>
+			 	</div>
+			 	<div class="col-lg-6">
+			 		<div class="busi_nav1 clearfix">
+			 			<p class="pull-left">专家问答</p>
+			 			<ul>
+			 				<li class="current">最热</li>
+			 				<li>最新</li>
+			 			</ul>
+			 		</div>
+			 		<div class="busi_nav_content1">
+			 			<div >
+			 				 <ul>
+			 				 <#list expertAnswerList1 as data>
+			 				 <#if data_index lt 11>
+			 				 	<li class="busi_nav_content_li1">
+			 				 		<!--<span class="">
+			 				 			<i></i>
+			 				 		</span>-->
+			 				 		<em>${data.time}</em>
+			 				 		<a href="${base}/web/expertAnswer/detial_${data.id}.htm">
+			 				 			${data.title}
+			 				 		</a>
+			 				 	</li>
+			 				 	</#if>
+			 				 	</#list>
+			 				 </ul>
+			 				 <div class="clearfix">
+			 				 	<a href="${base}/web/expertAnswer/show.htm" class="ck_more pull-right">查看更多</a>
+			 				 </div>
+			 			</div>
+			 			<div style="display: none;">
+			 				 <ul>
+			 				 	 <#list expertAnswerList as data>
+			 				 	 <#if data_index lt 11>
+			 				 	<li class="busi_nav_content_li1">
+			 				 		<!--<span class="">
+			 				 			<i></i>
+			 				 		</span>-->
+			 				 		<em>${data.time}</em>
+			 				 		<a href="${base}/web/expertAnswer/detial_${data.id}.htm">
+			 				 			${data.title}
+			 				 		</a>
+			 				 	</li>
+			 				 	</#if>
+			 				 	</#list>			 				 </ul>
+			 				 <div class="clearfix">
+			 				 	<a href="${base}/web/expertAnswer/show.htm" class="ck_more pull-right">查看更多</a>
+			 				 </div>
+			 			</div>
+			 		</div>
+			 	</div>
+			 </div>
+		</div>
+		<div class="col-lg-4 ">
+			<div class="sys_nav">
+				<h1>系统专栏</h1>
+				<div class="sys_nav_list clearfix">
+					<ul>
+						<li class="sys_nav_list_1">
+							<a href="${url1}">
+								<em><img src="${resRoot}/project/images/icon6.png"/></em>
+								<span>能源利用<br />状况报告</span>
+							</a>
+						</li>
+						<li class="sys_nav_list_2">
+							<a href="${url2}">
+								<em><img src="${resRoot}/project/images/icon7.png"/></em>
+								<span>关键指标<br />分析</span>
+							</a>
+						</li>
+						<li class="sys_nav_list_3">
+							<a href="${url3}">
+								<em><img src="${resRoot}/project/images/icon8.png"/></em>
+								<span>循环经济<br />指标</span>
+							</a>
+						</li>
+						<li class="sys_nav_list_4">
+							<a href="${url4}">
+								<em><img src="${resRoot}/project/images/icon9.png"/></em>
+								<span>能源审计<br />系统</span>
+							</a>
+						</li>
+						<li class="sys_nav_list_5">
+							<a href="${url5}">
+								<em><img src="${resRoot}/project/images/icon10.png"/></em>
+								<span>节能减排<br />项目申报</span>
+							</a>
+						</li>
+						<li class="sys_nav_list_6">
+							<a href="${url6}">
+								<em><img src="${resRoot}/project/images/icon11.png"/></em>
+								<span>清洁生产<br />审核系统</span>
+							</a>
+						</li>
+						<li class="sys_nav_list_7">
+							<a href="${url7}">
+								<em><img src="${resRoot}/project/images/icon12.png"/></em>
+								<span>能源管理<br />中心</span>
+							</a>
+						</li>
+						<li class="sys_nav_list_8">
+							<a href="${url8}">
+								<em><img src="${resRoot}/project/images/icon13.png"/></em>
+								<span>节能环保<br />产业调查</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="res_list">
+				<div class="res_top clearfix">
+					<div class="pull-left">
+						<img src="${resRoot}/project/images/icon14.png"/>
+						<span>成果展示</span>
+					</div>
+					<ul class="res_list_ul">
+						<li class="curr">绿色发展</li>
+						<li>节能减排</li>
+						<li>典型项目</li>
+						<li>园区循环化改造</li>
+						<li>产业布局调整</li>
+					</ul>
+				</div>
+				<div class="res_list_content clearfix">
+					<div >
+						<ul>
+							<#list achievement1 as achievement>
+							<#if list_index lt 7>
+							<li class="">
+								<a href="#" class="clearfix">
+									<em></em>
+									<p>${achievement.title}</p>
+									<span>${achievement.createTime?date}</span>
+								</a>
+							</li>
+							</#if>
+							</#list>
+						</ul>
+						<a href="${base}/web/achievement/show.htm" class="ck_more pull-right">查看更多</a>
+					</div>
+					<div style="display: none;">
+						<ul>
+							<#list achievement2 as achievement>
+							<#if list_index lt 7>
+							<li class="">
+								<a href="#" class="clearfix">
+									<em></em>
+									<p>${achievement.title}</p>
+									<span>${achievement.createTime?date}</span>
+								</a>
+							</li>
+							</#if>
+							</#list>
+						</ul>
+						<a href="${base}/web/achievement/show.htm?type=1" class="ck_more pull-right">查看更多</a>
+					</div>
+					<div style="display: none;">
+						<ul>
+							<#list achievement3 as achievement>
+							<#if list_index lt 7>
+							<li class="">
+								<a href="#" class="clearfix">
+									<em></em>
+									<p>${achievement.title}</p>
+									<span>${achievement.createTime?date}</span>
+								</a>
+							</li>
+							</#if>
+							</#list>
+						</ul>
+						<a href="${base}/web/achievement/show.htm?type=2" class="ck_more pull-right">查看更多</a>
+					</div>
+					<div style="display: none;">
+						<ul>
+							<#list achievement4 as achievement>
+							<#if list_index lt 7>
+							<li class="">
+								<a href="#" class="clearfix">
+									<em></em>
+									<p>${achievement.title}</p>
+									<span>${achievement.createTime?date}</span>
+								</a>
+							</li>
+							</#if>
+							</#list>
+						</ul>
+						<a href="${base}/web/achievement/show.htm?type=3" class="ck_more pull-right">查看更多</a>
+					</div>
+					<div style="display: none;">
+						<ul>
+							<#list achievement5 as achievement>
+							<#if list_index lt 7>
+							<li class="">
+								<a href="#" class="clearfix">
+									<em></em>
+									<p>${achievement.title}</p>
+									<span>${achievement.createTime?date}</span>
+								</a>
+							</li>
+							</#if>
+							</#list>
+						</ul>
+						<a href="${base}/web/achievement/show.htm?type=4" class="ck_more pull-right">查看更多</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+</html>

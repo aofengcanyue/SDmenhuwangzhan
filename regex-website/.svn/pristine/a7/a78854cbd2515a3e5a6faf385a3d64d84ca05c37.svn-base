@@ -1,0 +1,106 @@
+package com.regex.web.controller.admin.sys;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.dto.info.TrainingDTO;
+import com.regex.web.common.utils.AjaxUtil;
+import com.regex.web.service.info.TrainingService;
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 企业培训
+ *
+ * @author Administrator
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+@Controller
+@RequestMapping("sys/training")
+public class TrainingController {
+    
+    @Autowired
+    private TrainingService trainingService;
+    
+    private static Map<String, String> typeMap = new HashMap<String, String>();
+    
+    static {
+        typeMap.put("0", "能源管理体系");
+        typeMap.put("1", "能源审计");
+        typeMap.put("2", "清洁生产审核");
+       
+    }
+    
+    
+    @RequestMapping("input")
+    public String input(Model model,@ModelAttribute("id")String id) {
+        if(StringUtils.isNotEmpty(id)) {
+            TrainingDTO trainingDTO = trainingService.selectTrainingDTOById(Long.parseLong(id));
+        model.addAttribute("trainingDTO",trainingDTO);
+        }
+        model.addAttribute("typeMap", typeMap);
+        return "admin/training/input";
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 企业培训列表
+     *
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("show")
+    public String show(Model model) {
+           
+        List<TrainingDTO> trainingList = trainingService.selectTrainingDTO(null);
+        
+        model.addAttribute("trainingList",trainingList);
+        model.addAttribute("typeMap", typeMap);
+        return "admin/training/show";
+    }
+    
+    
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 添加企业培训
+     *  
+     * @param response
+     * @param eliminationDTO
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("insert")
+    public void insert(HttpServletResponse response,TrainingDTO trainingDTO) {
+        int n = 0;
+        if(trainingDTO.getId()>0) {
+            
+            trainingDTO.setUpdateTime(new Date());
+            n= trainingService.updateNonEmptyTrainingDTOById(trainingDTO);
+            
+        }else {
+            
+            trainingDTO.setIsDel("0");
+            trainingDTO.setCreateTime(new Date());
+            trainingDTO.setUpdateTime(new Date());
+            n = trainingService.insertTrainingDTO(trainingDTO);
+        }
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+}

@@ -1,0 +1,209 @@
+package com.regex.web.common.dto.green;
+public class GreenParkDTO {
+    private Long id;
+    private String applyJob;//申报人职务
+    private String applyFax;//申报人传真
+    private String applyEmail;//申报人电子邮箱
+    private String address;//通讯地址
+    private java.util.Date createTime;
+    private String level;//园区级别
+    private String applyTel;//申报人联系电话
+    private String applyor;//申报单位联系人
+    private String type;//园区类型
+    private java.util.Date updateTime;
+    private String name;//园区名称
+    private String isDel;
+    private String header;//负责人
+    private String tel;//联系电话
+    private String postalCode;//邮政编码
+    private String job;//职务
+    private String fax;//传真
+    private String email;//电子邮箱
+    private String introduction;//园区简介
+    public GreenParkDTO() {
+        super();
+    }
+    public GreenParkDTO(Long id,String applyJob,String applyFax,String applyEmail,String address,java.util.Date createTime,String level,String applyTel,String applyor,String type,java.util.Date updateTime,String name,String isDel,String header,String tel,String postalCode,String job,String fax,String email,String introduction) {
+        super();
+        this.id = id;
+        this.applyJob = applyJob;
+        this.applyFax = applyFax;
+        this.applyEmail = applyEmail;
+        this.address = address;
+        this.createTime = createTime;
+        this.level = level;
+        this.applyTel = applyTel;
+        this.applyor = applyor;
+        this.type = type;
+        this.updateTime = updateTime;
+        this.name = name;
+        this.isDel = isDel;
+        this.header = header;
+        this.tel = tel;
+        this.postalCode = postalCode;
+        this.job = job;
+        this.fax = fax;
+        this.email = email;
+        this.introduction = introduction;
+    }
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getApplyJob() {
+        return this.applyJob;
+    }
+
+    public void setApplyJob(String applyJob) {
+        this.applyJob = applyJob;
+    }
+
+    public String getApplyFax() {
+        return this.applyFax;
+    }
+
+    public void setApplyFax(String applyFax) {
+        this.applyFax = applyFax;
+    }
+
+    public String getApplyEmail() {
+        return this.applyEmail;
+    }
+
+    public void setApplyEmail(String applyEmail) {
+        this.applyEmail = applyEmail;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public java.util.Date getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(java.util.Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getLevel() {
+        return this.level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getApplyTel() {
+        return this.applyTel;
+    }
+
+    public void setApplyTel(String applyTel) {
+        this.applyTel = applyTel;
+    }
+
+    public String getApplyor() {
+        return this.applyor;
+    }
+
+    public void setApplyor(String applyor) {
+        this.applyor = applyor;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public java.util.Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(java.util.Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIsDel() {
+        return this.isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
+
+    public String getHeader() {
+        return this.header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public String getTel() {
+        return this.tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getPostalCode() {
+        return this.postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getJob() {
+        return this.job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getFax() {
+        return this.fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getIntroduction() {
+        return this.introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+}

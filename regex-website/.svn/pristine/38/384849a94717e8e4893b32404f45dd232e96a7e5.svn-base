@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>问答广场</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style>
+	html,body{ background: #fff; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>问答广场</p>
+</div>
+
+<div class="container bg_f">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/">首页</a>>问答广场</p>
+		</div>
+		<div class="col-lg-8 col-lg-push-2">
+			<div class="col-lg-3 o_sele">
+				<select name="" id="type" onchange="selectAns();" >
+					<option value="">服务领域-全部</option>
+					<#list typeMap?keys as key>
+					<option <#if type??&& type==key>selected="selected"</#if> value="${key}">${typeMap[key]}</option>
+					</#list>
+				</select>
+			</div>
+			<!-- <div class="col-lg-3 o_sele">
+				<select name="">
+					<option value="">啦啦啦啦啦</option>
+					<option value="">哈哈哈哈</option>
+				</select>
+			</div> -->
+			<a href="${base}/web/expertAnswer/input.htm" class="i_ask pull-right">我要提问</a>
+			<a href="${base}/web/expert/show.htm" class="i_ask  pull-right">专家库</a>
+			
+		</div>
+		<div class="col-lg-10 col-lg-push-2 ">
+				<div style="padding-bottom: 30px;"></div>
+		</div>
+		<#list result.datas as expertAnswerDTO>
+		<div class="col-lg-10 col-lg-push-2">
+			<h3 class="col-lg-10  h_join h_join1" >${expertAnswerDTO.title}</h3>
+			<p class="col-lg-10  h_info h_info1">
+				<span>${typeMap[expertAnswerDTO.type]}</span><strong>|</strong>
+				<span>${expertAnswerDTO.createTime?datetime}</span><strong>|</strong>
+				<i>${expertAnswerDTO.answerCount}</i><em>回答</em>
+				<a href="${base}/web/expertAnswer/detial_${expertAnswerDTO.id}.htm" class="pull-right answer_red">回答</a>
+			</p>
+		</div>
+		</#list>
+	</div>
+</div>
+	
+</body>
+<script type="text/javascript">
+	function selectAns() {
+		var type=$("#type").val();
+		window.location.href="${base}/web/expertAnswer/show.htm?type=" + type;
+	}
+</script>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+
+</html>

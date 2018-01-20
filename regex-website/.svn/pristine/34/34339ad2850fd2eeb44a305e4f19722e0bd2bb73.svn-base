@@ -1,0 +1,27 @@
+package com.regex.web.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.dto.info.NoticeDTO;
+import com.regex.web.service.info.INoticeService;
+
+@Controller
+public class IndexController {
+    
+	@Autowired
+    private INoticeService noticeService;
+	
+	@RequestMapping("index")
+	public String index() {
+	    try {
+    	    NoticeDTO noticeDTO = noticeService.selectById(1);
+    	    System.out.println("noticeDTO===" + noticeDTO.getTitle());
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	    }
+		return "index";
+	}
+
+}

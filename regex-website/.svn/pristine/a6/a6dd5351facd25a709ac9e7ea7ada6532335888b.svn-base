@@ -1,0 +1,17 @@
+#base=/regex-website
+base=
+resRoot=@{base}/RES
+picUrl=
+
+
+sysName=\u6B63\u5219\u7BA1\u7406\u540E\u53F0
+
+
+session.sessionTimeout=1800000
+session.sessionTimeoutClean=120000
+
+
+#jms.broker_url=failover://(tcp://139.196.181.106:61616)?randomize=false&initialReconnectDelay=100&timeout=5000
+#
+#jms.clicent_id=durableTopicListenerDemo
+

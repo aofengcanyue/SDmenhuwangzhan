@@ -1,0 +1,23 @@
+package com.regex.web.service.info;
+
+import java.util.List;
+
+import com.regex.web.common.dto.info.EliminationDTO;
+import com.regex.web.common.utils.QueryConditions;
+
+public interface IEliminationService {
+
+    int insert(EliminationDTO eliminationDTO); 
+    
+    List<EliminationDTO> selectByModel(QueryConditions params);
+    
+    int selectCountByModel(QueryConditions params);
+    
+    int updateById(EliminationDTO eliminationDTO);
+    
+    int del(long id);
+    
+    List<EliminationDTO> selectAll();
+    
+    EliminationDTO selectById(long id);
+}

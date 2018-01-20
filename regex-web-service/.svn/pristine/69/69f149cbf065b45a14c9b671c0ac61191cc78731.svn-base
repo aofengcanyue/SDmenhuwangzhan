@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IEnergySaveDAO">
+
+	 <insert id="insert" parameterType="com.regex.web.common.dto.info.EnergySaveDTO"
+     useGeneratedKeys="true" keyProperty="id">
+    	insert into t_energy_save (technical,years,type,application,technical_content,technical_conditions,model,
+    	investment,save_energy,emission,is_del,create_time,update_time,number)values(#{technical},#{years},#{type},#{application},
+    	#{technicalContent},#{technicalConditions},#{model},#{investment},#{saveEnergy},#{emission},#{isDel},
+    	#{createTime},#{updateTime},#{number})
+    </insert>
+    
+     <select id="selectAll"  resultType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	select id as id,
+    	    technical as technical,
+    	    years as years,
+    	    type as type,
+    	    application as application,
+    	    technical_content as technicalContent,
+    	    technical_conditions as technicalConditions,
+    	    model as model,
+    	    investment as investment,
+    	    save_energy as saveEnergy,
+    	    emission as emission,
+    	    is_del as isDel,
+    	    number as number,
+    	    create_time as createTime,
+    	    update_time as updateTime
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1'	  
+    </select>
+    
+     <select id="selectById"  parameterType="long" resultType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	select id as id,
+    	    technical as technical,
+    	    years as years,
+    	    type as type,
+    	    application as application,
+    	    technical_content as technicalContent,
+    	    technical_conditions as technicalConditions,
+    	    model as model,
+    	    investment as investment,
+    	    save_energy as saveEnergy,
+    	    emission as emission,
+    	    is_del as isDel,
+    	    number as number,
+    	    create_time as createTime,
+    	    update_time as updateTime
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1'	  and id=#{id}
+    </select>
+    
+    <select id="selectByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	select id as id,
+    	    technical as technical,
+    	    years as years,
+    	    type as type,
+    	    application as application,
+    	    technical_content as technicalContent,
+    	    technical_conditions as technicalConditions,
+    	    model as model,
+    	    investment as investment,
+    	    save_energy as saveEnergy,
+    	    emission as emission,
+    	    is_del as isDel,
+    	    number as number,
+    	    create_time as createTime,
+    	    update_time as updateTime
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1' 
+ 			<if test="name !=null and name !=''" >
+ 			and  technical like concat('%',#{name},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and type=#{type}  
+ 			</if>	  
+ 			LIMIT #{startIndex},#{pageSize}
+    </select>
+    
+    <select id="selectCountByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="int">
+    	select
+    		count(0)
+ 		from
+ 			 t_energy_save 	  
+ 		where 
+ 			is_del!='1'
+ 			<if test="name !=null and name !=''" >
+ 			and  technical like concat('%',#{name},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and type=#{type}  
+ 			</if>	   
+    </select>
+    
+    <update id="updateById" parameterType="com.regex.web.common.dto.info.EnergySaveDTO">
+    	update t_energy_save set technical=#{technical},years=#{years},application=#{application},technical_content=#{technicalContent},technical_conditions=#{technicalConditions},
+    	model=#{model},investment=#{investment},save_energy=#{saveEnergy},emission=#{emission},update_time=#{updateTime},number=#{number},type=#{type} where id=#{id}
+    </update>
+    
+     <update id="del" parameterType="long">
+    	update t_energy_save set is_del='1' where id=#{id}
+    </update>
+</mapper>

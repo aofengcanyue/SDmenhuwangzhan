@@ -1,0 +1,60 @@
+package com.regex.web.service.info.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.regex.web.common.dto.info.EliminationDTO;
+import com.regex.web.common.utils.QueryConditions;
+import com.regex.web.dao.info.IEliminationDAO;
+import com.regex.web.service.info.IEliminationService;
+@Service
+public class EliminationServiceImpl implements IEliminationService {
+    
+    @Autowired
+    private IEliminationDAO eliminationDAO;
+    
+    @Override
+    public int insert(EliminationDTO eliminationDTO) {
+
+        return eliminationDAO.insert(eliminationDTO);
+    }
+
+    @Override
+    public List<EliminationDTO> selectByModel(QueryConditions params) {
+        
+        return eliminationDAO.selectByModel(params);
+    }
+
+    @Override
+    public int selectCountByModel(QueryConditions params) {
+        
+        return eliminationDAO.selectCountByModel(params);
+    }
+
+    @Override
+    public int updateById(EliminationDTO eliminationDTO) {
+        
+        return eliminationDAO.updateById(eliminationDTO);
+    }
+
+    @Override
+    public int del(long id) {
+        
+        return eliminationDAO.del(id);
+    }
+
+    @Override
+    public List<EliminationDTO> selectAll() {
+        
+        return eliminationDAO.selectAll();
+    }
+
+    @Override
+    public EliminationDTO selectById(long id) {
+        
+        return eliminationDAO.selectById(id);
+    }
+
+}

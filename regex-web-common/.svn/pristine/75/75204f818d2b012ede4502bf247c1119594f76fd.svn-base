@@ -1,0 +1,94 @@
+package com.regex.web.common.dto.info;
+public class TrainingDTO implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
+    private Long id;
+    private String download;//下载链接
+    private java.util.Date updateTime;
+    private java.util.Date createTime;
+    private String upload;//上传地址
+    private String imageUrl;//图片
+    private String isDel;//0正常 1删除
+    private String title;//标题
+    private String type;//type
+    private String content;//内容
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDownload() {
+        return this.download;
+    }
+
+    public void setDownload(String download) {
+        this.download = download;
+    }
+
+    public java.util.Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(java.util.Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public java.util.Date getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(java.util.Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpload() {
+        return this.upload;
+    }
+
+    public void setUpload(String upload) {
+        this.upload = upload;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getIsDel() {
+        return this.isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+}

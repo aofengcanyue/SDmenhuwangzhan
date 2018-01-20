@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IEliminationDAO">
+	
+	 <resultMap id="result_EliminationDTO_Map" type="com.regex.web.common.dto.info.EliminationDTO">
+        <id column="id" property="id" />
+        <result column="reason" property="reason" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="name" property="name" />
+        <result column="is_del" property="isDel" />
+        <result column="specification" property="specification" />
+        <result column="model" property="model" />
+        <result column="type" property="type" />
+        <result column="range_time" property="rangeTime" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_elimination的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_elimination_Column">
+        t_elimination.id as id
+        ,t_elimination.reason as reason
+        ,t_elimination.update_time as update_time
+        ,t_elimination.create_time as create_time
+        ,t_elimination.name as name
+        ,t_elimination.is_del as is_del
+        ,t_elimination.specification as specification
+        ,t_elimination.model as model
+        ,t_elimination.type as type
+        ,t_elimination.range_time as range_time
+    </sql>
+
+    <!--获得类名为:EliminationDTO对应的数据库表的数据总行数 -->
+    <select id="getEliminationDTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_elimination
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:EliminationDTO对应数据库中表的数据集合 -->
+    <select id="selectEliminationDTO" parameterType="com.regex.web.common.Assist"  resultMap="result_EliminationDTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_elimination_Column" /> 
+            </otherwise>
+        </choose>
+        from t_elimination
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_elimination
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_elimination.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个EliminationDTO对象,以参数EliminationDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectEliminationDTOByObj" parameterType="com.regex.web.common.dto.info.EliminationDTO" resultMap="result_EliminationDTO_Map">
+        select 
+            <include refid="t_elimination_Column" /> 
+        from t_elimination
+        <where>
+            <if test="rangeTime != null "> and t_elimination.range_time = #{rangeTime}</if>
+            <if test="type != null "> and t_elimination.type = #{type}</if>
+            <if test="model != null "> and t_elimination.model = #{model}</if>
+            <if test="specification != null "> and t_elimination.specification = #{specification}</if>
+            <if test="isDel != null "> and t_elimination.is_del = #{isDel}</if>
+            <if test="name != null "> and t_elimination.name = #{name}</if>
+            <if test="createTime != null "> and t_elimination.create_time = #{createTime}</if>
+            <if test="updateTime != null "> and t_elimination.update_time = #{updateTime}</if>
+            <if test="reason != null "> and t_elimination.reason = #{reason}</if>
+            <if test="id != null "> and t_elimination.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过EliminationDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectEliminationDTOById" parameterType="java.lang.Long" resultMap="result_EliminationDTO_Map">
+        select 
+            <include refid="t_elimination_Column" /> 
+        from t_elimination
+        where t_elimination.id = #{id}
+    </select> 
+
+    <!-- 将EliminationDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertEliminationDTO" parameterType="com.regex.web.common.dto.info.EliminationDTO">
+        insert into t_elimination(id,reason,update_time,create_time,name,is_del,specification,model,type,range_time) 
+        values(#{id},#{reason},#{updateTime},#{createTime},#{name},#{isDel},#{specification},#{model},#{type},#{rangeTime})
+    </insert>
+
+    <!-- 将EliminationDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyEliminationDTO" parameterType="com.regex.web.common.dto.info.EliminationDTO">
+        insert into t_elimination
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="reason != null">reason,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="name != null">name,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="specification != null">specification,</if>
+            <if test="model != null">model,</if>
+            <if test="type != null">type,</if>
+            <if test="rangeTime != null">range_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="reason != null"> #{reason},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="name != null"> #{name},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="specification != null"> #{specification},</if>
+            <if test="model != null"> #{model},</if>
+            <if test="type != null"> #{type},</if>
+            <if test="rangeTime != null"> #{rangeTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 将EliminationDTO批量插入到对应数据库的表中-->
+    <insert id="insertEliminationDTOByBatch" parameterType="ArrayList">
+        insert into t_elimination(id,reason,update_time,create_time,name,is_del,specification,model,type,range_time) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.reason},#{item.updateTime},#{item.createTime},#{item.name},#{item.isDel},#{item.specification},#{item.model},#{item.type},#{item.rangeTime})
+        </foreach>
+    </insert>
+
+    <!-- 通过EliminationDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteEliminationDTOById" parameterType="java.lang.Long">
+        delete from t_elimination
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将EliminationDTO对应的数据库表的数据删除-->
+    <delete id="deleteEliminationDTO" parameterType="com.regex.web.common.Assist">
+        delete from t_elimination
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过EliminationDTO的id将EliminationDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateEliminationDTOById" parameterType="com.regex.web.common.dto.info.EliminationDTO">
+        update t_elimination set
+            reason=#{reason}
+            ,update_time=#{updateTime}
+            ,create_time=#{createTime}
+            ,name=#{name}
+            ,is_del=#{isDel}
+            ,specification=#{specification}
+            ,model=#{model}
+            ,type=#{type}
+            ,range_time=#{rangeTime}
+        where id=#{id}
+    </update>
+
+    <!-- 通过EliminationDTO的id将EliminationDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyEliminationDTOById" parameterType="com.regex.web.common.dto.info.EliminationDTO">
+        update t_elimination
+        <set>
+            <if test="reason != null">
+                reason=#{reason},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="specification != null">
+                specification=#{specification},
+            </if>
+            <if test="model != null">
+                model=#{model},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="rangeTime != null">
+                range_time=#{rangeTime},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将EliminationDTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateEliminationDTO" parameterType="map">
+        update t_elimination
+        <set>
+                id=#{enti.id},
+                reason=#{enti.reason},
+                update_time=#{enti.updateTime},
+                create_time=#{enti.createTime},
+                name=#{enti.name},
+                is_del=#{enti.isDel},
+                specification=#{enti.specification},
+                model=#{enti.model},
+                type=#{enti.type},
+                range_time=#{enti.rangeTime},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将EliminationDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyEliminationDTO" parameterType="map">
+        update t_elimination
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.reason != null">
+                reason=#{enti.reason},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.name != null">
+                name=#{enti.name},
+            </if>
+            <if test="enti.isDel != null">
+                is_del=#{enti.isDel},
+            </if>
+            <if test="enti.specification != null">
+                specification=#{enti.specification},
+            </if>
+            <if test="enti.model != null">
+                model=#{enti.model},
+            </if>
+            <if test="enti.type != null">
+                type=#{enti.type},
+            </if>
+            <if test="enti.rangeTime != null">
+                range_time=#{enti.rangeTime},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+	
+	<insert id="insert" parameterType="com.regex.web.common.dto.info.EliminationDTO"
+     useGeneratedKeys="true" keyProperty="id">
+     insert into t_elimination(name,type,model,specification,reason,range_time,is_del,create_time,
+     update_time)values(#{name},#{type},#{model},#{specification},#{reason},#{rangeTime},#{isDel},
+     #{createTime},#{updateTime})
+     </insert>
+     
+     <select id="selectAll" resultType="com.regex.web.common.dto.info.EliminationDTO">
+		select id as id,
+			name as name,
+			type as type,
+			model as model,
+			specification as specification,
+			reason as reason,
+			range_time as rangeTime,
+			is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+ 			 t_elimination 	  
+ 		where 
+ 			is_del!='1' 
+	</select>
+	
+	 <select id="selectById" parameterType="long" resultType="com.regex.web.common.dto.info.EliminationDTO">
+		select id as id,
+			name as name,
+			type as type,
+			model as model,
+			specification as specification,
+			reason as reason,
+			range_time as rangeTime,
+			is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+ 			 t_elimination 	  
+ 		where 
+ 			is_del!='1' and id=#{id}
+	</select>
+	
+	<select id="selectByModel" parameterType="com.regex.web.common.utils.QueryConditions" resultType="com.regex.web.common.dto.info.EliminationDTO">
+		select id as id,
+			name as name,
+			type as type,
+			model as model,
+			specification as specification,
+			reason as reason,
+			range_time as rangeTime,
+			is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+ 			 t_elimination 	  
+ 		where 
+ 			is_del!='1' 
+ 			<if test="model !=null and model !=''">
+ 			and  model like concat('%',#{model},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and type=#{type}  
+ 			</if>
+ 			LIMIT #{startIndex},#{pageSize}
+	</select>
+	
+	<select id="selectCountByModel" parameterType="com.regex.web.common.utils.QueryConditions" resultType="int">
+    	select
+    		count(0)
+ 		from
+ 			 t_elimination 	  
+ 		where 
+ 			is_del!='1'
+ 			<if test="model !=null and model !=''" >
+ 			and  model like concat('%',#{model},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and type=#{type}  
+ 			</if>
+    </select>
+    <update id="updateById" parameterType="com.regex.web.common.dto.info.EliminationDTO">
+    	update  t_elimination set name=#{name},type=#{type},model=#{model},specification=#{specification},reason=#{reason},
+    	range_time=#{rangeTime},update_time=#{updateTime} where id=#{id}
+    </update>
+    
+     <update id="del" parameterType="long">
+    	update  t_elimination set is_del='1' where id=#{id}
+    </update>
+</mapper>

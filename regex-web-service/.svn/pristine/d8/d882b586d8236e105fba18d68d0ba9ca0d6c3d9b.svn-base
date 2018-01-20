@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.evaluation.EvaluationOneDAO">
+    <!-- EvaluationOneDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_EvaluationOneDTO_Map" type="com.regex.web.common.dto.evaluation.EvaluationOneDTO">
+        <id column="id" property="id" />
+        <result column="value_eleven" property="valueEleven" />
+        <result column="value_seven" property="valueSeven" />
+        <result column="value_fifteen" property="valueFifteen" />
+        <result column="value_five" property="valueFive" />
+        <result column="create_time" property="createTime" />
+        <result column="value_twelve" property="valueTwelve" />
+        <result column="value_nine" property="valueNine" />
+        <result column="value_" property="value" />
+        <result column="value_fourteen" property="valueFourteen" />
+        <result column="years" property="years" />
+        <result column="value_ten" property="valueTen" />
+        <result column="update_time" property="updateTime" />
+        <result column="value_six" property="valueSix" />
+        <result column="value_thirteen" property="valueThirteen" />
+        <result column="name" property="name" />
+        <result column="is_del" property="isDel" />
+        <result column="value_one" property="valueOne" />
+        <result column="value_eight" property="valueEight" />
+        <result column="value_three" property="valueThree" />
+        <result column="value_two" property="valueTwo" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_evaluation_one的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_evaluation_one_Column">
+        t_evaluation_one.id as id
+        ,t_evaluation_one.value_eleven as value_eleven
+        ,t_evaluation_one.value_seven as value_seven
+        ,t_evaluation_one.value_fifteen as value_fifteen
+        ,t_evaluation_one.value_five as value_five
+        ,t_evaluation_one.create_time as create_time
+        ,t_evaluation_one.value_twelve as value_twelve
+        ,t_evaluation_one.value_nine as value_nine
+        ,t_evaluation_one.value_ as value_
+        ,t_evaluation_one.value_fourteen as value_fourteen
+        ,t_evaluation_one.years as years
+        ,t_evaluation_one.value_ten as value_ten
+        ,t_evaluation_one.update_time as update_time
+        ,t_evaluation_one.value_six as value_six
+        ,t_evaluation_one.value_thirteen as value_thirteen
+        ,t_evaluation_one.name as name
+        ,t_evaluation_one.is_del as is_del
+        ,t_evaluation_one.value_one as value_one
+        ,t_evaluation_one.value_eight as value_eight
+        ,t_evaluation_one.value_three as value_three
+        ,t_evaluation_one.value_two as value_two
+    </sql>
+
+    <!--获得类名为:EvaluationOneDTO对应的数据库表的数据总行数 -->
+    <select id="getEvaluationOneDTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_evaluation_one
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:EvaluationOneDTO对应数据库中表的数据集合 -->
+    <select id="selectEvaluationOneDTO" parameterType="com.regex.web.common.Assist"  resultMap="result_EvaluationOneDTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_evaluation_one_Column" /> 
+            </otherwise>
+        </choose>
+        from t_evaluation_one
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_evaluation_one
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_evaluation_one.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个EvaluationOneDTO对象,以参数EvaluationOneDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectEvaluationOneDTOByObj" parameterType="com.regex.web.common.dto.evaluation.EvaluationOneDTO" resultMap="result_EvaluationOneDTO_Map">
+        select 
+            <include refid="t_evaluation_one_Column" /> 
+        from t_evaluation_one
+        <where>
+            <if test="valueTwo != null "> and t_evaluation_one.value_two = #{valueTwo}</if>
+            <if test="valueThree != null "> and t_evaluation_one.value_three = #{valueThree}</if>
+            <if test="valueEight != null "> and t_evaluation_one.value_eight = #{valueEight}</if>
+            <if test="valueOne != null "> and t_evaluation_one.value_one = #{valueOne}</if>
+            <if test="isDel != null "> and t_evaluation_one.is_del = #{isDel}</if>
+            <if test="name != null "> and t_evaluation_one.name = #{name}</if>
+            <if test="valueThirteen != null "> and t_evaluation_one.value_thirteen = #{valueThirteen}</if>
+            <if test="valueSix != null "> and t_evaluation_one.value_six = #{valueSix}</if>
+            <if test="updateTime != null "> and t_evaluation_one.update_time = #{updateTime}</if>
+            <if test="valueTen != null "> and t_evaluation_one.value_ten = #{valueTen}</if>
+            <if test="years != null "> and t_evaluation_one.years = #{years}</if>
+            <if test="valueFourteen != null "> and t_evaluation_one.value_fourteen = #{valueFourteen}</if>
+            <if test="value != null "> and t_evaluation_one.value_ = #{value}</if>
+            <if test="valueNine != null "> and t_evaluation_one.value_nine = #{valueNine}</if>
+            <if test="valueTwelve != null "> and t_evaluation_one.value_twelve = #{valueTwelve}</if>
+            <if test="createTime != null "> and t_evaluation_one.create_time = #{createTime}</if>
+            <if test="valueFive != null "> and t_evaluation_one.value_five = #{valueFive}</if>
+            <if test="valueFifteen != null "> and t_evaluation_one.value_fifteen = #{valueFifteen}</if>
+            <if test="valueSeven != null "> and t_evaluation_one.value_seven = #{valueSeven}</if>
+            <if test="valueEleven != null "> and t_evaluation_one.value_eleven = #{valueEleven}</if>
+            <if test="id != null "> and t_evaluation_one.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过EvaluationOneDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectEvaluationOneDTOById" parameterType="java.lang.Long" resultMap="result_EvaluationOneDTO_Map">
+        select 
+            <include refid="t_evaluation_one_Column" /> 
+        from t_evaluation_one
+        where t_evaluation_one.id = #{id}
+    </select> 
+
+    <!-- 将EvaluationOneDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertEvaluationOneDTO" parameterType="com.regex.web.common.dto.evaluation.EvaluationOneDTO">
+        insert into t_evaluation_one(id,value_eleven,value_seven,value_fifteen,value_five,create_time,value_twelve,value_nine,value_,value_fourteen,years,value_ten,update_time,value_six,value_thirteen,name,is_del,value_one,value_eight,value_three,value_two) 
+        values(#{id},#{valueEleven},#{valueSeven},#{valueFifteen},#{valueFive},#{createTime},#{valueTwelve},#{valueNine},#{value},#{valueFourteen},#{years},#{valueTen},#{updateTime},#{valueSix},#{valueThirteen},#{name},#{isDel},#{valueOne},#{valueEight},#{valueThree},#{valueTwo})
+    </insert>
+
+    <!-- 将EvaluationOneDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyEvaluationOneDTO" parameterType="com.regex.web.common.dto.evaluation.EvaluationOneDTO">
+        insert into t_evaluation_one
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="valueEleven != null">value_eleven,</if>
+            <if test="valueSeven != null">value_seven,</if>
+            <if test="valueFifteen != null">value_fifteen,</if>
+            <if test="valueFive != null">value_five,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="valueTwelve != null">value_twelve,</if>
+            <if test="valueNine != null">value_nine,</if>
+            <if test="value != null">value_,</if>
+            <if test="valueFourteen != null">value_fourteen,</if>
+            <if test="years != null">years,</if>
+            <if test="valueTen != null">value_ten,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="valueSix != null">value_six,</if>
+            <if test="valueThirteen != null">value_thirteen,</if>
+            <if test="name != null">name,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="valueOne != null">value_one,</if>
+            <if test="valueEight != null">value_eight,</if>
+            <if test="valueThree != null">value_three,</if>
+            <if test="valueTwo != null">value_two,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="valueEleven != null"> #{valueEleven},</if>
+            <if test="valueSeven != null"> #{valueSeven},</if>
+            <if test="valueFifteen != null"> #{valueFifteen},</if>
+            <if test="valueFive != null"> #{valueFive},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="valueTwelve != null"> #{valueTwelve},</if>
+            <if test="valueNine != null"> #{valueNine},</if>
+            <if test="value != null"> #{value},</if>
+            <if test="valueFourteen != null"> #{valueFourteen},</if>
+            <if test="years != null"> #{years},</if>
+            <if test="valueTen != null"> #{valueTen},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="valueSix != null"> #{valueSix},</if>
+            <if test="valueThirteen != null"> #{valueThirteen},</if>
+            <if test="name != null"> #{name},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="valueOne != null"> #{valueOne},</if>
+            <if test="valueEight != null"> #{valueEight},</if>
+            <if test="valueThree != null"> #{valueThree},</if>
+            <if test="valueTwo != null"> #{valueTwo},</if>
+        </trim>
+    </insert>
+
+    <!-- 将EvaluationOneDTO批量插入到对应数据库的表中-->
+    <insert id="insertEvaluationOneDTOByBatch" parameterType="ArrayList">
+        insert into t_evaluation_one(id,value_eleven,value_seven,value_fifteen,value_five,create_time,value_twelve,value_nine,value_,value_fourteen,years,value_ten,update_time,value_six,value_thirteen,name,is_del,value_one,value_eight,value_three,value_two) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.valueEleven},#{item.valueSeven},#{item.valueFifteen},#{item.valueFive},#{item.createTime},#{item.valueTwelve},#{item.valueNine},#{item.value},#{item.valueFourteen},#{item.years},#{item.valueTen},#{item.updateTime},#{item.valueSix},#{item.valueThirteen},#{item.name},#{item.isDel},#{item.valueOne},#{item.valueEight},#{item.valueThree},#{item.valueTwo})
+        </foreach>
+    </insert>
+
+    <!-- 通过EvaluationOneDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteEvaluationOneDTOById" parameterType="java.lang.Long">
+        delete from t_evaluation_one
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将EvaluationOneDTO对应的数据库表的数据删除-->
+    <delete id="deleteEvaluationOneDTO" parameterType="com.regex.web.common.Assist">
+        delete from t_evaluation_one
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过EvaluationOneDTO的id将EvaluationOneDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateEvaluationOneDTOById" parameterType="com.regex.web.common.dto.evaluation.EvaluationOneDTO">
+        update t_evaluation_one set
+            value_eleven=#{valueEleven}
+            ,value_seven=#{valueSeven}
+            ,value_fifteen=#{valueFifteen}
+            ,value_five=#{valueFive}
+            ,create_time=#{createTime}
+            ,value_twelve=#{valueTwelve}
+            ,value_nine=#{valueNine}
+            ,value_=#{value}
+            ,value_fourteen=#{valueFourteen}
+            ,years=#{years}
+            ,value_ten=#{valueTen}
+            ,update_time=#{updateTime}
+            ,value_six=#{valueSix}
+            ,value_thirteen=#{valueThirteen}
+            ,name=#{name}
+            ,is_del=#{isDel}
+            ,value_one=#{valueOne}
+            ,value_eight=#{valueEight}
+            ,value_three=#{valueThree}
+            ,value_two=#{valueTwo}
+        where id=#{id}
+    </update>
+
+    <!-- 通过EvaluationOneDTO的id将EvaluationOneDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyEvaluationOneDTOById" parameterType="com.regex.web.common.dto.evaluation.EvaluationOneDTO">
+        update t_evaluation_one
+        <set>
+            <if test="valueEleven != null">
+                value_eleven=#{valueEleven},
+            </if>
+            <if test="valueSeven != null">
+                value_seven=#{valueSeven},
+            </if>
+            <if test="valueFifteen != null">
+                value_fifteen=#{valueFifteen},
+            </if>
+            <if test="valueFive != null">
+                value_five=#{valueFive},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="valueTwelve != null">
+                value_twelve=#{valueTwelve},
+            </if>
+            <if test="valueNine != null">
+                value_nine=#{valueNine},
+            </if>
+            <if test="value != null">
+                value_=#{value},
+            </if>
+            <if test="valueFourteen != null">
+                value_fourteen=#{valueFourteen},
+            </if>
+            <if test="years != null">
+                years=#{years},
+            </if>
+            <if test="valueTen != null">
+                value_ten=#{valueTen},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="valueSix != null">
+                value_six=#{valueSix},
+            </if>
+            <if test="valueThirteen != null">
+                value_thirteen=#{valueThirteen},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="valueOne != null">
+                value_one=#{valueOne},
+            </if>
+            <if test="valueEight != null">
+                value_eight=#{valueEight},
+            </if>
+            <if test="valueThree != null">
+                value_three=#{valueThree},
+            </if>
+            <if test="valueTwo != null">
+                value_two=#{valueTwo},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将EvaluationOneDTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateEvaluationOneDTO" parameterType="map">
+        update t_evaluation_one
+        <set>
+                id=#{enti.id},
+                value_eleven=#{enti.valueEleven},
+                value_seven=#{enti.valueSeven},
+                value_fifteen=#{enti.valueFifteen},
+                value_five=#{enti.valueFive},
+                create_time=#{enti.createTime},
+                value_twelve=#{enti.valueTwelve},
+                value_nine=#{enti.valueNine},
+                value_=#{enti.value},
+                value_fourteen=#{enti.valueFourteen},
+                years=#{enti.years},
+                value_ten=#{enti.valueTen},
+                update_time=#{enti.updateTime},
+                value_six=#{enti.valueSix},
+                value_thirteen=#{enti.valueThirteen},
+                name=#{enti.name},
+                is_del=#{enti.isDel},
+                value_one=#{enti.valueOne},
+                value_eight=#{enti.valueEight},
+                value_three=#{enti.valueThree},
+                value_two=#{enti.valueTwo},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将EvaluationOneDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyEvaluationOneDTO" parameterType="map">
+        update t_evaluation_one
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.valueEleven != null">
+                value_eleven=#{enti.valueEleven},
+            </if>
+            <if test="enti.valueSeven != null">
+                value_seven=#{enti.valueSeven},
+            </if>
+            <if test="enti.valueFifteen != null">
+                value_fifteen=#{enti.valueFifteen},
+            </if>
+            <if test="enti.valueFive != null">
+                value_five=#{enti.valueFive},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.valueTwelve != null">
+                value_twelve=#{enti.valueTwelve},
+            </if>
+            <if test="enti.valueNine != null">
+                value_nine=#{enti.valueNine},
+            </if>
+            <if test="enti.value != null">
+                value_=#{enti.value},
+            </if>
+            <if test="enti.valueFourteen != null">
+                value_fourteen=#{enti.valueFourteen},
+            </if>
+            <if test="enti.years != null">
+                years=#{enti.years},
+            </if>
+            <if test="enti.valueTen != null">
+                value_ten=#{enti.valueTen},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.valueSix != null">
+                value_six=#{enti.valueSix},
+            </if>
+            <if test="enti.valueThirteen != null">
+                value_thirteen=#{enti.valueThirteen},
+            </if>
+            <if test="enti.name != null">
+                name=#{enti.name},
+            </if>
+            <if test="enti.isDel != null">
+                is_del=#{enti.isDel},
+            </if>
+            <if test="enti.valueOne != null">
+                value_one=#{enti.valueOne},
+            </if>
+            <if test="enti.valueEight != null">
+                value_eight=#{enti.valueEight},
+            </if>
+            <if test="enti.valueThree != null">
+                value_three=#{enti.valueThree},
+            </if>
+            <if test="enti.valueTwo != null">
+                value_two=#{enti.valueTwo},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

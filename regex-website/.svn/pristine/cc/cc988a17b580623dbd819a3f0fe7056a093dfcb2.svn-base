@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>绿色供应链评价指标评价表</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style type="text/css">
+	html,body{ background: #fff !important; }
+	td{ vertical-align: middle !important;
+		padding: 10px 0 !important; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+
+<!--  这个 class  .order_nav_list1  控制进度条  第一个div 没有这个默认class   进入页面的 时候 第一个 div 已经有这个 了  -->
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p class="back_page col-lg-offset-1"><a href="${base}/web/index.htm">首页</a>>绿色供应链评价指标评价表</p>
+		</div>
+		<div class="col-md-12">
+			<h3 class="high_title">绿色供应链评价指标评价表 </h3>
+		</div>
+	</div>
+</div>
+
+<div class="order_nav clearfix">
+	<div class="order_nav_list order_nav_list_f">
+		 <div class="order_nav_list_div">
+		 	<em>1</em>
+		 </div>
+		 <span class="cur">绿色供应链管理战略</span>
+		 <div class="actvie_line"></div>
+	</div>
+	<div class="order_nav_list order_nav_list_f">
+		 <div class="order_nav_list_div">
+		 	<em>2</em>
+		 </div>
+		  <span  class="cur">实施绿色供应商管理</span>
+		 <div class="current_line1 current_line2"></div>
+	</div>
+	<div class="order_nav_list order_nav_list_f">
+		 <div class="order_nav_list_div">
+		 	<em>3</em>
+		 </div>
+		 <span  class="cur">绿色生产</span>
+		 <div class="current_line1 current_line2"></div>
+	</div>
+	<div class="order_nav_list order_nav_list_f">
+		 <div class="order_nav_list_div">
+		 	<em>4</em>
+		 </div>
+		 <span  class="cur">绿色回收</span>
+		 <div class="current_line1 current_line2"></div>
+	</div>
+	<div class="order_nav_list order_nav_list_f">
+		 <div class="order_nav_list_div">
+		 	<em>5</em>
+		 </div>
+		 <span  class="cur">绿色信息平台建设</span>
+		 <div class="current_line1 current_line2"></div>
+	</div>
+	<div class="order_nav_list_last order_nav_list1">
+		 <div class="order_nav_list_div">
+		 	<em>6</em>
+		 </div>
+		 <span  class="cur" style="width:100px;">绿色信息披露</span>
+		  <div class="current_line_l1 current_line_l"></div>
+	</div>
+</div>
+
+<div class="container"> 
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 "> 
+			<div style="margin-top: 20px;"></div>
+			 <table class="table table-condensed table-bordered">
+				  
+				  <thead>
+				    <tr>
+				      <th class="td_blue">二级指标</th>
+				      <th class="td_blue" >单位</th>
+				      <th class="td_blue">指标类型</th>
+				      <th class="td_blue">分值</th>
+				      <th class="td_blue">得分</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+			      <#list datas as data>
+			      	<tr>
+		      		  <td >${classBMap[data.classb]}</td> 
+				      <td>${data.unit}</td>
+			      		<td>${typeMap[data.type]}</td>
+				      <td >${data.maxPoint}</td>
+				      <td >
+				      	<input type="text" id="point_${data_index+1}" name="point5" itemId="${data.id}" onChange="checkPoint(id);" point="${data.maxPoint}" value="" style="width:80px;" >
+				      </td>
+				    </tr>
+			      </#list>
+				  </tbody>
+			 </table>	
+		</div>
+	</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 "> 
+			<input type="button" class="pull-right next_btn" name="" id="" onclick="saveIndex5();" value="下一步" />
+		</div>
+	</div>
+</div>		
+	
+	
+</body>
+<script src="${resRoot}/layui/lay/dest/layui.all.js" charset="utf-8"></script>
+<script type="text/javascript">
+function checkPoint(id) {
+	var pointTmp = $("#" + id).val();
+	if(pointTmp!= "" && pointTmp != null && pointTmp !="undefined") {
+	var inputPoint = parseFloat(pointTmp);
+		var point = parseFloat($("#" + id).attr("point"));
+		if(inputPoint > point) {
+			$("#" + id).val(point);
+		}
+	}
+}
+function saveIndex5() {
+	var point5Arr = "";
+	var itemIdArr = "";
+	var flag = true;
+$("input[name='point5']").each(function(index,item){
+	var tmpPoint = $(this).val();
+	if(flag && (tmpPoint == "" || tmpPoint == null || tmpPoint =="undefined")) {
+		alert("请选择输入分数！")
+		flag=false;
+		return false;
+	} else {
+		var inputPoint = parseFloat(tmpPoint);
+		var point = parseFloat($(this).attr("point"));
+		if(inputPoint > point) {
+			$(this).val(point);
+		}
+	point5Arr = point5Arr + $(this).val() + "#";
+	itemIdArr = itemIdArr + $(this).attr("itemId") + "#";
+	}
+	 });
+if(flag) {
+	
+	$.ajax({
+		type : "post",
+		url : "${base}/web/supplyEvaluation/saveIndex5.htm",
+		data : {
+			point5Arr : point5Arr,
+			itemIdArr : itemIdArr
+			},
+		dataType : "json",
+		async : false,
+		success : function(data) {
+			if(data.message == 2) {
+				layer.alert('请完善数据');   
+					// return false;
+				} else if(data.message == 1) {
+					layer.msg('保存成功！', {
+					  icon: 1,
+					  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+					}, function(){
+						window.location.href="${base}/web/supplyEvaluation/index6.htm";
+					});   
+				} else {
+					layer.msg('系统繁忙！'); 
+				}
+		}
+	}); 
+}
+}
+</script>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+</html>
+

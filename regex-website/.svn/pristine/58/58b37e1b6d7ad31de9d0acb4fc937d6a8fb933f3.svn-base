@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>融资项目</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+
+<link rel="stylesheet" href="${resRoot}/layui/css/layui.css" media="all" />
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>融资项目</p>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-offset-1"><a href="${base}/">首页</a>>融资项目</p>
+		</div>
+	</div>
+		<#list result.datas as financing>
+		<#if (financing_index+1)%4==1>
+			<div class="row">
+			<div class="col-lg-2 col-lg-offset-2 ">
+		<#else>
+			<div class="col-lg-2  ">
+		</#if>
+			<div class="border_div_e">
+				<div><img src="${financing.imgUrl}" width="100%"/></div>
+				<h3 class="item_title"><#if financing.title?length &gt; 9 >${financing.title?substring(0,9)}<#else>${financing.title}</#if></h3>
+				<p class="item_p"><#if financing.introduction?length &gt; 30 >${financing.introduction?substring(0,30)}<#else>${financing.introduction}</#if></p>
+				<div class="item_num">
+					<ul class="clearfix">
+						<li>
+							<em>${financing.investment}</em>
+							<span>投资预算</span>
+						</li>
+						<li>
+							<em>${financing.demand}</em>
+							<span>投资预算</span>
+						</li>
+					</ul>
+				</div>
+				<a href="${base}/web/financing/detial_${financing.id}.htm" class="item_tz">我要投资</a>
+			</div>
+			
+		</div>
+		<#if (financing_index+1)%4==0>
+		</div>
+		</#if>
+		</#list>
+	
+</div>
+<div id="page"></div>
+
+<script type="text/javascript" src="${resRoot}/layui/layui.js"></script>
+<#assign pageUrl=base+'/web/financing/show.htm?'>
+<#include "/page/page.html">
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+</html>

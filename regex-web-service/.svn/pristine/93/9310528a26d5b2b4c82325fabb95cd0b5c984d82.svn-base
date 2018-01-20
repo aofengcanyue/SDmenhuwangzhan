@@ -1,0 +1,23 @@
+package com.regex.web.dao.info;
+
+import java.util.List;
+
+import com.regex.web.common.dto.info.WaterDTO;
+import com.regex.web.common.utils.QueryConditions;
+
+public interface IWaterDAO {
+    
+    int insert(WaterDTO waterDTO);
+    
+    List<WaterDTO> selectByName(QueryConditions params);
+    
+    int selectCountByName(QueryConditions params);
+    
+    int updateById(WaterDTO waterDTO);
+    
+    int del(long id);
+    
+    WaterDTO selectById(long id);
+    
+    List<WaterDTO> selectAll();
+}

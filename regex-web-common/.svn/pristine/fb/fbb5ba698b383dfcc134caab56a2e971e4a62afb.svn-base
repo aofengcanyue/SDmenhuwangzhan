@@ -1,0 +1,185 @@
+package com.regex.web.common.dto.info;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 节能低碳技术DTO
+ *
+ * @author Administrator
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+public class EnergySaveDTO implements Serializable{
+
+    /**
+     */
+    private static final long serialVersionUID = -4364201060456106042L;
+    
+    private long id;
+    
+    /**
+     * 技术名称
+     */
+    private String technical;
+    /**
+     * 年份
+     */
+    private String years;
+    /**
+     * 类型   1节能   2低碳
+     */
+    private String type;
+    /**
+     * 技术范围
+     */
+    private String application;
+    /**
+     * 主要技术内容
+     */
+    private String technicalContent;
+    /**
+     * 适用技术条件
+     */
+    private String technicalConditions;
+    /**
+     * 建设模型
+     */
+    private String model;
+    /**
+     * 投资额
+     */
+    private String investment;
+    /**
+     * 节能量
+     */
+    private String saveEnergy;
+    /**
+     * 二氧化碳减排量
+     */
+    private String emission;
+    /**
+     * 是否删除 0正常 1删除
+     */
+    private String isDel;
+    
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private Date createTime;
+    
+    private Date updateTime;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTechnical() {
+        return technical;
+    }
+
+    public void setTechnical(String technical) {
+        this.technical = technical;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
+
+    public String getTechnicalContent() {
+        return technicalContent;
+    }
+
+    public void setTechnicalContent(String technicalContent) {
+        this.technicalContent = technicalContent;
+    }
+
+    public String getTechnicalConditions() {
+        return technicalConditions;
+    }
+
+    public void setTechnicalConditions(String technicalConditions) {
+        this.technicalConditions = technicalConditions;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getInvestment() {
+        return investment;
+    }
+
+    public void setInvestment(String investment) {
+        this.investment = investment;
+    }
+
+    public String getSaveEnergy() {
+        return saveEnergy;
+    }
+
+    public void setSaveEnergy(String saveEnergy) {
+        this.saveEnergy = saveEnergy;
+    }
+
+    public String getEmission() {
+        return emission;
+    }
+
+    public void setEmission(String emission) {
+        this.emission = emission;
+    }
+
+    public String getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getYears() {
+        return years;
+    }
+
+    public void setYears(String years) {
+        this.years = years;
+    }
+    
+    
+}

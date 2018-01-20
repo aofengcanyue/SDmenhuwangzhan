@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style>
+	.table > tbody > tr > td{ line-height: 2.4; }
+	.btn_sl{ width: 150px; }
+	.btn_sl i{ float: left; }
+	.btn_sl span{ float: right;margin-top: 8px; }
+	.btn_sub:hover{ background: #004EB7; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>绿色工厂一般要求符合性评价表</p>
+</div>
+
+		
+<div class="container bg_f">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/">首页</a>>绿色工厂一般要求符合性评价表</p>
+		</div>
+		<div class="col-lg-12">
+			<p class="pj_t">绿色工厂一般要求符合性评价表</p>
+		</div>
+	</div>
+	<div class="row " >
+		
+			<div class="col-lg-8 col-lg-offset-2">
+		
+			<table class="table table-hover table-bordered ">
+				  
+				  <thead>
+				    <tr>
+				      <th class="td_blue col-lg-8">一般要求</th>
+				      <th class="td_blue col-lg-4">是否符合</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  	<#list datas as data>
+				    <tr>
+				      <td>${data.content}</td>
+				      <td>
+				      	<div class="btn-group">
+						    <button type="button" class="btn btn-default dropdown-toggle btn_sl" data-toggle="dropdown"><i>是</i>
+						        <span class="caret"></span>
+						    </button>
+						    <ul class="dropdown-menu btn_sc" role="menu">
+						        <li>
+						            <a href="javascript:;">请选择</a>
+						        </li>
+						        <li>
+						            <a href="javascript:;">是</a>
+						        </li>
+						        <li>
+						            <a href="javascript:;">否</a>
+						        </li>
+						       
+						    </ul>
+						</div>
+				      </td>
+				    </tr>
+				  	</#list>
+				    <!-- <tr>
+				      <td>工厂应依法设立，在建设和生产过程中应遵守有关法律、法规、政策和在建设和生产过程中应遵守有关法律在建设和生产过程中应遵守有关法律标准</td>
+				      <td>
+				      	<div class="btn-group">
+						    <button type="button" class="btn btn-default dropdown-toggle btn_sl" data-toggle="dropdown"><i>是</i>
+						        <span class="caret"></span>
+						    </button>
+						    <ul class="dropdown-menu btn_sc" role="menu" >
+						        <li>
+						            <a href="javascript:;">是</a>
+						        </li>
+						        <li>
+						            <a href="javascript:;">否</a>
+						        </li>
+						       
+						    </ul>
+						</div>
+				      </td>
+				    </tr>
+				    <tr>
+				      <td>工厂应依法设立，在建设和生产过程中应遵守有关法律、法规、政策和标准</td>
+				      <td>
+				      	<div class="btn-group">
+						    <button type="button" class="btn btn-default dropdown-toggle btn_sl" data-toggle="dropdown"><i>是</i>
+						        <span class="caret"></span>
+						    </button>
+						    <ul class="dropdown-menu btn_sc" role="menu">
+						        <li>
+						            <a href="javascript:;">是</a>
+						        </li>
+						        <li>
+						            <a href="javascript:;">否</a>
+						        </li>
+						       
+						    </ul>
+						</div>
+				      </td>
+				    </tr> -->
+				   
+				   
+				   
+				  </tbody>
+			</table>
+		
+		</div>
+	
+	</div>
+	<div class="row">
+		  
+		  <div class="col-lg-2 col-md-push-8 col-sm-push-8 col-xs-push-8">
+		  		<button type="button" class="btn btn-primary btn_sub">提交评价</button>
+		  		<div style="padding-bottom: 20px;"></div>
+		  </div>
+	</div>
+</div>
+
+
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script>
+$(function(){
+	$(".btn_sc li a").click(function(){
+		var oV = $(this).text();
+		
+		if( oV == "否" ){
+			$(this).parent().parent().siblings(".btn_sl").find("i").text(oV);
+			$(this).parent().parent().siblings(".btn_sl").find("i").addClass("red_i")
+		}else{
+			$(this).parent().parent().siblings(".btn_sl").find("i").text(oV);
+			$(this).parent().parent().siblings(".btn_sl").find("i").removeClass("red_i")
+		}
+		
+	})
+})
+</script>
+
+</html>

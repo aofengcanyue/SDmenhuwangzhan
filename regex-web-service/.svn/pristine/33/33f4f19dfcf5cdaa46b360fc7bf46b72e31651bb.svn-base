@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IWaterDAO">
+	<insert id="insert" parameterType="com.regex.web.common.dto.info.WaterDTO"
+     useGeneratedKeys="true" keyProperty="id">
+     insert into t_water(category,name,quota,unit,remarks,is_del,create_time,
+     update_time)values(#{category},#{name},#{quota},#{unit},#{remarks},#{isDel},
+     #{createTime},#{updateTime})
+     </insert>
+     
+       <select id="selectAll"  resultType="com.regex.web.common.dto.info.WaterDTO">
+     	select id as id,
+     		category as category,
+     		name as name,
+     		quota as quota,
+     		unit as unit,
+     		remarks as remarks,
+     		is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+			t_water
+		where 
+ 			is_del!='1' 
+     </select>
+     
+     <select id="selectById"  parameterType="long" resultType="com.regex.web.common.dto.info.WaterDTO">
+     	select id as id,
+     		category as category,
+     		name as name,
+     		quota as quota,
+     		unit as unit,
+     		remarks as remarks,
+     		is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+			t_water
+		where 
+ 			is_del!='1' and id=#{id}
+     </select>
+     
+     <select id="selectByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="com.regex.web.common.dto.info.WaterDTO">
+     	select id as id,
+     		category as category,
+     		name as name,
+     		quota as quota,
+     		unit as unit,
+     		remarks as remarks,
+     		is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+			t_water
+		where 
+ 			is_del!='1'
+ 			<if test="name !=null and name !=''" >
+ 			and  name like concat('%',#{name},'%'))
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and category =#{type}  
+ 			</if>	 
+ 			LIMIT #{startIndex},#{pageSize} 
+     </select>
+     
+     <select id="selectCountByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="int">
+    	select
+    		count(0)
+ 		from
+ 			 t_water 	  
+ 		where 
+ 			is_del!='1' and  name like concat('%',#{name},'%') and  category =#{type}
+    </select>
+    
+     <update id="updateById" parameterType="com.regex.web.common.dto.info.WaterDTO">
+    	update t_water set category=#{category},name=#{name},quota=#{quota},unit=#{unit},remarks=#{remarks},
+    	update_time=#{updateTime} where id=#{id}
+    </update>
+    
+    <update id="del" parameterType="long">
+    	update t_water set is_del='1' where id=#{id}
+    </update>
+</mapper>

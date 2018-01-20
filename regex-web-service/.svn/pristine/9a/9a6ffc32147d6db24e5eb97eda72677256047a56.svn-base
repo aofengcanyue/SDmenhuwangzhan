@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd"
+	default-autowire="byName" default-lazy-init="false">
+
+
+       <!-- 测试数据源 -->
+       <bean id= "dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+             <property name="driverClassName"   value="com.mysql.jdbc.Driver" />
+             <property name="url"   value="jdbc:mysql://192.168.2.178:3306/sdlc_web_db?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true" />
+             <property name="username"   value="regex" />
+             <property name="password"   value="Aa123456*" />
+       </bean>
+       <!-- 数据连接 -->
+       <bean id= "jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" >
+             <property name="dataSource" ref="dataSource"></property>
+       </bean>
+
+	<!-- 扫描配置文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations">
+			<list>
+				<value>classpath*:SQLMapping/mybatis/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!--事务管理器 -->
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- AOP事务配置 -->
+    <aop:config>
+		<aop:advisor pointcut="execution(* com.regex..*service.*(..))"
+			advice-ref="txAdvice" order="1" />
+	</aop:config>
+	
+	<!-- AOP事务配置 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+            <tx:method name="get*" read-only="true" />  
+            <tx:method name="query*" read-only="true" />  
+            <tx:method name="find*" read-only="true" />  
+            <tx:method name="load*" read-only="true" />
+            <tx:method name="select*" read-only="true" /> 
+            <tx:method name="*" propagation="REQUIRED" rollback-for="Exception" /> 
+            <tx:method name="generateMemberCode" propagation="SUPPORTS" rollback-for="Exception" /> 
+            <tx:method name="getGoodsDetailByCode" propagation="SUPPORTS" rollback-for="Exception" />
+            <tx:method name="getPointByMemberCode" propagation="REQUIRED" rollback-for="Exception"/> 
+		</tx:attributes>
+	</tx:advice>
+	
+</beans>

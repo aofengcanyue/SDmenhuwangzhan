@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.sys.SysUserDao">
+    <!-- SysUser的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_SysUser_Map" type="com.regex.web.common.dto.sys.SysUser">
+        <id column="USER_ID" property="userId" />
+        <result column="NUMBER" property="number" />
+        <result column="RIGHTS" property="rights" />
+        <result column="IP" property="ip" />
+        <result column="PHONE" property="phone" />
+        <result column="LAST_LOGIN" property="lastLogin" />
+        <result column="EMAIL" property="email" />
+        <result column="NAME" property="name" />
+        <result column="STATUS" property="status" />
+        <result column="PASSWORD" property="password" />
+        <result column="BZ" property="bz" />
+        <result column="USERNAME" property="username" />
+        <result column="ROLE_ID" property="roleId" />
+        <result column="SKIN" property="skin" />
+    </resultMap>
+    
+    <select id="getByLoginName" parameterType="String" 
+	resultMap="result_SysUser_Map" >
+		select USER_ID as userId,
+		USERNAME as userName,
+		`PASSWORD` as `password`,
+		`NAME` as `name`,
+		RIGHTS as rights,
+		ROLE_ID as roleId,
+		LAST_LOGIN as lastLogin,
+		IP as ip,
+		`STATUS` as `status`,
+		BZ as bz,
+		SKIN as skin,
+		EMAIL as email,
+		NUMBER as number,
+		PHONE as phone
+		from sys_user where
+		USERNAME =#{userName}
+	</select>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:sys_user的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="sys_user_Column">
+        sys_user.USER_ID as USER_ID
+        ,sys_user.NUMBER as NUMBER
+        ,sys_user.RIGHTS as RIGHTS
+        ,sys_user.IP as IP
+        ,sys_user.PHONE as PHONE
+        ,sys_user.LAST_LOGIN as LAST_LOGIN
+        ,sys_user.EMAIL as EMAIL
+        ,sys_user.NAME as NAME
+        ,sys_user.STATUS as STATUS
+        ,sys_user.PASSWORD as PASSWORD
+        ,sys_user.BZ as BZ
+        ,sys_user.USERNAME as USERNAME
+        ,sys_user.ROLE_ID as ROLE_ID
+        ,sys_user.SKIN as SKIN
+    </sql>
+
+    <!--获得类名为:SysUser对应的数据库表的数据总行数 -->
+    <select id="getSysUserRowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(USER_ID) from sys_user
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:SysUser对应数据库中表的数据集合 -->
+    <select id="selectSysUser" parameterType="com.regex.web.common.Assist"  resultMap="result_SysUser_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="sys_user_Column" /> 
+            </otherwise>
+        </choose>
+        from sys_user
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT USER_ID as primary_key FROM sys_user
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=sys_user.USER_ID
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个SysUser对象,以参数SysUser对象中不为空的属性作为条件进行查询-->
+    <select id="selectSysUserByObj" parameterType="com.regex.web.common.dto.sys.SysUser" resultMap="result_SysUser_Map">
+        select 
+            <include refid="sys_user_Column" /> 
+        from sys_user
+        <where>
+            <if test="skin != null "> and sys_user.SKIN = #{skin}</if>
+            <if test="roleId != null "> and sys_user.ROLE_ID = #{roleId}</if>
+            <if test="username != null "> and sys_user.USERNAME = #{username}</if>
+            <if test="bz != null "> and sys_user.BZ = #{bz}</if>
+            <if test="password != null "> and sys_user.PASSWORD = #{password}</if>
+            <if test="status != null "> and sys_user.STATUS = #{status}</if>
+            <if test="name != null "> and sys_user.NAME = #{name}</if>
+            <if test="email != null "> and sys_user.EMAIL = #{email}</if>
+            <if test="lastLogin != null "> and sys_user.LAST_LOGIN = #{lastLogin}</if>
+            <if test="phone != null "> and sys_user.PHONE = #{phone}</if>
+            <if test="ip != null "> and sys_user.IP = #{ip}</if>
+            <if test="rights != null "> and sys_user.RIGHTS = #{rights}</if>
+            <if test="number != null "> and sys_user.NUMBER = #{number}</if>
+            <if test="userId != null "> and sys_user.USER_ID = #{userId}</if>
+        </where>
+    </select> 
+
+    <!-- 通过SysUser的id获得对应数据库中表的数据对象-->
+    <select id="selectSysUserById" parameterType="java.lang.String" resultMap="result_SysUser_Map">
+        select 
+            <include refid="sys_user_Column" /> 
+        from sys_user
+        where sys_user.USER_ID = #{id}
+    </select> 
+
+    <!-- 将SysUser插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertSysUser" parameterType="com.regex.web.common.dto.sys.SysUser">
+        insert into sys_user(USER_ID,NUMBER,RIGHTS,IP,PHONE,LAST_LOGIN,EMAIL,NAME,STATUS,PASSWORD,BZ,USERNAME,ROLE_ID,SKIN) 
+        values(#{userId},#{number},#{rights},#{ip},#{phone},#{lastLogin},#{email},#{name},#{status},#{password},#{bz},#{username},#{roleId},#{skin})
+    </insert>
+
+    <!-- 将SysUser中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptySysUser" parameterType="com.regex.web.common.dto.sys.SysUser">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">USER_ID,</if>
+            <if test="number != null">NUMBER,</if>
+            <if test="rights != null">RIGHTS,</if>
+            <if test="ip != null">IP,</if>
+            <if test="phone != null">PHONE,</if>
+            <if test="lastLogin != null">LAST_LOGIN,</if>
+            <if test="email != null">EMAIL,</if>
+            <if test="name != null">NAME,</if>
+            <if test="status != null">STATUS,</if>
+            <if test="password != null">PASSWORD,</if>
+            <if test="bz != null">BZ,</if>
+            <if test="username != null">USERNAME,</if>
+            <if test="roleId != null">ROLE_ID,</if>
+            <if test="skin != null">SKIN,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> #{userId},</if>
+            <if test="number != null"> #{number},</if>
+            <if test="rights != null"> #{rights},</if>
+            <if test="ip != null"> #{ip},</if>
+            <if test="phone != null"> #{phone},</if>
+            <if test="lastLogin != null"> #{lastLogin},</if>
+            <if test="email != null"> #{email},</if>
+            <if test="name != null"> #{name},</if>
+            <if test="status != null"> #{status},</if>
+            <if test="password != null"> #{password},</if>
+            <if test="bz != null"> #{bz},</if>
+            <if test="username != null"> #{username},</if>
+            <if test="roleId != null"> #{roleId},</if>
+            <if test="skin != null"> #{skin},</if>
+        </trim>
+    </insert>
+
+    <!-- 将SysUser批量插入到对应数据库的表中-->
+    <insert id="insertSysUserByBatch" parameterType="ArrayList">
+        insert into sys_user(USER_ID,NUMBER,RIGHTS,IP,PHONE,LAST_LOGIN,EMAIL,NAME,STATUS,PASSWORD,BZ,USERNAME,ROLE_ID,SKIN) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.userId},#{item.number},#{item.rights},#{item.ip},#{item.phone},#{item.lastLogin},#{item.email},#{item.name},#{item.status},#{item.password},#{item.bz},#{item.username},#{item.roleId},#{item.skin})
+        </foreach>
+    </insert>
+
+    <!-- 通过SysUser的id将数据库表中对应的数据删除-->
+    <delete id="deleteSysUserById" parameterType="java.lang.String">
+        delete from sys_user
+        where USER_ID = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将SysUser对应的数据库表的数据删除-->
+    <delete id="deleteSysUser" parameterType="com.regex.web.common.Assist">
+        delete from sys_user
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过SysUser的id将SysUser的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateSysUserById" parameterType="com.regex.web.common.dto.sys.SysUser">
+        update sys_user set
+            NUMBER=#{number}
+            ,RIGHTS=#{rights}
+            ,IP=#{ip}
+            ,PHONE=#{phone}
+            ,LAST_LOGIN=#{lastLogin}
+            ,EMAIL=#{email}
+            ,NAME=#{name}
+            ,STATUS=#{status}
+            ,PASSWORD=#{password}
+            ,BZ=#{bz}
+            ,USERNAME=#{username}
+            ,ROLE_ID=#{roleId}
+            ,SKIN=#{skin}
+        where USER_ID=#{userId}
+    </update>
+
+    <!-- 通过SysUser的id将SysUser中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptySysUserById" parameterType="com.regex.web.common.dto.sys.SysUser">
+        update sys_user
+        <set>
+            <if test="number != null">
+                NUMBER=#{number},
+            </if>
+            <if test="rights != null">
+                RIGHTS=#{rights},
+            </if>
+            <if test="ip != null">
+                IP=#{ip},
+            </if>
+            <if test="phone != null">
+                PHONE=#{phone},
+            </if>
+            <if test="lastLogin != null">
+                LAST_LOGIN=#{lastLogin},
+            </if>
+            <if test="email != null">
+                EMAIL=#{email},
+            </if>
+            <if test="name != null">
+                NAME=#{name},
+            </if>
+            <if test="status != null">
+                STATUS=#{status},
+            </if>
+            <if test="password != null">
+                PASSWORD=#{password},
+            </if>
+            <if test="bz != null">
+                BZ=#{bz},
+            </if>
+            <if test="username != null">
+                USERNAME=#{username},
+            </if>
+            <if test="roleId != null">
+                ROLE_ID=#{roleId},
+            </if>
+            <if test="skin != null">
+                SKIN=#{skin},
+            </if>
+        </set>
+        where USER_ID=#{userId}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将SysUser中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateSysUser" parameterType="map">
+        update sys_user
+        <set>
+                USER_ID=#{enti.userId},
+                NUMBER=#{enti.number},
+                RIGHTS=#{enti.rights},
+                IP=#{enti.ip},
+                PHONE=#{enti.phone},
+                LAST_LOGIN=#{enti.lastLogin},
+                EMAIL=#{enti.email},
+                NAME=#{enti.name},
+                STATUS=#{enti.status},
+                PASSWORD=#{enti.password},
+                BZ=#{enti.bz},
+                USERNAME=#{enti.username},
+                ROLE_ID=#{enti.roleId},
+                SKIN=#{enti.skin},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将SysUser中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptySysUser" parameterType="map">
+        update sys_user
+        <set>
+            <if test="enti.userId != null">
+                USER_ID=#{enti.userId},
+            </if>
+            <if test="enti.number != null">
+                NUMBER=#{enti.number},
+            </if>
+            <if test="enti.rights != null">
+                RIGHTS=#{enti.rights},
+            </if>
+            <if test="enti.ip != null">
+                IP=#{enti.ip},
+            </if>
+            <if test="enti.phone != null">
+                PHONE=#{enti.phone},
+            </if>
+            <if test="enti.lastLogin != null">
+                LAST_LOGIN=#{enti.lastLogin},
+            </if>
+            <if test="enti.email != null">
+                EMAIL=#{enti.email},
+            </if>
+            <if test="enti.name != null">
+                NAME=#{enti.name},
+            </if>
+            <if test="enti.status != null">
+                STATUS=#{enti.status},
+            </if>
+            <if test="enti.password != null">
+                PASSWORD=#{enti.password},
+            </if>
+            <if test="enti.bz != null">
+                BZ=#{enti.bz},
+            </if>
+            <if test="enti.username != null">
+                USERNAME=#{enti.username},
+            </if>
+            <if test="enti.roleId != null">
+                ROLE_ID=#{enti.roleId},
+            </if>
+            <if test="enti.skin != null">
+                SKIN=#{enti.skin},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

@@ -1,0 +1,106 @@
+package com.regex.web.common.dto.info;
+public class FinancingDTO implements java.io.Serializable {
+    
+    /**
+     */
+    private static final long serialVersionUID = -2615126330446655455L;
+    private Long id;
+    private java.util.Date updateTime;
+    private String address;//地址
+    private java.util.Date createTime;
+    private String phone;//电话
+    private String contact;//联系人
+    private String isDel;//0正常 1删除
+    private String investment;//投资预算
+    private String company;//公司名称
+    private String demand;//资金需求
+    private String introduction;//项目简介
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public java.util.Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(java.util.Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public java.util.Date getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(java.util.Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getContact() {
+        return this.contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getIsDel() {
+        return this.isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
+
+    public String getInvestment() {
+        return this.investment;
+    }
+
+    public void setInvestment(String investment) {
+        this.investment = investment;
+    }
+
+    public String getCompany() {
+        return this.company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getDemand() {
+        return this.demand;
+    }
+
+    public void setDemand(String demand) {
+        this.demand = demand;
+    }
+
+    public String getIntroduction() {
+        return this.introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+}

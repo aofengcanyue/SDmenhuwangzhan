@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${financingDTO.title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-offset-1"><a href="${base}/">首页</a>><a href="${base}/web/financing/show.htm">融资项目</a>>${financingDTO.title}</p>
+			<h3 class="back_page_title col-lg-offset-1">${financingDTO.title}</h3>
+		</div>
+	</div>
+	<div class="row">
+		
+		<div class="col-lg-6 col-lg-offset-1">
+			<div style="margin-top: 20px;">
+				<img src="${picUrl}${financingDTO.imgUrl}" alt="" />
+			</div>
+			<div class="inst">
+				<h3>项目简介：</h3>
+				${financingDTO.introduction}
+			</div>
+		</div>
+		
+		<div class="col-lg-3">
+			 <div class="tz" style="margin-top: 20px;">
+			 		<ul>
+			 			<li class="clearfix">
+			 				<em>投资预算</em>
+			 				<span>${financingDTO.investment}</span>
+			 			</li>
+			 			<li class="clearfix">
+			 				<em>投资预算</em>
+			 				<span>${financingDTO.demand}</span>
+			 			</li>
+			 		</ul>
+			 </div>
+			 
+			 <div class="address">
+			 		<h3>${financingDTO.company}</h3>
+			 		<p>联系人：${financingDTO.contact}</p>
+			 		<p>电话：${financingDTO.phone}</p>
+			 		<p>地址：${financingDTO.address}</p>
+			 </div>
+			 
+			 
+			 
+			 
+			 
+			 
+		</div>
+	</div>
+</div>
+
+</body>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+</html>
+

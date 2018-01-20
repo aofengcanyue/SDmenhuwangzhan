@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>高耗能落后机电设备（产品）淘汰目录查询</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<link rel="stylesheet" href="${resRoot}/layui/css/layui.css" media="all" />
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p class="back_page col-lg-offset-1"><a href="${base}/web/index.htm">首页</a>>高耗能落后几点设备（产品)淘汰目录查询</p>
+		</div>
+		<div class="col-md-12">
+			<h3 class="high_title">高耗能落后机电设备（产品）淘汰目录查询</h3>
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2 mt_20">
+				<form action="${base}/web/elimination/show.htm" method="POST">
+				    <div class="input-group">
+				      <div class="input-group-btn">
+				      <select class="btn btn-default dropdown-toggle btn_pad btn_val" name="type" >
+						<option value="" >请选择</option>
+						<option  value="0" <#if params.type=="0">selected="selected"</#if> >电动机</option>
+						<option  value="1" <#if params.type=="1">selected="selected"</#if> >变压器</option>
+						<option  value="2" <#if params.type=="2">selected="selected"</#if> >风机</option>
+						<option  value="3" <#if params.type=="3">selected="selected"</#if> >水泵</option>
+						<option  value="4" <#if params.type=="4">selected="selected"</#if> >锅炉</option>
+						<option  value="5" <#if params.type=="5">selected="selected"</#if> >落后工艺、设备和产品</option>
+						<option  value="6" <#if params.type=="6">selected="selected"</#if> >电焊机、电阻炉</option>
+					   </select>
+				      </div><!-- /btn-group -->
+				      <input type="text" class="form-control btn-ml input_text" aria-label="..." name="model" placeholder="输入产品型号" value="${params.model}">
+				      <button class="btn pull-right btn_search mt_0 btn_search_1">  
+				        <span class="glyphicon glyphicon-search"></span> 搜索  
+				     </button>
+				     </form>
+				    </div><!-- /input-group -->
+				  </div>
+			</div>
+			
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-10 col-lg-offset-1">
+			<table class="table table-hover table-bordered table_bg">
+				  <caption>找到${count}个结果</caption>
+				  <thead>
+				    <tr>
+				      <th>产品名称</th>
+				      <th>产品型号</th>
+				      <th>产品规格</th>
+				      <th>淘汰范围及时间</th>
+				      <th>淘汰理由</th>
+				    </tr>
+				  </thead>
+				  <#list result.datas as elimination>
+				  <tbody>
+				    <tr>
+				      <td>${elimination.name}</td>
+				      <td>${elimination.model}</td>
+				      <td>${elimination.specification}</td>
+				      <td>${elimination.rangeTime}</td>
+				      <td>${elimination.reason}</td>
+				    </tr>
+				  </tbody>
+				  </#list>
+			</table>
+		</div>
+	</div>
+</div>
+<div id="page"></div>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script type="text/javascript" src="${resRoot}/layui/layui.js"></script>
+<#assign pageUrl=base+'/web/elimination/show.htm?model=${params.model}&type=${params.type}&'>
+<#include "/page/page.html">
+
+
+
+ 
+
+	
+	
+</body>
+
+</html>

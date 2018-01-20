@@ -1,0 +1,155 @@
+package com.regex.web.controller.admin.sys;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.dto.info.EliminationDTO;
+import com.regex.web.common.utils.AjaxUtil;
+import com.regex.web.common.utils.Contant;
+import com.regex.web.common.utils.QueryConditions;
+import com.regex.web.common.utils.QueryResult;
+import com.regex.web.service.info.IEliminationService;
+/**
+ * 淘汰设备
+ * 〈一句话功能简述〉<br> 
+ * 〈功能详细描述〉
+ *
+ * @author Administrator
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+@Controller
+@RequestMapping("sys/elimination")
+public class EliminationController {
+    
+    @Autowired
+    private IEliminationService eliminationService;
+    
+    @RequestMapping("input")
+    public String input(Model model,@ModelAttribute("id")String id) {
+        
+        if(StringUtils.isNotEmpty(id)) {
+        EliminationDTO eliminationDTO = eliminationService.selectById(Long.parseLong(id));
+        
+        model.addAttribute("elimination",eliminationDTO);
+        }
+        return "admin/elimination/input";
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 落后机电设备列表
+     *
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("show")
+    public String show(Model model) {
+           
+        List<EliminationDTO> eliminationList = eliminationService.selectAll();
+        
+        model.addAttribute("eliminationList",eliminationList);
+        
+        return "admin/elimination/show";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 后台添加淘汰设备
+     *
+     * @param response
+     * @param eliminationDTO
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("insert")
+    public void insert(HttpServletResponse response,EliminationDTO eliminationDTO) {
+        int n = 0;
+        if(eliminationDTO.getId()>0) {
+            
+            eliminationDTO.setUpdateTime(new Date());
+            n= eliminationService.updateById(eliminationDTO);
+            
+        }else {
+            
+            eliminationDTO.setIsDel("0");
+            eliminationDTO.setCreateTime(new Date());
+            eliminationDTO.setUpdateTime(new Date());
+            n = eliminationService.insert(eliminationDTO);
+        }
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 修改信息
+     *
+     * @param response
+     * @param eliminationDTO
+     * @param id
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("update")
+    public void update(HttpServletResponse response,EliminationDTO eliminationDTO,String id) {
+        int n = 0;
+        eliminationDTO.setId(Long.parseLong(id));
+        eliminationDTO.setUpdateTime(new Date());
+        n = eliminationService.updateById(eliminationDTO);
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 删除
+     *
+     * @param response
+     * @param id
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("delete")
+    public void del(HttpServletResponse response,String id) {
+        int n = 0;
+        
+        n = eliminationService.del(Long.parseLong(id));
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 淘汰设备查询
+     *
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("queryEquipment")
+    public String queryEquipment(Model model,QueryConditions params) {
+        
+        params.setPageSize(Contant.NONMAL_PAGE_SIZE);
+        params.setStartIndex((params.getPageNumber() - 1) * Contant.NONMAL_PAGE_SIZE);
+        List<EliminationDTO> eliminationList = eliminationService.selectByModel(params);
+        int count = eliminationService.selectCountByModel(params);
+        QueryResult<EliminationDTO> result = new QueryResult<EliminationDTO>(count, Contant.NONMAL_PAGE_SIZE, params.getPageNumber());
+        result.setDatas(eliminationList);
+        return "";
+    }
+}

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.sys.SysRoleDao">
+    <!-- SysRole的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_SysRole_Map" type="com.regex.web.common.dto.sys.SysRole">
+        <id column="ROLE_ID" property="roleId" />
+        <result column="CHA_QX" property="chaQx" />
+        <result column="DEL_QX" property="delQx" />
+        <result column="RIGHTS" property="rights" />
+        <result column="ROLE_NAME" property="roleName" />
+        <result column="ADD_QX" property="addQx" />
+        <result column="PARENT_ID" property="parentId" />
+        <result column="EDIT_QX" property="editQx" />
+    </resultMap>
+    
+    <select id="getById" parameterType="String" resultMap="result_SysRole_Map" >
+		select *
+		from sys_role where ROLE_ID=#{roleId}
+	</select>
+	<select id="getByParentId" parameterType="String" resultMap="result_SysRole_Map">
+		select *
+		from sys_role where PARENT_ID=#{parentId}
+	</select>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:sys_role的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="sys_role_Column">
+        sys_role.ROLE_ID as ROLE_ID
+        ,sys_role.CHA_QX as CHA_QX
+        ,sys_role.DEL_QX as DEL_QX
+        ,sys_role.RIGHTS as RIGHTS
+        ,sys_role.ROLE_NAME as ROLE_NAME
+        ,sys_role.ADD_QX as ADD_QX
+        ,sys_role.PARENT_ID as PARENT_ID
+        ,sys_role.EDIT_QX as EDIT_QX
+    </sql>
+
+    <!--获得类名为:SysRole对应的数据库表的数据总行数 -->
+    <select id="getSysRoleRowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(ROLE_ID) from sys_role
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:SysRole对应数据库中表的数据集合 -->
+    <select id="selectSysRole" parameterType="com.regex.web.common.Assist"  resultMap="result_SysRole_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="sys_role_Column" /> 
+            </otherwise>
+        </choose>
+        from sys_role
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT ROLE_ID as primary_key FROM sys_role
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=sys_role.ROLE_ID
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个SysRole对象,以参数SysRole对象中不为空的属性作为条件进行查询-->
+    <select id="selectSysRoleByObj" parameterType="com.regex.web.common.dto.sys.SysRole" resultMap="result_SysRole_Map">
+        select 
+            <include refid="sys_role_Column" /> 
+        from sys_role
+        <where>
+            <if test="editQx != null "> and sys_role.EDIT_QX = #{editQx}</if>
+            <if test="parentId != null "> and sys_role.PARENT_ID = #{parentId}</if>
+            <if test="addQx != null "> and sys_role.ADD_QX = #{addQx}</if>
+            <if test="roleName != null "> and sys_role.ROLE_NAME = #{roleName}</if>
+            <if test="rights != null "> and sys_role.RIGHTS = #{rights}</if>
+            <if test="delQx != null "> and sys_role.DEL_QX = #{delQx}</if>
+            <if test="chaQx != null "> and sys_role.CHA_QX = #{chaQx}</if>
+            <if test="roleId != null "> and sys_role.ROLE_ID = #{roleId}</if>
+        </where>
+    </select> 
+
+    <!-- 通过SysRole的id获得对应数据库中表的数据对象-->
+    <select id="selectSysRoleById" parameterType="java.lang.String" resultMap="result_SysRole_Map">
+        select 
+            <include refid="sys_role_Column" /> 
+        from sys_role
+        where sys_role.ROLE_ID = #{id}
+    </select> 
+
+    <!-- 将SysRole插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertSysRole" parameterType="com.regex.web.common.dto.sys.SysRole">
+        insert into sys_role(ROLE_ID,CHA_QX,DEL_QX,RIGHTS,ROLE_NAME,ADD_QX,PARENT_ID,EDIT_QX) 
+        values(#{roleId},#{chaQx},#{delQx},#{rights},#{roleName},#{addQx},#{parentId},#{editQx})
+    </insert>
+
+    <!-- 将SysRole中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptySysRole" parameterType="com.regex.web.common.dto.sys.SysRole">
+        insert into sys_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">ROLE_ID,</if>
+            <if test="chaQx != null">CHA_QX,</if>
+            <if test="delQx != null">DEL_QX,</if>
+            <if test="rights != null">RIGHTS,</if>
+            <if test="roleName != null">ROLE_NAME,</if>
+            <if test="addQx != null">ADD_QX,</if>
+            <if test="parentId != null">PARENT_ID,</if>
+            <if test="editQx != null">EDIT_QX,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null"> #{roleId},</if>
+            <if test="chaQx != null"> #{chaQx},</if>
+            <if test="delQx != null"> #{delQx},</if>
+            <if test="rights != null"> #{rights},</if>
+            <if test="roleName != null"> #{roleName},</if>
+            <if test="addQx != null"> #{addQx},</if>
+            <if test="parentId != null"> #{parentId},</if>
+            <if test="editQx != null"> #{editQx},</if>
+        </trim>
+    </insert>
+
+    <!-- 将SysRole批量插入到对应数据库的表中-->
+    <insert id="insertSysRoleByBatch" parameterType="ArrayList">
+        insert into sys_role(ROLE_ID,CHA_QX,DEL_QX,RIGHTS,ROLE_NAME,ADD_QX,PARENT_ID,EDIT_QX) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.roleId},#{item.chaQx},#{item.delQx},#{item.rights},#{item.roleName},#{item.addQx},#{item.parentId},#{item.editQx})
+        </foreach>
+    </insert>
+
+    <!-- 通过SysRole的id将数据库表中对应的数据删除-->
+    <delete id="deleteSysRoleById" parameterType="java.lang.String">
+        delete from sys_role
+        where ROLE_ID = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将SysRole对应的数据库表的数据删除-->
+    <delete id="deleteSysRole" parameterType="com.regex.web.common.Assist">
+        delete from sys_role
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过SysRole的id将SysRole的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateSysRoleById" parameterType="com.regex.web.common.dto.sys.SysRole">
+        update sys_role set
+            CHA_QX=#{chaQx}
+            ,DEL_QX=#{delQx}
+            ,RIGHTS=#{rights}
+            ,ROLE_NAME=#{roleName}
+            ,ADD_QX=#{addQx}
+            ,PARENT_ID=#{parentId}
+            ,EDIT_QX=#{editQx}
+        where ROLE_ID=#{roleId}
+    </update>
+
+    <!-- 通过SysRole的id将SysRole中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptySysRoleById" parameterType="com.regex.web.common.dto.sys.SysRole">
+        update sys_role
+        <set>
+            <if test="chaQx != null">
+                CHA_QX=#{chaQx},
+            </if>
+            <if test="delQx != null">
+                DEL_QX=#{delQx},
+            </if>
+            <if test="rights != null">
+                RIGHTS=#{rights},
+            </if>
+            <if test="roleName != null">
+                ROLE_NAME=#{roleName},
+            </if>
+            <if test="addQx != null">
+                ADD_QX=#{addQx},
+            </if>
+            <if test="parentId != null">
+                PARENT_ID=#{parentId},
+            </if>
+            <if test="editQx != null">
+                EDIT_QX=#{editQx},
+            </if>
+        </set>
+        where ROLE_ID=#{roleId}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将SysRole中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateSysRole" parameterType="map">
+        update sys_role
+        <set>
+                ROLE_ID=#{enti.roleId},
+                CHA_QX=#{enti.chaQx},
+                DEL_QX=#{enti.delQx},
+                RIGHTS=#{enti.rights},
+                ROLE_NAME=#{enti.roleName},
+                ADD_QX=#{enti.addQx},
+                PARENT_ID=#{enti.parentId},
+                EDIT_QX=#{enti.editQx},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将SysRole中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptySysRole" parameterType="map">
+        update sys_role
+        <set>
+            <if test="enti.roleId != null">
+                ROLE_ID=#{enti.roleId},
+            </if>
+            <if test="enti.chaQx != null">
+                CHA_QX=#{enti.chaQx},
+            </if>
+            <if test="enti.delQx != null">
+                DEL_QX=#{enti.delQx},
+            </if>
+            <if test="enti.rights != null">
+                RIGHTS=#{enti.rights},
+            </if>
+            <if test="enti.roleName != null">
+                ROLE_NAME=#{enti.roleName},
+            </if>
+            <if test="enti.addQx != null">
+                ADD_QX=#{enti.addQx},
+            </if>
+            <if test="enti.parentId != null">
+                PARENT_ID=#{enti.parentId},
+            </if>
+            <if test="enti.editQx != null">
+                EDIT_QX=#{enti.editQx},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+</mapper>

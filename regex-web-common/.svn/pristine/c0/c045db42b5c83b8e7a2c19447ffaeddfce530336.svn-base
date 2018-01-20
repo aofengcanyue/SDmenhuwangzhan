@@ -1,0 +1,144 @@
+package com.regex.web.common.dto.info;
+
+/**
+ * 
+ * 〈一句话功能简述〉<br>
+ * noticeDTO
+ *
+ * @author admin
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+public class NoticeDTO implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
+    private Long id;
+    private String createBy;
+    private java.util.Date updateTime;
+    private java.util.Date createTime;
+    private Integer reaadCount;
+    private String imageUrl;
+    private String audit;
+    private String isDel;
+    private String title;
+    private String type;
+    private String content;
+    private String isTop;
+
+    public NoticeDTO() {
+        super();
+    }
+
+    public NoticeDTO(Long id, String createBy, java.util.Date updateTime, java.util.Date createTime, Integer reaadCount,
+            String imageUrl, String audit, String isDel, String title, String type, String content, String isTop) {
+        super();
+        this.id = id;
+        this.createBy = createBy;
+        this.updateTime = updateTime;
+        this.createTime = createTime;
+        this.reaadCount = reaadCount;
+        this.imageUrl = imageUrl;
+        this.audit = audit;
+        this.isDel = isDel;
+        this.title = title;
+        this.type = type;
+        this.content = content;
+        this.isTop = isTop;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCreateBy() {
+        return this.createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public java.util.Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(java.util.Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public java.util.Date getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(java.util.Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Integer getReaadCount() {
+        return this.reaadCount;
+    }
+
+    public void setReaadCount(Integer reaadCount) {
+        this.reaadCount = reaadCount;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getAudit() {
+        return this.audit;
+    }
+
+    public void setAudit(String audit) {
+        this.audit = audit;
+    }
+
+    public String getIsDel() {
+        return this.isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getIsTop() {
+        return this.isTop;
+    }
+
+    public void setIsTop(String isTop) {
+        this.isTop = isTop;
+    }
+
+}

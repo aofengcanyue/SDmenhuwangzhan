@@ -1,0 +1,431 @@
+<#assign security=JspTaglibs["/WEB-INF/tlds/security.tld"] />
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${sysName}</title>
+
+		<meta name="description" content="Dynamic tables and grids using jqGrid plugin" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/jquery-ui.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/bootstrap-datepicker3.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/ui.jqgrid.min.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/fonts.googleapis.com.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="${resRoot}/assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+		<![endif]-->
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace-rtl.min.css" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="${resRoot}/assets/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+		<script src="${resRoot}/assets/js/ace-extra.min.js"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="${resRoot}/assets/js/html5shiv.min.js"></script>
+		<script src="${resRoot}/assets/js/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+											<h4>2015</h4>
+											<table id="dynamic-table" class="table table-bordered">
+												<tbody>
+													<tr>
+														<td>能源产出率</td>
+														<td>${list.value1}万元/tce</td>
+														<td>可再生能源使用比例</td>
+														<td>${list.value2}%</td>
+														<td>清洁能源使用率</td>
+														<td>${list.value3}%</td>
+													</tr>
+													<tr>
+														<td>水资源产出率</td>
+														<td>${list.value4}元/m3</td>
+														<td>土地资源产出率</td>
+														<td>${list.value5}亿元/km2</td>
+														<td>工业固体废弃物综合利用率</td>
+														<td>${list.value6}%</td>
+													</tr>
+													<tr>
+														<td>工业用水重复利用率</td>
+														<td>${list.value7}%</td>
+														<td>中水回用率</td>
+														<td>${list.value8}%</td>
+														<td>余热资源回收利用率</td>
+														<td>${list.value9}%</td>
+													</tr>
+													<tr>
+														<td>废气资源回收利用率</td>
+														<td>${list.value10}%</td>
+														<td>再生资源回收利用率</td>
+														<td>${list.value11}%</td>
+														<td>污水集中处理设施</td>
+														<td>${list.value12}</td>
+													</tr>
+													<tr>
+														<td>新建工业建筑中绿色建筑的比例</td>
+														<td>${list.value13}%</td>
+														<td>新建公共建筑中绿色建筑的比例</td>
+														<td>${list.value14}%</td>
+														<td>500米公交站点覆盖率</td>
+														<td>${list.value15}%</td>
+													</tr>
+													<tr>
+														<td>节能与新能源公交车比例</td>
+														<td>${list.value16}%</td>
+														<td>高新技术产业产值占园区工业总产值比例</td>
+														<td>${list.value17}%</td>
+														<td>绿色产业增加值占园区工业增加值比例</td>
+														<td>${list.value18}%</td>
+													</tr>
+													<tr>
+														<td>人均工业增加值</td>
+														<td>${list.value19}万元/人</td>
+														<td>现代服务业比例</td>
+														<td>${list.value20}%</td>
+														<td>工业固体废弃物（含危废）处置利用率</td>
+														<td>${list.value21}%</td>
+													</tr>
+													<tr>
+														<td>万元工业增加值碳排放量消减率</td>
+														<td>${list.value22}%</td>
+														<td>单位工业增加值废水排放量</td>
+														<td>${list.value23}t/万元</td>
+														<td>主要污染物弹性系数</td>
+														<td>${list.value24}</td>
+													</tr>
+													<tr>
+														<td>园区空气质量优良率</td>
+														<td>${list.value25}%</td>
+														<td>绿化覆盖率</td>
+														<td>${list.value26}%</td>
+														<td>道路遮荫比例</td>
+														<td>${list.value27}%</td>
+													</tr>
+													<tr>
+														<td>露天停车场遮荫比例</td>
+														<td>${list.value28}%</td>
+														<td>绿色园区标准体系完善程度</td>
+														<td>${list.value29}</td>
+														<td>编制绿色园区发展规划</td>
+														<td>${list.value30}</td>
+													</tr>
+													<tr>
+														<td>绿色园区信息平台完善程度</td>
+														<td>${list.value31}</td>
+													</tr>
+												</tbody>
+											</table>
+											
+											<h4>2016</h4>
+											<table id="dynamic-table" class="table table-bordered">
+												<tbody>
+													<tr>
+														<td>能源产出率</td>
+														<td>${list1.value1}万元/tce</td>
+														<td>可再生能源使用比例</td>
+														<td>${list1.value2}%</td>
+														<td>清洁能源使用率</td>
+														<td>${list1.value3}%</td>
+													</tr>
+													<tr>
+														<td>水资源产出率</td>
+														<td>${list1.value4}元/m3</td>
+														<td>土地资源产出率</td>
+														<td>${list1.value5}亿元/km2</td>
+														<td>工业固体废弃物综合利用率</td>
+														<td>${list1.value6}%</td>
+													</tr>
+													<tr>
+														<td>工业用水重复利用率</td>
+														<td>${list1.value7}%</td>
+														<td>中水回用率</td>
+														<td>${list1.value8}%</td>
+														<td>余热资源回收利用率</td>
+														<td>${list1.value9}%</td>
+													</tr>
+													<tr>
+														<td>废气资源回收利用率</td>
+														<td>${list1.value10}%</td>
+														<td>再生资源回收利用率</td>
+														<td>${list1.value11}%</td>
+														<td>污水集中处理设施</td>
+														<td>${list1.value12}</td>
+													</tr>
+													<tr>
+														<td>新建工业建筑中绿色建筑的比例</td>
+														<td>${list1.value13}%</td>
+														<td>新建公共建筑中绿色建筑的比例</td>
+														<td>${list1.value14}%</td>
+														<td>500米公交站点覆盖率</td>
+														<td>${list1.value15}%</td>
+													</tr>
+													<tr>
+														<td>节能与新能源公交车比例</td>
+														<td>${list1.value16}%</td>
+														<td>高新技术产业产值占园区工业总产值比例</td>
+														<td>${list1.value17}%</td>
+														<td>绿色产业增加值占园区工业增加值比例</td>
+														<td>${list1.value18}%</td>
+													</tr>
+													<tr>
+														<td>人均工业增加值</td>
+														<td>${list1.value19}万元/人</td>
+														<td>现代服务业比例</td>
+														<td>${list1.value20}%</td>
+														<td>工业固体废弃物（含危废）处置利用率</td>
+														<td>${list1.value21}%</td>
+													</tr>
+													<tr>
+														<td>万元工业增加值碳排放量消减率</td>
+														<td>${list1.value22}%</td>
+														<td>单位工业增加值废水排放量</td>
+														<td>${list1.value23}t/万元</td>
+														<td>主要污染物弹性系数</td>
+														<td>${list1.value24}</td>
+													</tr>
+													<tr>
+														<td>园区空气质量优良率</td>
+														<td>${list1.value25}%</td>
+														<td>绿化覆盖率</td>
+														<td>${list1.value26}%</td>
+														<td>道路遮荫比例</td>
+														<td>${list1.value27}%</td>
+													</tr>
+													<tr>
+														<td>露天停车场遮荫比例</td>
+														<td>${list1.value28}%</td>
+														<td>绿色园区标准体系完善程度</td>
+														<td>${list1.value29}</td>
+														<td>编制绿色园区发展规划</td>
+														<td>${list1.value30}</td>
+													</tr>
+													<tr>
+														<td>绿色园区信息平台完善程度</td>
+														<td>${list1.value31}</td>
+													</tr>
+												</tbody>
+											</table>
+											
+											<h4>2017</h4>
+											<table id="dynamic-table" class="table table-bordered">
+												<tbody>
+													<tr>
+														<td>能源产出率</td>
+														<td>${list2.value1}万元/tce</td>
+														<td>可再生能源使用比例</td>
+														<td>${list2.value2}%</td>
+														<td>清洁能源使用率</td>
+														<td>${list2.value3}%</td>
+													</tr>
+													<tr>
+														<td>水资源产出率</td>
+														<td>${list2.value4}元/m3</td>
+														<td>土地资源产出率</td>
+														<td>${list2.value5}亿元/km2</td>
+														<td>工业固体废弃物综合利用率</td>
+														<td>${list2.value6}%</td>
+													</tr>
+													<tr>
+														<td>工业用水重复利用率</td>
+														<td>${list2.value7}%</td>
+														<td>中水回用率</td>
+														<td>${list2.value8}%</td>
+														<td>余热资源回收利用率</td>
+														<td>${list2.value9}%</td>
+													</tr>
+													<tr>
+														<td>废气资源回收利用率</td>
+														<td>${list2.value10}%</td>
+														<td>再生资源回收利用率</td>
+														<td>${list2.value11}%</td>
+														<td>污水集中处理设施</td>
+														<td>${list2.value12}</td>
+													</tr>
+													<tr>
+														<td>新建工业建筑中绿色建筑的比例</td>
+														<td>${list2.value13}%</td>
+														<td>新建公共建筑中绿色建筑的比例</td>
+														<td>${list2.value14}%</td>
+														<td>500米公交站点覆盖率</td>
+														<td>${list2.value15}%</td>
+													</tr>
+													<tr>
+														<td>节能与新能源公交车比例</td>
+														<td>${list2.value16}%</td>
+														<td>高新技术产业产值占园区工业总产值比例</td>
+														<td>${list2.value17}%</td>
+														<td>绿色产业增加值占园区工业增加值比例</td>
+														<td>${list2.value18}%</td>
+													</tr>
+													<tr>
+														<td>人均工业增加值</td>
+														<td>${list2.value19}万元/人</td>
+														<td>现代服务业比例</td>
+														<td>${list2.value20}%</td>
+														<td>工业固体废弃物（含危废）处置利用率</td>
+														<td>${list2.value21}%</td>
+													</tr>
+													<tr>
+														<td>万元工业增加值碳排放量消减率</td>
+														<td>${list2.value22}%</td>
+														<td>单位工业增加值废水排放量</td>
+														<td>${list2.value23}t/万元</td>
+														<td>主要污染物弹性系数</td>
+														<td>${list2.value24}</td>
+													</tr>
+													<tr>
+														<td>园区空气质量优良率</td>
+														<td>${list2.value25}%</td>
+														<td>绿化覆盖率</td>
+														<td>${list2.value26}%</td>
+														<td>道路遮荫比例</td>
+														<td>${list2.value27}%</td>
+													</tr>
+													<tr>
+														<td>露天停车场遮荫比例</td>
+														<td>${list2.value28}%</td>
+														<td>绿色园区标准体系完善程度</td>
+														<td>${list2.value29}</td>
+														<td>编制绿色园区发展规划</td>
+														<td>${list2.value30}</td>
+													</tr>
+													<tr>
+														<td>绿色园区信息平台完善程度</td>
+														<td>${list2.value31}</td>
+													</tr>
+												</tbody>
+											</table>
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="button" onclick="parent.layer.closeAll();" >
+												<i class="ace-icon fa fa-undo bigger-110"></i>
+												返回
+											</button>
+										</div>
+									</div>
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="${resRoot}/assets/js/jquery-2.1.4.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="${resRoot}/assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='${resRoot}/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="${resRoot}/assets/js/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+		<script src="${resRoot}/assets/js/jquery.dataTables.min.js"></script>
+		<script src="${resRoot}/assets/js/jquery.dataTables.bootstrap.min.js"></script>
+		<script src="${resRoot}/assets/js/dataTables.buttons.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.flash.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.html5.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.print.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.colVis.min.js"></script>
+		<script src="${resRoot}/assets/js/dataTables.select.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="${resRoot}/assets/js/ace-elements.min.js"></script>
+		<script src="${resRoot}/assets/js/ace.min.js"></script>
+
+	<script src="${resRoot}/layui/lay/dest/layui.all.js" charset="utf-8"></script>
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+		
+				// $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+				
+				
+				// myTable.buttons().container().appendTo( $('.tableTools-container') );
+				
+				//style the message box
+				
+			
+				layui.use('layer', function(){
+		
+				//调用示例
+				layer.photos({
+				  photos: '#layer-photos-demo'
+				  ,anim: 0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+				}); 
+				});
+				
+				function audit(id) {
+		  			var flag = 0;
+		  			layer.confirm('确定审核该条数据吗?',{btn: ['通过','驳回']}, function(index){
+		  				$.ajax({
+		  					type : "post",
+		  					url : "${base}/sys/supply/audit.htm",
+		  					data : {
+		  						id : id
+		  					},
+		  					dataType : "json",
+		  					async : false,
+		  					success : function(data) {
+		  						flag  = data.message;
+		  						if(flag == 1) {
+		  							layer.msg('审核成功！', {
+		  							  icon: 1,
+		  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+		  							}, function(){
+		  								window.location.reload();
+		  							});   
+		  						} else {
+		  							layer.alert("服务器繁忙，请稍候再试！");
+		  						}
+		  					}
+		  				});
+		  			}, function(){
+		  				$.ajax({
+		  					type : "post",
+		  					url : "${base}/sys/supply/reject.htm",
+		  					data : {
+		  						id : id
+		  					},
+		  					dataType : "json",
+		  					async : false,
+		  					success : function(data) {
+		  						flag  = data.message;
+		  						if(flag == 1) {
+		  							layer.msg('驳回成功！', {
+		  							  icon: 1,
+		  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+		  							}, function(){
+		  								window.location.reload();
+		  							});   
+		  						} else {
+		  							layer.alert("服务器繁忙，请稍候再试！");
+		  						}
+		  					}
+		  				});
+		  			  });
+		  		}
+		</script>
+	</body>
+</html>

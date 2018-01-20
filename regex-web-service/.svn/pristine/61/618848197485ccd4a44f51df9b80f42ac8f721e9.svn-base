@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IWaterDAO">
+	<insert id="insert" parameterType="com.regex.web.common.dto.info.EliminationDTO"
+     useGeneratedKeys="true" keyProperty="id">
+     insert into t_water(category,name,quota,unit,remarks,is_del,create_time,
+     update_time)values(#{category},#{name},#{quota},#{unit},#{remarks},#{isDel},
+     #{createTime},#{updateTime})
+     </insert>
+     
+     <select id="selectByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="com.regex.web.common.dto.info.EliminationDTO">
+     	select id as id,
+     		category as category,
+     		name as name,
+     		quota as quota,
+     		unit as unit,
+     		remarks as remarks,
+     		is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+			t_water
+		where 
+ 			is_del!='1' and  name like concat('%',#{name},'%')  category =#{type}  LIMIT #{startIndex},#{pageSize}
+     </select>
+     
+     <select id="selectCountByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="int">
+    	select
+    		count(0)
+ 		from
+ 			 t_water 	  
+ 		where 
+ 			is_del!='1' and  name like concat('%',#{name},'%')  category =#{type}
+    </select>
+</mapper>

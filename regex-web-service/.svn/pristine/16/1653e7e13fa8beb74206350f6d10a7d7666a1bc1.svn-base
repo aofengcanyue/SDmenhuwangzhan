@@ -1,0 +1,49 @@
+package com.regex.web.service.info.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.regex.web.common.dto.info.WaterDTO;
+import com.regex.web.common.utils.QueryConditions;
+import com.regex.web.dao.info.IWaterDAO;
+import com.regex.web.service.info.IWaterService;
+
+@Service
+public class WaterServiceImpl implements IWaterService {
+    
+    @Autowired
+    private IWaterDAO waterDAO;
+    
+    @Override
+    public int insert(WaterDTO waterDTO) {
+
+        return waterDAO.insert(waterDTO);
+    }
+
+    @Override
+    public List<WaterDTO> selectByName(QueryConditions params) {
+        
+        return waterDAO.selectByName(params);
+    }
+
+    @Override
+    public int selectCountByName(QueryConditions params) {
+        
+        return waterDAO.selectCountByName(params);
+    }
+
+    @Override
+    public int updateById(WaterDTO waterDTO) {
+        
+        return waterDAO.updateById(waterDTO);
+    }
+
+    @Override
+    public int del(long id) {
+        
+        return waterDAO.del(id);
+    }
+
+}

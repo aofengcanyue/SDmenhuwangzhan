@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.FinancingDAO">
+    <!-- FinancingDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_FinancingDTO_Map" type="com.regex.web.common.dto.info.FinancingDTO">
+        <id column="id" property="id" />
+        <result column="update_time" property="updateTime" />
+        <result column="address" property="address" />
+        <result column="create_time" property="createTime" />
+        <result column="phone" property="phone" />
+        <result column="contact" property="contact" />
+        <result column="is_del" property="isDel" />
+        <result column="investment" property="investment" />
+        <result column="company" property="company" />
+        <result column="demand" property="demand" />
+        <result column="introduction" property="introduction" />
+    </resultMap>
+
+    <!-- 数据库中表名为:t_financing的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_financing_Column">
+        t_financing.id as id
+        ,t_financing.update_time as update_time
+        ,t_financing.address as address
+        ,t_financing.create_time as create_time
+        ,t_financing.phone as phone
+        ,t_financing.contact as contact
+        ,t_financing.is_del as is_del
+        ,t_financing.investment as investment
+        ,t_financing.company as company
+        ,t_financing.demand as demand
+        ,t_financing.introduction as introduction
+    </sql>
+
+    <!--获得类名为:FinancingDTO对应的数据库表的数据总行数 -->
+    <select id="getFinancingDTORowCount" resultType="java.lang.Long">
+        select count(id) from t_financing
+    </select>
+    <!-- 获得类名为:FinancingDTO对应数据库中表的数据集合 -->
+    <select id="selectFinancingDTO" resultMap="result_FinancingDTO_Map">
+        select 
+        <include refid="t_financing_Column" /> 
+        from t_financing
+    </select> 
+
+    <!-- 获得一个FinancingDTO对象,以参数FinancingDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectFinancingDTOByObj" parameterType="com.regex.web.common.dto.info.FinancingDTO" resultMap="result_FinancingDTO_Map">
+        select 
+            <include refid="t_financing_Column" /> 
+        from t_financing
+        <where>
+            <if test="introduction != null "> and t_financing.introduction = #{introduction}</if>
+            <if test="demand != null "> and t_financing.demand = #{demand}</if>
+            <if test="company != null "> and t_financing.company = #{company}</if>
+            <if test="investment != null "> and t_financing.investment = #{investment}</if>
+            <if test="isDel != null "> and t_financing.is_del = #{isDel}</if>
+            <if test="contact != null "> and t_financing.contact = #{contact}</if>
+            <if test="phone != null "> and t_financing.phone = #{phone}</if>
+            <if test="createTime != null "> and t_financing.create_time = #{createTime}</if>
+            <if test="address != null "> and t_financing.address = #{address}</if>
+            <if test="updateTime != null "> and t_financing.update_time = #{updateTime}</if>
+            <if test="id != null "> and t_financing.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过FinancingDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectFinancingDTOById" parameterType="java.lang.Long" resultMap="result_FinancingDTO_Map">
+        select 
+            <include refid="t_financing_Column" /> 
+        from t_financing
+        where t_financing.id = #{id}
+    </select> 
+
+    <!-- 将FinancingDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertFinancingDTO" parameterType="com.regex.web.common.dto.info.FinancingDTO">
+        insert into t_financing(id,update_time,address,create_time,phone,contact,is_del,investment,company,demand,introduction) 
+        values(#{id},#{updateTime},#{address},#{createTime},#{phone},#{contact},#{isDel},#{investment},#{company},#{demand},#{introduction})
+    </insert>
+
+    <!-- 将FinancingDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyFinancingDTO" parameterType="com.regex.web.common.dto.info.FinancingDTO">
+        insert into t_financing
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="address != null">address,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="phone != null">phone,</if>
+            <if test="contact != null">contact,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="investment != null">investment,</if>
+            <if test="company != null">company,</if>
+            <if test="demand != null">demand,</if>
+            <if test="introduction != null">introduction,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="address != null"> #{address},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="phone != null"> #{phone},</if>
+            <if test="contact != null"> #{contact},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="investment != null"> #{investment},</if>
+            <if test="company != null"> #{company},</if>
+            <if test="demand != null"> #{demand},</if>
+            <if test="introduction != null"> #{introduction},</if>
+        </trim>
+    </insert>
+
+    <!-- 将FinancingDTO批量插入到对应数据库的表中-->
+    <insert id="insertFinancingDTOByBatch" parameterType="ArrayList">
+        insert into t_financing(id,update_time,address,create_time,phone,contact,is_del,investment,company,demand,introduction) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.updateTime},#{item.address},#{item.createTime},#{item.phone},#{item.contact},#{item.isDel},#{item.investment},#{item.company},#{item.demand},#{item.introduction})
+        </foreach>
+    </insert>
+
+    <!-- 通过FinancingDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteFinancingDTOById" parameterType="java.lang.Long">
+        delete from t_financing
+        where id = #{id}
+    </delete>
+
+    <!-- 通过FinancingDTO的id将FinancingDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateFinancingDTOById" parameterType="com.regex.web.common.dto.info.FinancingDTO">
+        update t_financing set
+            update_time=#{updateTime}
+            ,address=#{address}
+            ,create_time=#{createTime}
+            ,phone=#{phone}
+            ,contact=#{contact}
+            ,is_del=#{isDel}
+            ,investment=#{investment}
+            ,company=#{company}
+            ,demand=#{demand}
+            ,introduction=#{introduction}
+        where id=#{id}
+    </update>
+
+    <!-- 通过FinancingDTO的id将FinancingDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyFinancingDTOById" parameterType="com.regex.web.common.dto.info.FinancingDTO">
+        update t_financing
+        <set>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="address != null">
+                address=#{address},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
+            <if test="contact != null">
+                contact=#{contact},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="investment != null">
+                investment=#{investment},
+            </if>
+            <if test="company != null">
+                company=#{company},
+            </if>
+            <if test="demand != null">
+                demand=#{demand},
+            </if>
+            <if test="introduction != null">
+                introduction=#{introduction},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

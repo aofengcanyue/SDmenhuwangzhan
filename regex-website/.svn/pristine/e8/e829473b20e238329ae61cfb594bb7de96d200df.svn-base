@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>绿色园区基本信息</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style>
+	.label_lh{ line-height: 34px;margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html">
+
+		
+<div class="container bg_f">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/">首页</a>>绿色工厂一般要求符合性评价表</p>
+		</div>
+		<div class="col-lg-12">
+			<p class="pj_t">绿色园区基本信息</p>
+		</div>
+	</div>
+</div>
+
+<div style="background: #fff; padding-bottom: 30px;">
+	<div class="info_sub">
+		 <h3 class="info_sub_ty">园区信息</h3>
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">园区名称</em>
+		 	<input class="info_div_in" type="text" name="name" id="name" value="" />
+		 </div>
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">园区级别</em>
+		 	<div class="div_ra">
+		 		<input type="radio" name="level" id="level" value="0" />
+		 		<label for="">国家级</label>
+		 	</div>
+		 	<div class="div_ra">
+		 		<input type="radio" name="level" id="level" value="1" />
+		 		<label for="">省级</label>
+		 	</div>
+		 	<div class="div_ra">
+		 		<input type="radio" name="level" id="level" value="2" />
+		 		<label for="">市级</label>
+		 	</div>
+		 </div>
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">园区类型</em>
+		 	<input class="info_div_in" type="text" name="type" id="type" value="" />
+		 </div>
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">通讯地址</em>
+		 	<input class="info_div_in" type="text" name="address" id="address" value="" />
+		 </div>
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">邮政编码</em>
+		 	<input class="info_div_in" type="text" name="postalCode" id="postalCode" value="" />
+		 </div>
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">园区负责人</em>
+		 	<input class="info_div_in" type="text" name="header" id="header" value="" />
+		 </div>
+	</div>
+	
+	<div class="info_sub2">
+		 <ul class="clearfix">
+		 	<li class="info_div">
+		 		<em>职务</em>
+		 		<input type="" name="job" id="job" value="" />
+		 	</li>
+		 	<li class="info_div">
+		 		<em>联系电话</em>
+		 		<input type="" name="tel" id="tel" value="" />
+		 	</li>
+		 	<li class="info_div">
+		 		<em>传真</em>
+		 		<input type="" name="fax" id="fax" value="" />
+		 	</li>
+		 	<li class="info_div">
+		 		<em>电子邮箱</em>
+		 		<input type="" name="email" id="email" value="" />
+		 	</li>
+		 </ul>
+		
+	</div>
+	<div class="info_sub">
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">园区简介</em>
+		 	<textarea name="" rows="7" cols="" id="introduction" class="info_div_in_t"></textarea>
+		 </div>
+	</div>
+	<div class="info_sub" style="margin-top: 30px;">
+		 <h3 class="info_sub_ty">申报人信息</h3>
+		 <div class="info_div clearfix">
+		 	<em class="info_div_title">申报单位联系人</em>
+		 	<input class="info_div_in" type="text" name="applyor" id="applyor" value="" />
+		 </div>
+	</div>
+	<div class="info_sub2">
+		 <ul class="clearfix">
+		 	<li class="info_div">
+		 		<em>职务</em>
+		 		<input type="" name="applyJob" id="applyJob" value="" />
+		 	</li>
+		 	<li class="info_div">
+		 		<em>联系电话</em>
+		 		<input type="" name="applyTel" id="applyTel" value="" />
+		 	</li>
+		 	<li class="info_div">
+		 		<em>传真</em>
+		 		<input type="" name="applyFax" id="applyFax" value="" />
+		 	</li>
+		 	<li class="info_div">
+		 		<em>电子邮箱</em>
+		 		<input type="" name="applyEmail" id="applyEmail" value="" />
+		 	</li>
+		 </ul>
+		
+	</div>
+	<div style="padding-bottom: 50px;"></div>
+	<div class="end_sub">
+		 <input type="button" class="end_sub_btn" name="" id="" onclick="save();" value="提交" />
+	</div>
+</div>
+<script src="${resRoot}/layui/lay/dest/layui.all.js" charset="utf-8"></script>
+</body>
+	<script type="text/javascript">
+	function save() {
+		// var id = $("#id").val();
+		var name =$("#name").val();
+		var type=$("#type").val();
+		var applyJob = $("#applyJob").val();
+		var applyFax=$("#applyFax").val();
+		var applyEmail=$("#applyEmail").val();
+		var applyTel=$("#applyTel").val();
+		var address=$("#address").val();
+		var level=$("input[name='level']:checked").val(); 
+		var applyor=$("#applyor").val();
+		var header=$("#header").val();
+		var tel=$("#tel").val();
+		var postalCode=$("#postalCode").val();
+		var job=$("#job").val();
+		var fax=$("#fax").val();
+		var email=$("#email").val();
+		var introduction=$("#introduction").val();
+		var flag = true;
+		if(name==""|| name == null || name=="undifined") {
+			layer.msg("请输入标题");
+			flag = false;
+			return false;
+		}
+		if(type==""|| type == null || type=="undifined") {
+			layer.msg("请输入园区类型");
+			flag = false;
+			return false;
+		}
+		if(level==""|| level == null || level=="undifined") {
+			layer.msg("请选择园区级别");
+			flag = false;
+			return false;
+		}
+		if(address==""|| address == null || address=="undifined") {
+			layer.msg("请输入园区地址");
+			flag = false;
+			return false;
+		}
+		if(header==""|| header == null || header=="undifined") {
+			layer.msg("请输入园区负责人");
+			flag = false;
+			return false;
+		}
+		if(tel==""|| tel == null || tel=="undifined") {
+			layer.msg("请输入联系电话");
+			flag = false;
+			return false;
+		}
+		if(job==""|| job == null || job=="undifined") {
+			layer.msg("请输入职务");
+			flag = false;
+			return false;
+		}
+		if(introduction==""|| introduction == null || introduction=="undifined") {
+			layer.msg("请输入园区简介");
+			flag = false;
+			return false;
+		}
+		if(applyor==""|| applyor == null || applyor=="undifined") {
+			layer.msg("请输入申报人");
+			flag = false;
+			return false;
+		}
+		if(applyTel==""|| applyTel == null || applyTel=="undifined") {
+			layer.msg("请输入申报人电话");
+			flag = false;
+			return false;
+		}
+		if(applyJob==""|| applyJob == null || applyJob=="undifined") {
+			layer.msg("请输入申报人职务");
+			flag = false;
+			return false;
+		}
+		if(flag) {
+			$.ajax({
+				type : "post",
+				url : "${base}/web/greenPark/save.htm",
+				data : {
+					name : name,
+					type : type,
+					applyJob : applyJob,
+					applyFax : applyFax,
+					applyTel : applyTel,
+					applyEmail : applyEmail,
+					address : address,
+					level : level,
+					applyor : applyor,
+					header : header,
+					tel : tel,
+					postalCode : postalCode,
+					job : job,
+					fax : fax,
+					email : email,
+					introduction : introduction
+					},
+				dataType : "json",
+				async : false,
+				success : function(data) {
+					if(data.message == 2) {
+						layer.alert('请完善数据');   
+							// return false;
+						} else if(data.message == 1) {
+							layer.msg('保存成功！', {
+							  icon: 1,
+							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+							}, function(){
+								window.location.href="${base}/web/greenPark/accord.htm";
+							});   
+						} else {
+							layer.msg('系统繁忙！'); 
+						}
+				}
+			}); 
+		}
+	}
+	</script>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+</html>

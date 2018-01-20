@@ -1,0 +1,61 @@
+package com.regex.web.service.info.impl;
+import java.util.List;
+import com.regex.web.dao.info.AchievementDAO;
+import com.regex.web.common.dto.info.AchievementDTO;
+import com.regex.web.service.info.AchievementService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+@Service
+public class AchievementServiceImpl implements AchievementService{
+    @Autowired
+    private AchievementDAO achievementDao;
+    @Override
+    public long getAchievementDTORowCount(){
+        return achievementDao.getAchievementDTORowCount();
+    }
+    @Override
+    public List<AchievementDTO> selectAchievementDTO(){
+        return achievementDao.selectAchievementDTO();
+    }
+    @Override
+    public AchievementDTO selectAchievementDTOByObj(AchievementDTO obj){
+        return achievementDao.selectAchievementDTOByObj(obj);
+    }
+    @Override
+    public AchievementDTO selectAchievementDTOById(Long id){
+        return achievementDao.selectAchievementDTOById(id);
+    }
+    @Override
+    public int insertAchievementDTO(AchievementDTO value){
+        return achievementDao.insertAchievementDTO(value);
+    }
+    @Override
+    public int insertNonEmptyAchievementDTO(AchievementDTO value){
+        return achievementDao.insertNonEmptyAchievementDTO(value);
+    }
+    @Override
+    public int insertAchievementDTOByBatch(List<AchievementDTO> value){
+        return achievementDao.insertAchievementDTOByBatch(value);
+    }
+    @Override
+    public int deleteAchievementDTOById(Long id){
+        return achievementDao.deleteAchievementDTOById(id);
+    }
+    @Override
+    public int updateAchievementDTOById(AchievementDTO enti){
+        return achievementDao.updateAchievementDTOById(enti);
+    }
+    @Override
+    public int updateNonEmptyAchievementDTOById(AchievementDTO enti){
+        return achievementDao.updateNonEmptyAchievementDTOById(enti);
+    }
+
+    public AchievementDAO getAchievementDao() {
+        return this.achievementDao;
+    }
+
+    public void setAchievementDao(AchievementDAO achievementDao) {
+        this.achievementDao = achievementDao;
+    }
+
+}

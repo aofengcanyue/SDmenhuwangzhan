@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>指标评价</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style>
+	.table > tbody > tr > td{ line-height: 2.4; }
+	.btn_sl{ width: 150px; }
+	.btn_sl i{ float: left; }
+	.btn_sl span{ float: right;margin-top: 8px; }
+	.btn_sub:hover{ background: #004EB7; }
+	.add_select{ height: 34px;
+				 line-height: 34px;
+				 width:200px;
+				 display: block;
+				 border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html">		
+<div class="container bg_f">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/">首页</a>>绿色评价分析</p>
+		</div>
+		<div class="col-lg-12">
+				<div class="col-lg-2 col-lg-offset-3">
+					 <div class="b_d1 mato ">
+					 	<div class="b_d2">
+					 		<em>96<span>分</span></em>
+					 	</div>
+					 </div>
+				</div>
+				<div class="col-lg-5">
+					<p class="end_pj">已完成指标评价</p>
+					<p class="beat">本次测评结果打败<span>97%</span>的企业，望继续努力</p>
+				</div>
+		</div>
+		<div class="col-lg-12">
+			<div style="padding-bottom: 80px;"></div>
+		</div>
+	</div>
+</div>
+
+
+<div class="pj_nav">
+	<ul  class="clearfix">
+		<li onclick="window.location.href='${base}/web/factoryEvaluation/result.htm'">
+			符合性评价
+			<span style="display: none;"></span>
+		</li>
+		<li onclick="window.location.href='${base}/web/factoryEvaluation/result2.htm'">
+			指标评价
+			<span></span>
+			<em></em>
+		</li>
+	</ul>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 ">
+			 <div class="col-lg-4 col-md-4 col-sm-4" >
+		 	  		<em class="l_title">一级指标</em>
+		 	  		<div class="btn-group">
+		 	  			<select class="add_select" name="type" id="type" >
+						<option value="" >请选择</option>
+						<#list classAMap?keys as key>
+						<#if key_index &gt; 0>
+						<option  value="${key}">${classAMap[key]}</option>
+						</#if>
+						</#list>
+					   </select>
+					</div>
+		 	  </div>
+		 	  <div class="col-lg-4 col-md-4  col-sm-4">
+		 	  		<em class="l_title">二级指标</em>
+		 	  		<div class="btn-group">
+					    <select class="add_select" name="type" >
+						<option value="0" >否</option>
+						<option value="1" >是</option>
+					   </select>
+					</div>
+		 	  </div>
+		 	  <div class="col-lg-2 col-md-2 col-sm-2 text-center">
+		 	  		<button type="button" class="btn shai_x " onclick="changeValue();" >筛选</button>
+		 	  </div>
+		</div>
+	</div>	 
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 "> 
+			<div style="margin-top: 20px;"></div>
+			 <table class="table table-condensed table-bordered">
+				  <thead>
+				    <tr>
+				      <th class="td_blue">二级指标</th>
+				      <th class="td_blue" style="width:60%">要求条款</th>
+				      <th class="td_blue">要求类型</th>
+				      <th class="td_blue">分值</th>
+				      <th class="td_blue">得分</th>
+				    </tr>
+				  </thead>
+				  <tbody id="data_1" class="data_table11" >
+				  	<#list datas1 as data>
+			      	<tr>
+			      		<#if data_index == 0>
+			      		  <td rowspan="9">${classBMap[data.classb]}</td> 
+			      		<#elseif data_index == 9>
+			      			<td rowspan="2">${classBMap[data.classb]}</td>
+			      		<#elseif data_index == 11>
+			      			<td rowspan="2">${classBMap[data.classb]}</td>
+			      		</#if>
+				      <td>${data.item}</td>
+				      <#if data_index == 0>
+			      		  <td rowspan="4">${typeMap[data.type]}</td> 
+			      		<#elseif data_index == 4>
+			      			<td rowspan="5">${typeMap[data.type]}</td>
+			      		<#elseif data_index == 9>
+			      			<td rowspan="2">${typeMap[data.type]}</td>
+			      		<#elseif data_index &gt; 10>
+			      		<td>${typeMap[data.type]}</td>
+			      		</#if>
+				      <td >${data.point}</td>
+				      <td >
+				      	<#if data_index == 0>${evaluationOneDTOTmp.valueOne}
+				      	<#elseif data_index == 1>${evaluationOneDTOTmp.valueTwo}
+				      	<#elseif data_index == 2>${evaluationOneDTOTmp.valueThree}
+				      	<#elseif data_index == 3>${evaluationOneDTOTmp.value}
+				      	<#elseif data_index == 4>${evaluationOneDTOTmp.valueFive}
+				      	<#elseif data_index == 5>${evaluationOneDTOTmp.valueSix}
+				      	<#elseif data_index == 6>${evaluationOneDTOTmp.valueSeven}
+				      	<#elseif data_index == 7>${evaluationOneDTOTmp.valueEight}
+				      	<#elseif data_index == 8>${evaluationOneDTOTmp.valueNine}
+				      	<#elseif data_index == 9>${evaluationOneDTOTmp.valueTen}
+				      	<#elseif data_index == 10>${evaluationOneDTOTmp.valueEleven}
+				      	<#elseif data_index == 11>${evaluationOneDTOTmp.valueTwelve}
+				      	<#elseif data_index == 12>${evaluationOneDTOTmp.valueThirteen}
+				      	<#elseif data_index == 13>${evaluationOneDTOTmp.valueFourteen}
+				      	<#elseif data_index == 14>${evaluationOneDTOTmp.valueFifteen}
+				      	</#if>
+				      </td>
+				    </tr>
+			      </#list>
+				  </tbody>
+				  
+				  <tbody id="data_2" class="data_table11" >
+				  	<#list datas2 as data>
+			      	<tr>
+			      		<#if data_index == 0>
+			      		  <td rowspan="4">${classBMap[data.classb]}</td> 
+			      		<#elseif data_index == 4>
+			      			<td rowspan="2">${classBMap[data.classb]}</td>
+			      		<#elseif data_index == 6>
+			      			<td rowspan="2">${classBMap[data.classb]}</td>
+			      			<#elseif data_index == 8>
+			      			<td>${classBMap[data.classb]}</td>
+			      		</#if>
+				      <td>${data.item}</td>
+			      		<td>${typeMap[data.type]}</td>
+				      <td >${data.point}</td>
+				      <td >
+				      	<#if data_index == 0>${evaluationTwoDTOTmp.valueOne}
+				      	<#elseif data_index == 1>${evaluationTwoDTOTmp.valueTwo}
+				      	<#elseif data_index == 2>${evaluationTwoDTOTmp.valueThree}
+				      	<#elseif data_index == 3>${evaluationTwoDTOTmp.value}
+				      	<#elseif data_index == 4>${evaluationTwoDTOTmp.valueFive}
+				      	<#elseif data_index == 5>${evaluationTwoDTOTmp.valueSix}
+				      	<#elseif data_index == 6>${evaluationTwoDTOTmp.valueSeven}
+				      	<#elseif data_index == 7>${evaluationTwoDTOTmp.valueEight}
+				      	<#elseif data_index == 8>${evaluationTwoDTOTmp.valueNine}
+				      	</#if>
+				      </td>
+				    </tr>
+			      </#list>
+				  </tbody>
+				  
+				  <tbody id="data_3" class="data_table11" >
+				  	<#list datas3 as data>
+			      	<tr>
+			      		<#if data_index == 0>
+			      		  <td rowspan="9">${classBMap[data.classb]}</td> 
+			      		<#elseif data_index == 9>
+			      			<td rowspan="5">${classBMap[data.classb]}</td>
+			      		</#if>
+				      <td>${data.item}</td>
+				      <#if data_index == 0>
+			      		  <td rowspan="4">${typeMap[data.type]}</td> 
+			      		<#elseif data_index == 4>
+			      			<td rowspan="5">${typeMap[data.type]}</td>
+			      		<#elseif data_index == 9>
+			      			<td>${typeMap[data.type]}</td>
+			      		<#elseif data_index == 10>
+			      			<td>${typeMap[data.type]}</td>
+			      		<#elseif data_index == 11>
+			      			<td rowspan="2">${typeMap[data.type]}</td>
+			      		<#elseif data_index == 13>
+			      			<td>${typeMap[data.type]}</td>
+			      		</#if>
+				      <td >${data.point}</td>
+				      <td >
+				      	<#if data_index == 0>${evaluationThreeDTOTmp.valueOne}
+				      	<#elseif data_index == 1>${evaluationThreeDTOTmp.valueTwo}
+				      	<#elseif data_index == 2>${evaluationThreeDTOTmp.valueThree}
+				      	<#elseif data_index == 3>${evaluationThreeDTOTmp.value}
+				      	<#elseif data_index == 4>${evaluationThreeDTOTmp.valueFive}
+				      	<#elseif data_index == 5>${evaluationThreeDTOTmp.valueSix}
+				      	<#elseif data_index == 6>${evaluationThreeDTOTmp.valueSeven}
+				      	<#elseif data_index == 7>${evaluationThreeDTOTmp.valueEight}
+				      	<#elseif data_index == 8>${evaluationThreeDTOTmp.valueNine}
+				      	<#elseif data_index == 9>${evaluationThreeDTOTmp.valueTen}
+				      	<#elseif data_index == 10>${evaluationThreeDTOTmp.valueEleven}
+				      	<#elseif data_index == 11>${evaluationThreeDTOTmp.valueTwelve}
+				      	<#elseif data_index == 12>${evaluationThreeDTOTmp.valueThirteen}
+				      	<#elseif data_index == 13>${evaluationThreeDTOTmp.valueFourteen}
+				      	</#if>
+				      </td>
+				    </tr>
+			      </#list>
+				  </tbody>
+				  
+				  <tbody id="data_4" class="data_table11" >
+				  	<#list datas4 as data>
+			      	<tr>
+			      		<#if data_index == 0>
+			      		  <td rowspan="2">${classBMap[data.classb]}</td> 
+			      		<#elseif data_index == 2>
+			      			<td rowspan="2">${classBMap[data.classb]}</td>
+			      		<#elseif data_index == 4>
+			      			<td rowspan="2">${classBMap[data.classb]}</td>
+		      			<#elseif data_index == 6>
+			      			<td rowspan="2">${classBMap[data.classb]}</td>
+			      		</#if>
+				      <td>${data.item}</td>
+			      		<td>${typeMap[data.type]}</td>
+				      <td >${data.point}</td>
+				      <td >
+				      	<#if data_index == 0>${evaluationFourDTOTmp.valueOne}
+				      	<#elseif data_index == 1>${evaluationFourDTOTmp.valueTwo}
+				      	<#elseif data_index == 2>${evaluationFourDTOTmp.valueThree}
+				      	<#elseif data_index == 3>${evaluationFourDTOTmp.value}
+				      	<#elseif data_index == 4>${evaluationFourDTOTmp.valueFive}
+				      	<#elseif data_index == 5>${evaluationFourDTOTmp.valueSix}
+				      	<#elseif data_index == 6>${evaluationFourDTOTmp.valueSeven}
+				      	<#elseif data_index == 7>${evaluationFourDTOTmp.valueEight}
+				      	</#if>
+				      </td>
+				    </tr>
+			      </#list>
+				  </tbody>
+				  
+				  <tbody id="data_5" class="data_table11" >
+				  	<#list datas5 as data>
+			      	<tr>
+			      		<#if data_index &lt; 5>
+			      		  <td>${classBMap[data.classb]}</td> 
+			      		<#elseif data_index == 5>
+			      			<td rowspan="4">${classBMap[data.classb]}</td>
+			      		</#if>
+				      <td>${data.item}</td>
+			      		<td>${typeMap[data.type]}</td>
+				      <td >${data.point}</td>
+				      <td >
+				      	<#if data_index == 0>${evaluationFiveDTOTmp.valueOne}
+				      	<#elseif data_index == 1>${evaluationFiveDTOTmp.valueTwo}
+				      	<#elseif data_index == 2>${evaluationFiveDTOTmp.valueThree}
+				      	<#elseif data_index == 3>${evaluationFiveDTOTmp.value}
+				      	<#elseif data_index == 4>${evaluationFiveDTOTmp.valueFive}
+				      	<#elseif data_index == 5>${evaluationFiveDTOTmp.valueSix}
+				      	<#elseif data_index == 6>${evaluationFiveDTOTmp.valueSeven}
+				      	<#elseif data_index == 7>${evaluationFiveDTOTmp.valueEight}
+				      	<#elseif data_index == 8>${evaluationFiveDTOTmp.valueNine}
+				      	</#if>
+				      </td>
+				    </tr>
+			      </#list>
+				  </tbody>
+				  
+				  <tbody id="data_6" class="data_table11" >
+				  	<#list datas6 as data>
+			      	<tr>
+			      		<#if data_index == 0>
+			      		  <td rowspan="4">${classBMap[data.classb]}</td> 
+			      		<#elseif data_index == 4>
+			      			<td rowspan="6">${classBMap[data.classb]}</td>
+			      		<#elseif data_index == 10>
+			      			<td rowspan="6">${classBMap[data.classb]}</td>
+			      			<#elseif data_index == 16>
+			      			<td rowspan="4">${classBMap[data.classb]}</td>
+			      		</#if>
+				      <td>${data.item}</td>
+			      	  <td>${typeMap[data.type]}</td>
+				      <td >${data.point}</td>
+				      <td >
+				      	<#if data_index == 0>${evaluationSixDTOTmp.valueOne}
+				      	<#elseif data_index == 1>${evaluationSixDTOTmp.valueTwo}
+				      	<#elseif data_index == 2>${evaluationSixDTOTmp.valueThree}
+				      	<#elseif data_index == 3>${evaluationSixDTOTmp.value}
+				      	<#elseif data_index == 4>${evaluationSixDTOTmp.valueFive}
+				      	<#elseif data_index == 5>${evaluationSixDTOTmp.valueSix}
+				      	<#elseif data_index == 6>${evaluationSixDTOTmp.valueSeven}
+				      	<#elseif data_index == 7>${evaluationSixDTOTmp.valueEight}
+				      	<#elseif data_index == 8>${evaluationSixDTOTmp.valueNine}
+				      	<#elseif data_index == 9>${evaluationSixDTOTmp.valueTen}
+				      	<#elseif data_index == 10>${evaluationSixDTOTmp.valueEleven}
+				      	<#elseif data_index == 11>${evaluationSixDTOTmp.valueTwelve}
+				      	<#elseif data_index == 12>${evaluationSixDTOTmp.valueThirteen}
+				      	<#elseif data_index == 13>${evaluationSixDTOTmp.valueFourteen}
+				      	<#elseif data_index == 14>${evaluationSixDTOTmp.valueFifteen}
+				      	<#elseif data_index == 15>${evaluationSixDTOTmp.valueSixteen}
+				      	<#elseif data_index == 16>${evaluationSixDTOTmp.valueSeventeen}
+				      	<#elseif data_index == 17>${evaluationSixDTOTmp.valueEighteen}
+				      	<#elseif data_index == 18>${evaluationSixDTOTmp.valueNineteen}
+				      	<#elseif data_index == 19>${evaluationSixDTOTmp.valueTwenty}
+				      	</#if>
+				      </td>
+				    </tr>
+			      </#list>
+				  </tbody>
+			 </table>	
+		</div>
+	</div>
+</div>
+
+<!--  弹窗 -->
+
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script>
+function changeValue() {
+	var type = $("#type").val();
+	if(type!= "") {
+		$(".data_table11").hide();
+		$("#data_"+type).show();
+	} else {
+		$(".data_table11").show();
+	}
+}
+</script>
+
+</html>
+

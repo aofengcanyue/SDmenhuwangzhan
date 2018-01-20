@@ -1,0 +1,61 @@
+package com.regex.web.common.dto.info;
+
+import java.io.Serializable;
+
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 行业信息DTO
+ *
+ * @author Administrator
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+public class IndustryInfoDTO implements Serializable{
+
+    /**
+     */
+    private static final long serialVersionUID = -668384841209823331L;
+    /**
+     * 行业ID
+     */
+    private String industryId;
+    /**
+     * 行业编号
+     */
+    private String industryCode;
+    /**
+     * 行业名称
+     */
+    private String industryName;
+    /**
+     * 行业分类Id
+     */
+    private String classIfyId;
+    
+    public String getIndustryId() {
+        return industryId;
+    }
+    public void setIndustryId(String industryId) {
+        this.industryId = industryId;
+    }
+    public String getIndustryCode() {
+        return industryCode;
+    }
+    public void setIndustryCode(String industryCode) {
+        this.industryCode = industryCode;
+    }
+    public String getIndustryName() {
+        return industryName;
+    }
+    public void setIndustryName(String industryName) {
+        this.industryName = industryName;
+    }
+    public String getClassIfyId() {
+        return classIfyId;
+    }
+    public void setClassIfyId(String classIfyId) {
+        this.classIfyId = classIfyId;
+    }
+
+}

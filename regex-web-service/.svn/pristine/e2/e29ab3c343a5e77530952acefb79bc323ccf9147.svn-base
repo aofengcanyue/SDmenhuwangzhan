@@ -1,0 +1,15 @@
+package com.regex.web.service.info;
+
+import java.util.List;
+
+import com.regex.web.common.dto.info.EnergySaveDTO;
+import com.regex.web.common.utils.QueryConditions;
+
+public interface IEnergySaveService {
+    
+    int insert(EnergySaveDTO energySaveDTO);
+    
+    List<EnergySaveDTO> selectByName(QueryConditions params);
+    
+    int selectCountByName(QueryConditions params);
+}

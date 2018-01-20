@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+</head>
+<body>
+
+<div class="container container_top">
+	<nav class="navbar navbar-default" role="navigation">
+	    <div class="container-fluid">
+	    <div class="navbar-header">
+	        <button type="button" class="navbar-toggle nav_t1" data-toggle="collapse"
+	                data-target="#example-navbar-collapse">
+	            <span class="sr-only">切换导航</span>
+	            <span class="icon-bar" style="background: #fff;"></span>
+	            <span class="icon-bar" style="background: #fff;"></span>
+	            <span class="icon-bar" style="background: #fff;"></span>
+	        </button>
+	        <a class="navbar-brand" href="#"><img src="${resRoot}/project/images/logo.png"/></a>
+	    </div>
+	    <div class="collapse navbar-collapse navbar-right nav_t s_nav" style="position: relative;z-index: 10;"  id="example-navbar-collapse">
+	        <ul class="nav navbar-nav">
+	            <li class="active "><em><img style="vertical-align: middle;" src="${resRoot}/project/images/icon1.png"/></em><a href="#">注册&nbsp;|</a><a href="#">&nbsp;登陆</a></li>
+	            <li class=""><em>&nbsp;&nbsp;&nbsp;&nbsp;  </em><a href="#">关于我们</a></li>
+	            <li class=""><em><img style="vertical-align: middle;" src="${resRoot}/project/images/icon2.png"/></em><a href="#">400-630-2016</a></li>
+	        </ul>
+	    </div>
+	    </div>
+	</nav>
+
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p class="back_page col-lg-offset-1"><a href="${base}/web/index.htm">首页</a>>聊城市主要工业产品取水定额查询</p>
+		</div>
+		<div class="col-md-12">
+			<h3 class="high_title">聊城市主要工业产品取水定额查询 </h3>
+			<div class="row">
+				<div class="col-lg-6 col-lg-offset-3 mt_20">
+				    <div class="input-group">
+				      <div class="input-group-btn">
+				        <button type="button" class="btn btn-default dropdown-toggle btn_pad btn_val" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i>行业类别</i> <span class="caret"></span></button>
+				        <ul class="dropdown-menu btn_list">
+				          <li><a href="#">Action</a></li>
+				          <li><a href="#">Another action</a></li>
+				          <li><a href="#">Something else here</a></li>
+				          <li role="separator" class="divider"></li>
+				          <li><a href="#">Separated link</a></li>
+				        </ul>
+				      </div><!-- /btn-group -->
+				      <div class="input-group-btn">
+				        <button type="button" class="btn btn-default dropdown-toggle btn_pad1 btn_val1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i>行业类别</i> <span class="caret"></span></button>
+				        <ul class="dropdown-menu btn_list1" >
+				          <li><a href="#">ActionActionActionAction</a></li>
+				          <li><a href="#">Another actionActionAction</a></li>
+				          <li><a href="#">Something else hereActionActionAction</a></li>
+				          <li role="separator" class="divider"></li>
+				          <li><a href="#">Separated linkActionAction</a></li>
+				        </ul>
+				      </div>
+				      <button class="btn pull-right btn_search mt_0 btn_search_1">  
+				        <span class="glyphicon glyphicon-search"></span> 搜索  
+				     </button> 
+				    </div><!-- /input-group -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-10 col-lg-offset-1">
+			<table class="table table-hover table-bordered table_bg table-striped table_h">
+				  <caption class="cap">找到264767个结果</caption>
+				  <thead>
+				    <tr>
+				      <th class="td_blue">行业类别</th>
+				      <th class="td_blue">产品名称</th>
+				      <th class="td_blue">定额值</th>
+				     
+				    </tr>
+				  </thead>
+				    <#list result.datas as water>
+				  <tbody>
+				    <tr>
+				      <td>${water.category}</td>
+				      <td>${water.name}</td>
+				      <td>${water.quota}</td>
+				    </tr>
+				  </#list>
+				  </tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div id="page"></div>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script type="text/javascript" src="${resRoot}/layui/layui.js"></script>
+<#assign pageUrl=base+'/patient/patientList.htm?keyword=${param.keyword}&'>
+<#include "/page/page.html">	
+
+</body>
+<script>
+	$(".btn_list li").click(function(){
+		var oVal = $(this).text();
+		$(".btn_val i").text(oVal)
+		
+	})
+	
+	$(".btn_list1 li").click(function(){
+		var oVal1 = $(this).text();
+		$(".btn_val1 i").text(oVal1)
+		
+	})
+	
+	
+</script>
+</html>

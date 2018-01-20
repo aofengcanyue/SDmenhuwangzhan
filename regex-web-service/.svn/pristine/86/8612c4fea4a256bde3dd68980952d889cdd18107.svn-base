@@ -1,0 +1,19 @@
+package com.regex.web.dao.info;
+
+import java.util.List;
+
+import com.regex.web.common.dto.info.EliminationDTO;
+import com.regex.web.common.utils.QueryConditions;
+
+public interface IEliminationDAO {
+    
+    int insert(EliminationDTO eliminationDTO); 
+    
+    List<EliminationDTO> selectByModel(QueryConditions params);
+    
+    int selectCountByModel(QueryConditions params);
+    
+    int updateById(EliminationDTO eliminationDTO);
+    
+    int del(long id);
+}

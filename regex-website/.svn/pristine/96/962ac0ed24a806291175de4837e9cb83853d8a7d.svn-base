@@ -1,0 +1,489 @@
+<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+				<script type="text/javascript">
+					try{ace.settings.loadState('sidebar')}catch(e){}
+				</script>
+
+				<ul class="nav nav-list">
+					<li class="active">
+						<a href="${base}/index.htm">
+							<i class="menu-icon fa fa-tachometer"></i>
+							<span class="menu-text"> 系统首页 </span>
+						</a>
+
+						<b class="arrow"></b>
+					</li>
+					<@security.authorize ifAnyGranted="ROLE_ADMIN">
+						<li class="">
+							<a href="#" class="dropdown-toggle">
+								<i class="menu-icon fa fa-desktop"></i>
+								<span class="menu-text">
+									系统管理
+								</span>
+	
+								<b class="arrow fa fa-angle-down"></b>
+							</a>
+	
+							<b class="arrow"></b>
+	
+							<ul class="submenu">
+								<li class="">
+									<a href="${base}/sys/user/show.htm">
+										<i class="menu-icon fa fa-caret-right"></i>
+										用户管理
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="${base}/sys/role/show.htm">
+										<i class="menu-icon fa fa-caret-right"></i>
+										角色管理
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="#">
+										<i class="menu-icon fa fa-caret-right"></i>
+										菜单管理
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+							</ul>
+						</li>
+						
+						<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> 信息发布 </span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/admin/notice/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									信息管理
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="${base}/admin/noticeType/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									信息分类
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+						</ul>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> 首页查询 </span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/energySave/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									节能低碳
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="${base}/sys/elimination/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									淘汰设备
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							
+							<li class="">
+								<a href="${base}/sys/water/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									取水定额
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+						</ul>
+					</li>
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> 固废资源交易 </span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/supply/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									供应信息
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="${base}/sys/demand/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									求购信息
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+						</ul>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text">系统专栏</span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/systemColumn/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									传送链接
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+						</ul>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> 成果展示</span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/achievement/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									成果展示
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+						</ul>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> 绿色金融</span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/policy/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									金融政策
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							<li class="">
+								<a href="${base}/sys/Mechanism/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									金融机构
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							<li class="">
+									<a href="${base}/sys/Financing/show.htm">
+										<i class="menu-icon fa fa-caret-right"></i>
+										融资项目
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+						</ul>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text">企业培训</span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/training/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									培训列表
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+						</ul>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text">专家问答</span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/ExpertAnswer/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									专家问答列表
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+						</ul>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text">绿色评价</span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="${base}/sys/CommonAccordEvaluate/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									符合性评价
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							
+							<li class="">
+								<a href="${base}/sys/IndexEvaluation/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									绿色工厂指标性评价
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							
+							<li class="">
+								<a href="${base}/sys/GreenSupply/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									绿色供应链指标性评价
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							
+							<li class="">
+								<a href="${base}/sys/GreenParkEvaluation/show.htm">
+									<i class="menu-icon fa fa-caret-right"></i>
+									绿色园区指标性评价
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+						</ul>
+					</li>
+					</@security.authorize>
+					
+					<@security.authorize ifAnyGranted="ROLE_USER">
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> 普通用户 </span>
+
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<!-- <ul class="submenu">
+							<li class="">
+								<a href="tables.html">
+									<i class="menu-icon fa fa-caret-right"></i>
+									Simple &amp; Dynamic
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="jqgrid.html">
+									<i class="menu-icon fa fa-caret-right"></i>
+									jqGrid plugin
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+						</ul> -->
+					</li>
+					</@security.authorize>
+
+					<@security.authorize ifAnyGranted="ROLE_EXPERT">
+						<li class="">
+							<a href="#" class="dropdown-toggle">
+								<i class="menu-icon fa fa-pencil-square-o"></i>
+								<span class="menu-text"> 专家顾问 </span>
+	
+								<b class="arrow fa fa-angle-down"></b>
+							</a>
+	
+							<b class="arrow"></b>
+	
+							<ul class="submenu">
+								<li class="">
+									<a href="${base}/expert/ExpertAnswer/show.htm">
+										<i class="menu-icon fa fa-caret-right"></i>
+										我的咨询消息
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+							</ul>
+						</li>
+					</@security.authorize>
+
+					<@security.authorize ifAnyGranted="ROLE_ENTERPRISE">
+						<li class="">
+							<a href="#" class="dropdown-toggle">
+								<i class="menu-icon fa fa-tag"></i>
+								<span class="menu-text"> 企业用户 </span>
+	
+								<b class="arrow fa fa-angle-down"></b>
+							</a>
+	
+							<b class="arrow"></b>
+	
+							<ul class="submenu">
+								<li class="">
+									<a href="${base}/ent/demand/mydemand.htm">
+										<i class="menu-icon fa fa-caret-right"></i>
+										我的求购
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="${base}/ent/supply/mysupply.htm">
+										<i class="menu-icon fa fa-caret-right"></i>
+										我的供应
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="${base}/ent/Financing/show.htm">
+										<i class="menu-icon fa fa-caret-right"></i>
+										我的融资项目
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<!-- <li class="">
+									<a href="invoice.html">
+										<i class="menu-icon fa fa-caret-right"></i>
+										Invoice
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="timeline.html">
+										<i class="menu-icon fa fa-caret-right"></i>
+										Timeline
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="search.html">
+										<i class="menu-icon fa fa-caret-right"></i>
+										Search Results
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="email.html">
+										<i class="menu-icon fa fa-caret-right"></i>
+										Email Templates
+									</a>
+	
+									<b class="arrow"></b>
+								</li>
+	
+								<li class="">
+									<a href="login.html">
+										<i class="menu-icon fa fa-caret-right"></i>
+										Login &amp; Register
+									</a>
+	
+									<b class="arrow"></b>
+								</li> -->
+							</ul>
+						</li>
+					</@security.authorize>
+
+				</ul><!-- /.nav-list -->
+
+				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+					<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+				</div>
+			</div>

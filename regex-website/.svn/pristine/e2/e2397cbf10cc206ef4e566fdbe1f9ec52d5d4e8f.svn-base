@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<style type="text/css">
+	html,body{ background: #fff;}
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+<div class="container bg_f">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-4 col-lg-offset-2"><a href="${base}/">首页</a>><a href="${base}/web/expertAnswer/show.htm">问答广场</a>>工业设计周活动怎么参加？</p>
+		</div>
+		<div class="col-lg-12">
+			<input type="hidden" id="id" value="${ExpertAnswerDTO.id}" >
+			<h3 class="col-lg-10 col-lg-offset-2 h_join">${ExpertAnswerDTO.title}</h3>
+			<p class="col-lg-8 col-lg-offset-2 h_info">
+				<span>${typeMap[ExpertAnswerDTO.title]}</span><strong>|</strong>
+				<span>${ExpertAnswerDTO.createTime?datetime}</span><strong>|</strong>
+				<i>${dataList?size}</i><em>回答</em>
+				<a href="#" class="pull-right answer">回答</a>
+			</p>
+			<div class="col-lg-8  col-lg-push-2" style="padding-bottom: 20px;border-bottom: 1px solid #ccc;"></div>
+		</div>
+		<div class="col-lg-10 col-lg-offset-2">
+			 <p class="ans ans1">回答(${dataList?size})</p>
+		</div>
+		<div class="col-lg-8 col-lg-push-2">
+			 <ul class="pl_list">
+			 	<#list dataList as data>
+			 	<li>
+			 		<em>${data.userid}</em>
+			 		<p>${data.content}</p>
+			 	</li>
+			 	</#list>
+			 	<!-- <li>
+			 		<em>大锤</em>
+			 		<p>平台开设绿色金融专栏，面向政府管理部门、企业、金融机构发布项目融资需求，为各类绿色发展基金或社会资本参与聊城市工业节能及循环经济发展提供金融支撑。</p>
+			 	</li>
+			 	<li>
+			 		<em>大锤</em>
+			 		<p>平台开设绿色金融专栏，面向政府管理部门、企业、金融机构发布项目融资需求，为各类绿色发展基金或社会资本参与聊城市工业节能及循环经济发展提供金融支撑。</p>
+			 	</li> -->
+			 </ul>
+			 <textarea class="pl_txt" name="" id="content" rows="8" cols=""></textarea>
+		</div>
+		<div class="col-lg-8 col-lg-push-2">
+			 <a href="javascript:;" onclick="save();" class="pull-right pub_btn">发表</a>
+		</div>
+	</div>
+</div>	
+</body>
+<script type="text/javascript">
+function save() {
+	var id = $("#id").val();
+	var content=$("#content").val();
+	var flag = true;
+	if(content==""|| content == null || content=="undifined") {
+		alert("请输入回复内容");
+		flag = false;
+		return false;
+	}
+	if(flag) {
+		$.ajax({
+			type : "post",
+			url : "${base}/web/expertAnswer/save.htm",
+			data : {
+				id : id,
+				content : content
+				},
+			dataType : "json",
+			async : false,
+			success : function(data) {
+				if(data.message == 2) {
+					layer.alert('数据未审核或不存在！');   
+						// return false;
+					} else if(data.message == 1) {
+						layer.msg('保存成功！', {
+						  icon: 1,
+						  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+						}, function(){
+							window.location.reload();
+						});   
+					} else {
+						layer.msg('系统繁忙！'); 
+					}
+			}
+		}); 
+	}
+}
+</script>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+</html>

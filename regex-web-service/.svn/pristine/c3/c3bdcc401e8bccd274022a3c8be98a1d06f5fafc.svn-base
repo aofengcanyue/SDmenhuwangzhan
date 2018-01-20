@@ -1,0 +1,53 @@
+package com.regex.web.service.info.impl;
+import java.util.List;
+import com.regex.web.dao.info.SystemColumnDAD;
+import com.regex.web.common.dto.info.SystemColumnDTO;
+import com.regex.web.service.info.SystemColumnService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+@Service
+public class SystemColumnServiceImpl implements SystemColumnService{
+    @Autowired
+    private SystemColumnDAD systemColumnDAD;
+    @Override
+    public long getSystemColumnDTORowCount(){
+        return systemColumnDAD.getSystemColumnDTORowCount();
+    }
+    @Override
+    public List<SystemColumnDTO> selectSystemColumnDTO(){
+        return systemColumnDAD.selectSystemColumnDTO();
+    }
+    @Override
+    public SystemColumnDTO selectSystemColumnDTOByObj(SystemColumnDTO obj){
+        return systemColumnDAD.selectSystemColumnDTOByObj(obj);
+    }
+    @Override
+    public SystemColumnDTO selectSystemColumnDTOById(String id){
+        return systemColumnDAD.selectSystemColumnDTOById(id);
+    }
+    @Override
+    public int insertSystemColumnDTO(SystemColumnDTO value){
+        return systemColumnDAD.insertSystemColumnDTO(value);
+    }
+    @Override
+    public int insertNonEmptySystemColumnDTO(SystemColumnDTO value){
+        return systemColumnDAD.insertNonEmptySystemColumnDTO(value);
+    }
+    @Override
+    public int insertSystemColumnDTOByBatch(List<SystemColumnDTO> value){
+        return systemColumnDAD.insertSystemColumnDTOByBatch(value);
+    }
+    @Override
+    public int deleteSystemColumnDTOById(String id){
+        return systemColumnDAD.deleteSystemColumnDTOById(id);
+    }
+    @Override
+    public int updateSystemColumnDTOById(SystemColumnDTO enti){
+        return systemColumnDAD.updateSystemColumnDTOById(enti);
+    }
+    @Override
+    public int updateNonEmptySystemColumnDTOById(SystemColumnDTO enti){
+        return systemColumnDAD.updateNonEmptySystemColumnDTOById(enti);
+    }
+
+}

@@ -1,0 +1,187 @@
+package com.regex.web.controller.web;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.green.GreenParkDTO;
+import com.regex.web.service.green.GreenParkService;
+import com.regex.web.utils.AjaxUtil;
+
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 绿色园区评价
+ *
+ * @author admin
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+@Controller
+@RequestMapping("web/greenPark")
+public class WebGreenParkController {
+
+    @Autowired
+    private GreenParkService GreenParkService;
+    /**
+     * 一级指标
+     */
+    private static Map<String, String> classAMap = new HashMap<String, String>();
+    /**
+     * 二级指标
+     */
+    private static Map<String, String> classBMap = new HashMap<String, String>();
+    /**
+     * 单位
+     */
+    private static Map<String, String> unitMap = new HashMap<String, String>();
+    
+    
+    static {
+      unitMap.put("0", "万元/tce"); // d单位
+      unitMap.put("1", "%"); // 单位 
+      unitMap.put("2", "元/m3"); // 单位 
+      unitMap.put("3", "亿元/km2"); // 单位 
+      unitMap.put("4", "-"); // 单位 
+      unitMap.put("5", "万元/人"); // 单位 
+      unitMap.put("6", "t/万元"); // 单位 
+  }
+    
+    static {
+        classAMap.put("x1", "能源利用绿色化指标（EG）");
+        classAMap.put("x2", "能源利用绿色化指标（RG）");
+        classAMap.put("x3", "基础设施绿色指标(IG)");
+        classAMap.put("x4", "产业绿色指标（CG）");
+        classAMap.put("x5", "生态环境绿色指标（HG）");
+        classAMap.put("x6", "运行管理绿色指标（MG）");
+    }
+    
+    static {
+        classBMap.put("11", "能源产出率");
+        classBMap.put("12", "可再生能源使用比例");
+        classBMap.put("13", "清洁能源使用率");
+        classBMap.put("21", "水资源产出率");
+        classBMap.put("22", "土地资源产出率");
+        classBMap.put("23", "工业固体废弃物综合利用率");
+        classBMap.put("24", "工业用水重复利用率");
+        classBMap.put("25", "中水回用率");
+        classBMap.put("26", "余热资源回收利用率");
+        classBMap.put("27", "废气资源回收利用率");
+        classBMap.put("28", "再生资源回收利用率");
+        classBMap.put("31", "污水集中处理设施");
+        classBMap.put("32", "新建工业建筑中绿色建筑的比例");
+        classBMap.put("33", "新建公共建筑中绿色建筑的比例");
+        classBMap.put("34", "500米公交站点覆盖率");
+        classBMap.put("35", "节能与新能源公交车比例");
+        classBMap.put("41", "高新技术产业产值占园区工业总产值比例");
+        classBMap.put("42", "绿色产业增加值占园区工业增加值比例");
+        classBMap.put("43", "人均工业增加值");
+        classBMap.put("44", "现代服务业比例");
+        classBMap.put("51", "工业固体废弃物（含危废）处置利用率");
+        classBMap.put("52", "万元工业增加值碳排放量消减率");
+        classBMap.put("53", "单位工业增加值废水排放量");
+        classBMap.put("54", "主要污染物弹性系数");
+        classBMap.put("55", "园区空气质量优良率");
+        classBMap.put("56", "绿化覆盖率");
+        classBMap.put("57", "道路遮荫比例");
+        classBMap.put("58", "露天停车场遮荫比例");
+        classBMap.put("61", "绿色园区标准体系完善程度");
+        classBMap.put("62", "编制绿色园区发展规划");
+        classBMap.put("63", "绿色园区信息平台完善程度");
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 指标性评价展示
+     *
+     * @param model
+     * @param assist
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("show")
+    public String show(Model model, @ModelAttribute("assist") Assist assist) {
+        assist.setRequires(Assist.andEq("is_del", "0"));
+        assist.setOrder(Assist.order("update_time", true));
+        List<GreenParkDTO> datas = GreenParkService.selectGreenParkDTO(assist);
+        model.addAttribute("datas", datas);
+        model.addAttribute("classAMap", classAMap);
+        model.addAttribute("classBMap", classBMap);
+        model.addAttribute("unitMap", unitMap);
+        return "admin/IndexEvaluation/green_park/show";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 修改/ 新增
+     *
+     * @param id
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("input")
+    public String input(Model model) {
+        return "web/green/park/park_input";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 保存
+     *
+     * @param GreenParkDTO
+     * @param response
+     * @param request
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("save")
+    public void save(GreenParkDTO GreenParkDTO, HttpServletResponse response,
+            HttpServletRequest request) {
+        int n = 0;
+        try {
+        if(StringUtils.isNotEmpty(GreenParkDTO.getLevel())
+                && StringUtils.isNotEmpty(GreenParkDTO.getType())
+                && StringUtils.isNotEmpty(GreenParkDTO.getName())
+                && StringUtils.isNotEmpty(GreenParkDTO.getHeader())
+                && StringUtils.isNotEmpty(GreenParkDTO.getTel())
+                && StringUtils.isNotEmpty(GreenParkDTO.getJob())
+                && StringUtils.isNotEmpty(GreenParkDTO.getApplyor())
+                && StringUtils.isNotEmpty(GreenParkDTO.getApplyTel())
+                && StringUtils.isNotEmpty(GreenParkDTO.getApplyJob())
+                && StringUtils.isNotEmpty(GreenParkDTO.getAddress())
+                && StringUtils.isNotEmpty(GreenParkDTO.getIntroduction())) {
+                GreenParkDTO.setUpdateTime(new Date());
+                GreenParkDTO.setIsDel("0");
+                GreenParkDTO.setCreateTime(new Date());
+                n = GreenParkService.insertGreenParkDTO(GreenParkDTO);
+        } else {
+            n = 2;
+        }
+        } catch(Exception e) {
+            e.printStackTrace();
+            n = 3;
+        }
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+
+
+
+}

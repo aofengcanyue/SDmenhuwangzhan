@@ -1,0 +1,63 @@
+package com.regex.web.dao.info;
+import com.regex.web.common.dto.info.MechanismDTO;
+import java.util.List;
+public interface MechanismDAO{
+	/**
+	 * 获得MechanismDTO数据的总行数
+	 * @return
+	 */
+    long getMechanismDTORowCount();
+	/**
+	 * 获得MechanismDTO数据集合
+	 * @return
+	 */
+    List<MechanismDTO> selectMechanismDTO();
+	/**
+	 * 获得一个MechanismDTO对象,以参数MechanismDTO对象中不为空的属性作为条件进行查询
+	 * @param obj
+	 * @return
+	 */
+    MechanismDTO selectMechanismDTOByObj(MechanismDTO obj);
+	/**
+	 * 通过MechanismDTO的id获得MechanismDTO对象
+	 * @param id
+	 * @return
+	 */
+    MechanismDTO selectMechanismDTOById(Long id);
+	/**
+	 * 插入MechanismDTO到数据库,包括null值
+	 * @param value
+	 * @return
+	 */
+    int insertMechanismDTO(MechanismDTO value);
+	/**
+	 * 插入MechanismDTO中属性值不为null的数据到数据库
+	 * @param value
+	 * @return
+	 */
+    int insertNonEmptyMechanismDTO(MechanismDTO value);
+	/**
+	 * 批量插入MechanismDTO到数据库,包括null值
+	 * @param value
+	 * @return
+	 */
+    int insertMechanismDTOByBatch(List<MechanismDTO> value);
+	/**
+	 * 通过MechanismDTO的id删除MechanismDTO
+	 * @param id
+	 * @return
+	 */
+    int deleteMechanismDTOById(Long id);
+	/**
+	 * 通过MechanismDTO的id更新MechanismDTO中的数据,包括null值
+	 * @param enti
+	 * @return
+	 */
+    int updateMechanismDTOById(MechanismDTO enti);
+	/**
+	 * 通过MechanismDTO的id更新MechanismDTO中属性不为null的数据
+	 * @param enti
+	 * @return
+	 */
+    int updateNonEmptyMechanismDTOById(MechanismDTO enti);
+}

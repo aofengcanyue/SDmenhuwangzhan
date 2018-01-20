@@ -1,0 +1,172 @@
+package com.regex.web.controller.admin.sys;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.info.TrainingDTO;
+import com.regex.web.common.utils.AjaxUtil;
+import com.regex.web.controller.vo.PageVO;
+import com.regex.web.excel.ExportExcel;
+import com.regex.web.service.info.TrainingService;
+import com.regex.web.utils.HTMLSpiritUtil;
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 企业培训
+ *
+ * @author Administrator
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+@Controller
+@RequestMapping("sys/training")
+public class SysTrainingController {
+    
+    @Autowired
+    private TrainingService trainingService;
+    
+    private static Map<String, String> typeMap = new HashMap<String, String>();
+    
+    static {
+        typeMap.put("0", "能源管理体系");
+        typeMap.put("1", "能源审计");
+        typeMap.put("2", "清洁生产审核");
+       
+    }
+    
+    
+    @RequestMapping("input")
+    public String input(Model model,@ModelAttribute("id")String id) {
+        if(StringUtils.isNotEmpty(id)) {
+            TrainingDTO trainingDTO = trainingService.selectTrainingDTOById(Long.parseLong(id));
+        model.addAttribute("trainingDTO",trainingDTO);
+        }
+        model.addAttribute("typeMap", typeMap);
+        return "admin/training/input";
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 企业培训列表
+     *
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("show")
+    public String show() {
+        return "admin/training/show";
+    }
+    
+    @RequestMapping(value = "getPage", method = RequestMethod.POST)
+    @ResponseBody
+    public void getPage(Model model, @ModelAttribute("assist") Assist assist, HttpServletResponse response, int sEcho,
+            String columns, String iDisplayStart, String iDisplayLength, String sSearch) {
+        assist.setRequires(Assist.andNeq("is_del", "1"));
+        if(StringUtils.isEmpty(iDisplayLength)) {
+            iDisplayLength = "10";
+        }
+        assist.setRowSize(Integer.parseInt(iDisplayLength));
+        if(StringUtils.isEmpty(iDisplayStart)) {
+            iDisplayStart = "0";
+        }
+        if(StringUtils.isNotEmpty(sSearch)) {
+            assist.setRequires(Assist.customRequire("and title like concat('%',", sSearch, ",'%')"));
+        }
+        assist.setStartRow(Integer.parseInt(iDisplayStart));
+        List<TrainingDTO> datas = trainingService.selectTrainingDTO(assist);
+        for(TrainingDTO trainingDTO : datas) {
+            trainingDTO.setType(typeMap.get(trainingDTO.getType()));
+        }
+        long totalCount = trainingService.getTrainingDTORowCount(assist);
+        model.addAttribute("data", datas);
+        PageVO<TrainingDTO> mData = new PageVO<TrainingDTO>();
+        mData.setAaData(datas);
+        mData.setsEcho(sEcho);
+        mData.setiTotalRecords(totalCount);
+        mData.setiTotalDisplayRecords(totalCount);
+        AjaxUtil.ajaxJsonSucMessage(response, mData);
+    }
+    
+    
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 添加企业培训
+     *  
+     * @param response
+     * @param eliminationDTO
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("insert")
+    public void insert(HttpServletResponse response,TrainingDTO trainingDTO) {
+        int n = 0;
+        if(trainingDTO.getId()>0) {
+            
+            trainingDTO.setUpdateTime(new Date());
+            n= trainingService.updateNonEmptyTrainingDTOById(trainingDTO);
+            
+        }else {
+            
+            trainingDTO.setIsDel("0");
+            trainingDTO.setCreateTime(new Date());
+            trainingDTO.setUpdateTime(new Date());
+            n = trainingService.insertTrainingDTO(trainingDTO);
+        }
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 导出excel
+     *
+     * @param response
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping(value = "export", method=RequestMethod.POST)
+    public String exportFile(HttpServletResponse response, Model model) {
+        try {
+            String fileName = "企业培训"+(new Date()).getTime()+".xlsx";
+//            Assist assist = new Assist();
+//            assist.setRequires(Assist.andEq("type", "0"));
+            List<TrainingDTO> datas = trainingService.selectTrainingDTO(null);
+            for(TrainingDTO TrainingDTO : datas) {
+                TrainingDTO.setContent(HTMLSpiritUtil.delHTMLTag(TrainingDTO.getContent()));
+                if(TrainingDTO.getIsDel().equals("1")) {
+                    TrainingDTO.setIsDel("已删除");
+                } else {
+                    TrainingDTO.setIsDel("未删除");
+                }
+                TrainingDTO.setType(typeMap.get(TrainingDTO.getType()));
+            }
+            new ExportExcel("企业培训", TrainingDTO.class).setDataList(datas).write(response, fileName).dispose();
+            return null; 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:show.htm";
+    }
+    
+}

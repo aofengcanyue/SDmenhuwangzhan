@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>国家重点节能低碳技术推广目录查询</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+<link rel="stylesheet" href="${resRoot}/layui/css/layui.css" media="all" />
+<style type="text/css">
+	.add_select{ height: 34px;
+				 line-height: 34px;
+				 width:200px;
+				 display: block;
+				 border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p class="back_page col-lg-offset-1"><a href="${base}/web/index.htm">首页</a>>国家重点节能低碳技术推广目录查询</p>
+		</div>
+		<div class="col-md-12">
+			<h3 class="high_title">国家重点节能低碳技术推广目录查询</h3>
+			<div class="row">
+				<div class="col-lg-8 col-lg-offset-2 mt_20">
+				    <form action="${base}/web/energySave/show.htm" method="POST">
+				    <div class="input-group">
+				      <div class="input-group-btn">
+				        <select class="btn btn-default dropdown-toggle btn_pad btn_val" name="type" >
+					    <option  value="">请选择</option>
+						<#list typeMap?keys as key>
+						<option  value="${key}">${typeMap[key]}</option>
+						</#list>
+					   </select>
+				      </div><!-- /btn-group -->
+				      <input type="text" class="form-control btn-ml input_text" aria-label="..." name="name" placeholder="输入关键字搜索相关技术">
+				      <button class="btn pull-right btn_search mt_0 btn_search_1">  
+				        <span class="glyphicon glyphicon-search"></span> 搜索  
+				     </button>
+				    </div><!-- /input-group -->
+				     </form> 
+				  </div>
+			</div>
+			
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-10 col-lg-offset-1">
+			<table class="table table-hover table-bordered table_bg table_h">
+				  <caption>找到${count}个结果</caption>
+				  <thead>
+				    <tr>
+				      <th class="td_blue">序号</th>
+				      <th class="td_blue">技术名称</th>
+				      <th class="td_blue">适用范围</th>
+				      <th class="td_blue">主要技术内容</th>
+				      <th class="td_blue">适用的技术条件</th>
+				      <th class="td_blue">建设规模</th>
+				      <th class="td_blue">投资额(万元)</th>
+				      <th class="td_blue">节能量(tce/a)</th>
+				      <th class="td_blue">二氧化碳减排量(tCO2/a)</th>
+				    </tr>
+				  </thead>
+				  <#list result.datas as energySave>
+				  <tbody>
+				    <tr>
+				      <td>${energySave_index+1}</td>
+				      <td>${energySave.technical}</td>
+				      <td>${energySave.application}</td>
+				      <td>${energySave.technicalContent}</td>
+				      <td>${energySave.technicalConditions}</td>
+				      <td>${energySave.model}</td>
+				      <td>${energySave.investment}</td>
+				      <td>${energySave.saveEnergy}</td>
+				      <td>${energySave.emission}</td>
+				    </tr>
+				   </#list>
+				  </tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<div id="page"></div>
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script type="text/javascript" src="${resRoot}/layui/layui.js"></script>
+<!-- <#assign pageUrl=base+'/patient/patientList.htm?keyword=${param.keyword}&'>
+<#include "/page/page.html"> -->
+ 
+
+
+
+	
+	
+</body>
+<script>
+	$(".btn_list li").click(function(){
+		var oVal = $(this).text();
+		$(".btn_val i").text(oVal)
+		
+	})
+	
+	$(".btn_list1 li").click(function(){
+		var oVal1 = $(this).text();
+		$(".btn_val1 i").text(oVal1)
+		
+	})
+	
+	
+</script>
+</html>

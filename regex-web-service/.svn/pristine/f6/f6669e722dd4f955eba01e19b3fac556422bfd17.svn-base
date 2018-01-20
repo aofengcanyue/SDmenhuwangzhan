@@ -1,0 +1,9 @@
+package com.regex.web.dao.sys;
+
+import com.regex.web.common.dto.sys.UserDTO;
+
+public interface IUserDAO {
+    
+    UserDTO getByLoginName(String loginName);
+
+}

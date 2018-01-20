@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.regex.web.dao.info.IWaterDAO">
+
+<!-- WaterDTO的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_WaterDTO_Map" type="com.regex.web.common.dto.info.WaterDTO">
+        <id column="id" property="id" />
+        <result column="unit" property="unit" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="quota" property="quota" />
+        <result column="name" property="name" />
+        <result column="is_del" property="isDel" />
+        <result column="category" property="category" />
+        <result column="remarks" property="remarks" />
+    </resultMap>
+
+	   <!-- Assist用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="Assist">
+        <where>
+            <foreach collection="require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+	   <!-- updateAssist用于更新数据的使用它拓展自Assist,用于辅助工具类setRequires设置的条件,${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+    <sql id="updateAssist">
+        <where>
+            <foreach collection="assist.require" item="req" separator=" ">
+                ${req.require} #{req.value} <if test="req.suffix != null"> ${req.suffix}</if>
+            </foreach>
+        </where>
+    </sql>
+
+    <!-- 数据库中表名为:t_water的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="t_water_Column">
+        t_water.id as id
+        ,t_water.unit as unit
+        ,t_water.update_time as update_time
+        ,t_water.create_time as create_time
+        ,t_water.quota as quota
+        ,t_water.name as name
+        ,t_water.is_del as is_del
+        ,t_water.category as category
+        ,t_water.remarks as remarks
+    </sql>
+
+    <!--获得类名为:WaterDTO对应的数据库表的数据总行数 -->
+    <select id="getWaterDTORowCount" parameterType="com.regex.web.common.Assist" resultType="java.lang.Long">
+        select count(id) from t_water
+        <if test="require!=null"><include refid="Assist" /></if>
+    </select>
+    <!-- 获得类名为:WaterDTO对应数据库中表的数据集合 -->
+    <select id="selectWaterDTO" parameterType="com.regex.web.common.Assist"  resultMap="result_WaterDTO_Map">
+        select  <if test="distinct !=null">${distinct}</if>
+        <choose>
+            <when test="resultColumn!=null">${resultColumn}</when>
+            <otherwise>
+        <include refid="t_water_Column" /> 
+            </otherwise>
+        </choose>
+        from t_water
+        <choose>
+            <when test="rowSize ==null">
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+            </when>
+            <otherwise>
+                inner join
+                (
+                SELECT id as primary_key FROM t_water
+                <if test="require!=null">
+                    <include refid="Assist" />
+                </if>
+                <if test="order !=null">${order}</if>
+                <choose>
+                    <when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+                    <when test="rowSize !=null">LIMIT #{rowSize}</when>
+                 </choose>
+                 ) as tmp
+                 on tmp.primary_key=t_water.id
+            </otherwise>
+        </choose>
+    </select> 
+
+    <!-- 获得一个WaterDTO对象,以参数WaterDTO对象中不为空的属性作为条件进行查询-->
+    <select id="selectWaterDTOByObj" parameterType="com.regex.web.common.dto.info.WaterDTO" resultMap="result_WaterDTO_Map">
+        select 
+            <include refid="t_water_Column" /> 
+        from t_water
+        <where>
+            <if test="remarks != null "> and t_water.remarks = #{remarks}</if>
+            <if test="category != null "> and t_water.category = #{category}</if>
+            <if test="isDel != null "> and t_water.is_del = #{isDel}</if>
+            <if test="name != null "> and t_water.name = #{name}</if>
+            <if test="quota != null "> and t_water.quota = #{quota}</if>
+            <if test="createTime != null "> and t_water.create_time = #{createTime}</if>
+            <if test="updateTime != null "> and t_water.update_time = #{updateTime}</if>
+            <if test="unit != null "> and t_water.unit = #{unit}</if>
+            <if test="id != null "> and t_water.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过WaterDTO的id获得对应数据库中表的数据对象-->
+    <select id="selectWaterDTOById" parameterType="java.lang.Long" resultMap="result_WaterDTO_Map">
+        select 
+            <include refid="t_water_Column" /> 
+        from t_water
+        where t_water.id = #{id}
+    </select> 
+
+    <!-- 将WaterDTO插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertWaterDTO" parameterType="com.regex.web.common.dto.info.WaterDTO">
+        insert into t_water(id,unit,update_time,create_time,quota,name,is_del,category,remarks) 
+        values(#{id},#{unit},#{updateTime},#{createTime},#{quota},#{name},#{isDel},#{category},#{remarks})
+    </insert>
+
+    <!-- 将WaterDTO中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyWaterDTO" parameterType="com.regex.web.common.dto.info.WaterDTO">
+        insert into t_water
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="unit != null">unit,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="quota != null">quota,</if>
+            <if test="name != null">name,</if>
+            <if test="isDel != null">is_del,</if>
+            <if test="category != null">category,</if>
+            <if test="remarks != null">remarks,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="unit != null"> #{unit},</if>
+            <if test="updateTime != null"> #{updateTime},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="quota != null"> #{quota},</if>
+            <if test="name != null"> #{name},</if>
+            <if test="isDel != null"> #{isDel},</if>
+            <if test="category != null"> #{category},</if>
+            <if test="remarks != null"> #{remarks},</if>
+        </trim>
+    </insert>
+
+    <!-- 将WaterDTO批量插入到对应数据库的表中-->
+    <insert id="insertWaterDTOByBatch" parameterType="ArrayList">
+        insert into t_water(id,unit,update_time,create_time,quota,name,is_del,category,remarks) values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.id},#{item.unit},#{item.updateTime},#{item.createTime},#{item.quota},#{item.name},#{item.isDel},#{item.category},#{item.remarks})
+        </foreach>
+    </insert>
+
+    <!-- 通过WaterDTO的id将数据库表中对应的数据删除-->
+    <delete id="deleteWaterDTOById" parameterType="java.lang.Long">
+        delete from t_water
+        where id = #{id}
+    </delete>
+
+    <!-- 通过辅助工具Assist中的条件将WaterDTO对应的数据库表的数据删除-->
+    <delete id="deleteWaterDTO" parameterType="com.regex.web.common.Assist">
+        delete from t_water
+        <if test="require!=null"><include refid="Assist" /></if>
+    </delete>
+
+    <!-- 通过WaterDTO的id将WaterDTO的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateWaterDTOById" parameterType="com.regex.web.common.dto.info.WaterDTO">
+        update t_water set
+            unit=#{unit}
+            ,update_time=#{updateTime}
+            ,create_time=#{createTime}
+            ,quota=#{quota}
+            ,name=#{name}
+            ,is_del=#{isDel}
+            ,category=#{category}
+            ,remarks=#{remarks}
+        where id=#{id}
+    </update>
+
+    <!-- 通过WaterDTO的id将WaterDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyWaterDTOById" parameterType="com.regex.web.common.dto.info.WaterDTO">
+        update t_water
+        <set>
+            <if test="unit != null">
+                unit=#{unit},
+            </if>
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+            <if test="quota != null">
+                quota=#{quota},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="isDel != null">
+                is_del=#{isDel},
+            </if>
+            <if test="category != null">
+                category=#{category},
+            </if>
+            <if test="remarks != null">
+                remarks=#{remarks},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将WaterDTO中的数据更新到数据库对应的表中,包括值为null的数据-->
+    <update id="updateWaterDTO" parameterType="map">
+        update t_water
+        <set>
+                id=#{enti.id},
+                unit=#{enti.unit},
+                update_time=#{enti.updateTime},
+                create_time=#{enti.createTime},
+                quota=#{enti.quota},
+                name=#{enti.name},
+                is_del=#{enti.isDel},
+                category=#{enti.category},
+                remarks=#{enti.remarks},
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+    <!-- 通过辅助工具Assist中的条件将WaterDTO中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyWaterDTO" parameterType="map">
+        update t_water
+        <set>
+            <if test="enti.id != null">
+                id=#{enti.id},
+            </if>
+            <if test="enti.unit != null">
+                unit=#{enti.unit},
+            </if>
+            <if test="enti.updateTime != null">
+                update_time=#{enti.updateTime},
+            </if>
+            <if test="enti.createTime != null">
+                create_time=#{enti.createTime},
+            </if>
+            <if test="enti.quota != null">
+                quota=#{enti.quota},
+            </if>
+            <if test="enti.name != null">
+                name=#{enti.name},
+            </if>
+            <if test="enti.isDel != null">
+                is_del=#{enti.isDel},
+            </if>
+            <if test="enti.category != null">
+                category=#{enti.category},
+            </if>
+            <if test="enti.remarks != null">
+                remarks=#{enti.remarks},
+            </if>
+        </set>
+        <if test="assist.require!=null"><include refid="updateAssist" /></if>
+    </update>
+
+	<insert id="insert" parameterType="com.regex.web.common.dto.info.WaterDTO"
+     useGeneratedKeys="true" keyProperty="id">
+     insert into t_water(category,name,quota,unit,remarks,is_del,create_time,
+     update_time)values(#{category},#{name},#{quota},#{unit},#{remarks},#{isDel},
+     #{createTime},#{updateTime})
+     </insert>
+     
+       <select id="selectAll"  resultType="com.regex.web.common.dto.info.WaterDTO">
+     	select id as id,
+     		category as category,
+     		name as name,
+     		quota as quota,
+     		unit as unit,
+     		remarks as remarks,
+     		is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+			t_water
+		where 
+ 			is_del!='1' 
+     </select>
+     
+     <select id="selectById"  parameterType="long" resultType="com.regex.web.common.dto.info.WaterDTO">
+     	select id as id,
+     		category as category,
+     		name as name,
+     		quota as quota,
+     		unit as unit,
+     		remarks as remarks,
+     		is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+			t_water
+		where 
+ 			is_del!='1' and id=#{id}
+     </select>
+     
+     <select id="selectByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="com.regex.web.common.dto.info.WaterDTO">
+     	select id as id,
+     		category as category,
+     		name as name,
+     		quota as quota,
+     		unit as unit,
+     		remarks as remarks,
+     		is_del as isDel,
+			create_time as createTime,
+			update_time as updateTime
+		from
+			t_water
+		where 
+ 			is_del!='1'
+ 			<if test="name !=null and name !=''" >
+ 			and  name like concat('%',#{name},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and category =#{type}  
+ 			</if>	 
+ 			LIMIT #{startIndex},#{pageSize} 
+     </select>
+     
+     <select id="selectCountByName" parameterType="com.regex.web.common.utils.QueryConditions" resultType="int">
+    	select
+    		count(0)
+ 		from
+ 			 t_water 	  
+ 		where 
+ 			is_del!='1'
+ 			<if test="name !=null and name !=''" >
+ 			and  name like concat('%',#{name},'%')
+ 			</if>
+ 			<if test="type !=null and type !=''">
+ 			and category =#{type}  
+ 			</if>	 
+    </select>
+    
+     <update id="updateById" parameterType="com.regex.web.common.dto.info.WaterDTO">
+    	update t_water set category=#{category},name=#{name},quota=#{quota},unit=#{unit},remarks=#{remarks},
+    	update_time=#{updateTime} where id=#{id}
+    </update>
+    
+    <update id="del" parameterType="long">
+    	update t_water set is_del='1' where id=#{id}
+    </update>
+</mapper>

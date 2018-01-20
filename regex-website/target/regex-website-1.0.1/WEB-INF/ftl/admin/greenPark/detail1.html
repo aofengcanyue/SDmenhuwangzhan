@@ -1,0 +1,275 @@
+<#assign security=JspTaglibs["/WEB-INF/tlds/security.tld"] />
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>${sysName}</title>
+
+		<meta name="description" content="Dynamic tables and grids using jqGrid plugin" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/jquery-ui.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/bootstrap-datepicker3.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/ui.jqgrid.min.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/fonts.googleapis.com.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace.min.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="${resRoot}/assets/css/ace-part2.min.css" class="ace-main-stylesheet" />
+		<![endif]-->
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="${resRoot}/assets/css/ace-rtl.min.css" />
+
+		<!--[if lte IE 9]>
+		  <link rel="stylesheet" href="${resRoot}/assets/css/ace-ie.min.css" />
+		<![endif]-->
+
+		<!-- inline styles related to this page -->
+
+		<!-- ace settings handler -->
+		<script src="${resRoot}/assets/js/ace-extra.min.js"></script>
+
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+		<!--[if lte IE 8]>
+		<script src="${resRoot}/assets/js/html5shiv.min.js"></script>
+		<script src="${resRoot}/assets/js/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+											<h4>2015</h4>
+											<table id="dynamic-table" class="table table-bordered">
+												<tbody>
+													<tr>
+														<td>国家和地方绿色、循环和低碳相关法律法规、政策和标准应得到有效的贯彻执行。</td>
+														<td><#if list.value1 == 1>是<#elseif list.value1==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>近三年，未发生重大污染事故或重大生态破坏事件，完成国家或地方政府下达的节能减排指标，碳排放强度持续下降。</td>
+														<td><#if list.value2 == 1>是<#elseif list.value2==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>环境质量达到国家或地方规定的环境功能区环境质量标准，园区内企业污染物达标排放，各类重点污染物排放总量均不超过国家或地方的总量控制要求。</td>
+														<td><#if list.value3 == 1>是<#elseif list.value3==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区重点企业100%实施清洁生产审核。</td>
+														<td><#if list.value4 == 1>是<#elseif list.value4==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区企业不应使用国家列入淘汰目录的落后生产技术、工艺和设备，不应生产国家列入淘汰目录的产品。</td>
+														<td><#if list.value5 == 1>是<#elseif list.value5==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区建立履行绿色发展工作职责的专门机构、配备2名以上专职工作人员。</td>
+														<td><#if list.value6 == 1>是<#elseif list.value6==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>鼓励园区建立并运行环境管理体系和能源管理体系，建立园区能源监测管理平台。</td>
+														<td><#if list.value7 == 1>是<#elseif list.value7==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>鼓励园区建设并运行风能、太阳能等可再生能源应用设施。</td>
+														<td><#if list.value8 == 1>是<#elseif list.value8==0>否<#else>暂无数据</#if></td>
+													</tr>
+												</tbody>
+											</table>
+											
+											<h4>2016</h4>
+											<table id="dynamic-table" class="table table-bordered">
+												<tbody>
+													<tr>
+														<td>国家和地方绿色、循环和低碳相关法律法规、政策和标准应得到有效的贯彻执行。</td>
+														<td><#if list1.value1 == 1>是<#elseif list1.value1==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>近三年，未发生重大污染事故或重大生态破坏事件，完成国家或地方政府下达的节能减排指标，碳排放强度持续下降。</td>
+														<td><#if list1.value2 == 1>是<#elseif list1.value2==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>环境质量达到国家或地方规定的环境功能区环境质量标准，园区内企业污染物达标排放，各类重点污染物排放总量均不超过国家或地方的总量控制要求。</td>
+														<td><#if list1.value3 == 1>是<#elseif list1.value3==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区重点企业100%实施清洁生产审核。</td>
+														<td><#if list1.value4 == 1>是<#elseif list1.value4==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区企业不应使用国家列入淘汰目录的落后生产技术、工艺和设备，不应生产国家列入淘汰目录的产品。</td>
+														<td><#if list1.value5 == 1>是<#elseif list1.value5==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区建立履行绿色发展工作职责的专门机构、配备2名以上专职工作人员。</td>
+														<td><#if list1.value6 == 1>是<#elseif list1.value6==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>鼓励园区建立并运行环境管理体系和能源管理体系，建立园区能源监测管理平台。</td>
+														<td><#if list1.value7 == 1>是<#elseif list1.value7==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>鼓励园区建设并运行风能、太阳能等可再生能源应用设施。</td>
+														<td><#if list1.value8 == 1>是<#elseif list1.value8==0>否<#else>暂无数据</#if></td>
+													</tr>
+												</tbody>
+											</table>
+											
+											<h4>2017</h4>
+											<table id="dynamic-table" class="table table-bordered">
+												<tbody>
+													<tr>
+														<td>国家和地方绿色、循环和低碳相关法律法规、政策和标准应得到有效的贯彻执行。</td>
+														<td><#if list2.value1 == 1>是<#elseif list2.value1==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>近三年，未发生重大污染事故或重大生态破坏事件，完成国家或地方政府下达的节能减排指标，碳排放强度持续下降。</td>
+														<td><#if list2.value2 == 1>是<#elseif list2.value2==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>环境质量达到国家或地方规定的环境功能区环境质量标准，园区内企业污染物达标排放，各类重点污染物排放总量均不超过国家或地方的总量控制要求。</td>
+														<td><#if list2.value3 == 1>是<#elseif list2.value3==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区重点企业100%实施清洁生产审核。</td>
+														<td><#if list2.value4 == 1>是<#elseif list2.value4==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区企业不应使用国家列入淘汰目录的落后生产技术、工艺和设备，不应生产国家列入淘汰目录的产品。</td>
+														<td><#if list2.value5 == 1>是<#elseif list2.value5==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>园区建立履行绿色发展工作职责的专门机构、配备2名以上专职工作人员。</td>
+														<td><#if list2.value6 == 1>是<#elseif list2.value6==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>鼓励园区建立并运行环境管理体系和能源管理体系，建立园区能源监测管理平台。</td>
+														<td><#if list2.value7 == 1>是<#elseif list2.value7==0>否<#else>暂无数据</#if></td>
+													</tr>
+													<tr>
+														<td>鼓励园区建设并运行风能、太阳能等可再生能源应用设施。</td>
+														<td><#if list2.value8 == 1>是<#elseif list2.value8==0>否<#else>暂无数据</#if></td>
+													</tr>
+												</tbody>
+											</table>
+									<div class="clearfix form-actions">
+										<div class="col-md-offset-3 col-md-9">
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn" type="button" onclick="parent.layer.closeAll();" >
+												<i class="ace-icon fa fa-undo bigger-110"></i>
+												返回
+											</button>
+										</div>
+									</div>
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="${resRoot}/assets/js/jquery-2.1.4.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script src="${resRoot}/assets/js/jquery-1.11.3.min.js"></script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='${resRoot}/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+		<script src="${resRoot}/assets/js/bootstrap.min.js"></script>
+
+		<!-- page specific plugin scripts -->
+		<script src="${resRoot}/assets/js/jquery.dataTables.min.js"></script>
+		<script src="${resRoot}/assets/js/jquery.dataTables.bootstrap.min.js"></script>
+		<script src="${resRoot}/assets/js/dataTables.buttons.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.flash.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.html5.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.print.min.js"></script>
+		<script src="${resRoot}/assets/js/buttons.colVis.min.js"></script>
+		<script src="${resRoot}/assets/js/dataTables.select.min.js"></script>
+
+		<!-- ace scripts -->
+		<script src="${resRoot}/assets/js/ace-elements.min.js"></script>
+		<script src="${resRoot}/assets/js/ace.min.js"></script>
+
+	<script src="${resRoot}/layui/lay/dest/layui.all.js" charset="utf-8"></script>
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+		
+				// $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
+				
+				
+				// myTable.buttons().container().appendTo( $('.tableTools-container') );
+				
+				//style the message box
+				
+			
+				layui.use('layer', function(){
+		
+				//调用示例
+				layer.photos({
+				  photos: '#layer-photos-demo'
+				  ,anim: 0 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+				}); 
+				});
+				
+				function audit(id) {
+		  			var flag = 0;
+		  			layer.confirm('确定审核该条数据吗?',{btn: ['通过','驳回']}, function(index){
+		  				$.ajax({
+		  					type : "post",
+		  					url : "${base}/sys/supply/audit.htm",
+		  					data : {
+		  						id : id
+		  					},
+		  					dataType : "json",
+		  					async : false,
+		  					success : function(data) {
+		  						flag  = data.message;
+		  						if(flag == 1) {
+		  							layer.msg('审核成功！', {
+		  							  icon: 1,
+		  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+		  							}, function(){
+		  								window.location.reload();
+		  							});   
+		  						} else {
+		  							layer.alert("服务器繁忙，请稍候再试！");
+		  						}
+		  					}
+		  				});
+		  			}, function(){
+		  				$.ajax({
+		  					type : "post",
+		  					url : "${base}/sys/supply/reject.htm",
+		  					data : {
+		  						id : id
+		  					},
+		  					dataType : "json",
+		  					async : false,
+		  					success : function(data) {
+		  						flag  = data.message;
+		  						if(flag == 1) {
+		  							layer.msg('驳回成功！', {
+		  							  icon: 1,
+		  							  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+		  							}, function(){
+		  								window.location.reload();
+		  							});   
+		  						} else {
+		  							layer.alert("服务器繁忙，请稍候再试！");
+		  						}
+		  					}
+		  				});
+		  			  });
+		  		}
+		</script>
+	</body>
+</html>

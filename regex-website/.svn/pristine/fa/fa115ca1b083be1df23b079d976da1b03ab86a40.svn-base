@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>金融机构</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="${resRoot}/project/css/css.css"/>
+</head>
+<body>
+
+<#include "/web/layout/header.html"> 
+
+<div class="banner">
+	<img src="${resRoot}/project/images/banner.png" width="100%"/>
+	<p>金融机构</p>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<p class="back_page col-lg-offset-2"><a href="${base}/">首页</a>>金融机构</p>
+		</div>
+	</div>
+	<div class="row mb_20">
+		<#list result.datas as mechanismDTO>
+		<div class="col-lg-2 col-lg-offset-2 ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="${mechanismDTO.imageUrl}" width="100%" alt="" />
+				</div>
+				<h3>${mechanismDTO.title}</h3>
+				<p>${mechanismDTO.content}</p>
+				
+			</div>
+		</div>
+		</#list>
+		<!-- <div class="col-lg-2  ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="images/pic2.png" width="100%" alt="" />
+				</div>
+				<h3>趣店</h3>
+				<p>趣店是面向5亿非信用卡人群的金融科技公司。趣店集团成立于2014年3月，前身为“趣分期”。趣店集团依托统一且独特的风控和大数据体系，同时与国内多家第三方大数据平台合作，能够多维度、全方位识别用户信息</p>
+				
+			</div>
+		</div>
+		<div class="col-lg-2  ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="images/pic2.png" width="100%" alt="" />
+				</div>
+				<h3>趣店</h3>
+				<p>趣店是面向5亿非信用卡人群的金融科技公司。趣店集团成立于2014年3月，前身为“趣分期”。趣店集团依托统一且独特的风控和大数据体系，同时与国内多家第三方大数据平台合作，能够多维度、全方位识别用户信息</p>
+				
+			</div>
+		</div>
+		<div class="col-lg-2  ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="images/pic2.png" width="100%" alt="" />
+				</div>
+				<h3>趣店</h3>
+				<p>趣店是面向5亿非信用卡人群的金融科技公司。趣店集团成立于2014年3月，前身为“趣分期”。趣店集团依托统一且独特的风控和大数据体系，同时与国内多家第三方大数据平台合作，能够多维度、全方位识别用户信息</p>
+				
+			</div>
+		</div> -->
+		
+		
+	</div>
+	<div class="row mb_20">
+		<div class="col-lg-2 col-lg-offset-2 ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="images/pic2.png" width="100%" alt="" />
+				</div>
+				<h3>趣店</h3>
+				<p>趣店是面向5亿非信用卡人群的金融科技公司。趣店集团成立于2014年3月，前身为“趣分期”。趣店集团依托统一且独特的风控和大数据体系，同时与国内多家第三方大数据平台合作，能够多维度、全方位识别用户信息</p>
+				
+			</div>
+		</div>
+		<div class="col-lg-2  ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="images/pic2.png" width="100%" alt="" />
+				</div>
+				<h3>趣店</h3>
+				<p>趣店是面向5亿非信用卡人群的金融科技公司。趣店集团成立于2014年3月，前身为“趣分期”。趣店集团依托统一且独特的风控和大数据体系，同时与国内多家第三方大数据平台合作，能够多维度、全方位识别用户信息</p>
+				
+			</div>
+		</div>
+		<div class="col-lg-2  ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="images/pic2.png" width="100%" alt="" />
+				</div>
+				<h3>趣店</h3>
+				<p>趣店是面向5亿非信用卡人群的金融科技公司。趣店集团成立于2014年3月，前身为“趣分期”。趣店集团依托统一且独特的风控和大数据体系，同时与国内多家第三方大数据平台合作，能够多维度、全方位识别用户信息</p>
+				
+			</div>
+		</div>
+		<div class="col-lg-2  ">
+			<div class="q_list">
+				<div class="div_h_b"></div>
+				<div>
+					<img src="images/pic2.png" width="100%" alt="" />
+				</div>
+				<h3>趣店</h3>
+				<p>趣店是面向5亿非信用卡人群的金融科技公司。趣店集团成立于2014年3月，前身为“趣分期”。趣店集团依托统一且独特的风控和大数据体系，同时与国内多家第三方大数据平台合作，能够多维度、全方位识别用户信息</p>
+				
+			</div>
+		</div>
+		
+		
+	</div>
+</div>
+
+
+	
+	
+</body>
+
+<script src="${resRoot}/project/js/bootstrap.min.js"></script>
+<script src="${resRoot}/project/js/js.js"></script>
+<script>
+	$(function(){
+		var oH = $(".q_list").height();
+		$(".div_h_b").height(oH);
+		
+		$(".q_list").mouseover(function(){
+		
+			$(this).find(".div_h_b").show()
+		})
+		$(".q_list").mouseout(function(){
+		
+			$(this).find(".div_h_b").hide()
+		})
+	})
+	
+</script>
+</html>

@@ -1,0 +1,255 @@
+package com.regex.web.controller.admin.sys;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.regex.web.common.Assist;
+import com.regex.web.common.dto.info.IndustryInfoDTO;
+import com.regex.web.common.dto.info.WaterDTO;
+import com.regex.web.common.utils.AjaxUtil;
+import com.regex.web.common.utils.Contant;
+import com.regex.web.common.utils.QueryConditions;
+import com.regex.web.common.utils.QueryResult;
+import com.regex.web.controller.vo.PageVO;
+import com.regex.web.excel.ExportExcel;
+import com.regex.web.service.info.IWaterService;
+import com.regex.web.service.info.IndustryInfoService;
+/**
+ * 
+ * 〈一句话功能简述〉<br> 
+ * 取水定额
+ *
+ * @author Administrator
+ * @see [相关类/方法]（可选）
+ * @since [产品/模块版本] （可选）
+ */
+@Controller
+@RequestMapping("sys/water")
+public class SysWaterController {
+    
+    @Autowired
+    private IWaterService waterService;
+    
+    @Autowired
+    private IndustryInfoService industryInfoService;
+    
+    @RequestMapping("input")
+    public String input(Model model,@ModelAttribute("id")String id) {
+        if(StringUtils.isNotEmpty(id)) {
+        WaterDTO waterDTO = waterService.selectById(Long.parseLong(id));
+        model.addAttribute("water",waterDTO);
+        }
+        
+        List<IndustryInfoDTO> industryInfoList= industryInfoService.selectIndustryInfoDTO(null);
+        model.addAttribute("industryInfoList",industryInfoList);
+        return "admin/water/input";
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 取水定额列表
+     *
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+  /*  @RequestMapping("show")
+    public String show(Model model) {
+           
+        List<WaterDTO> waterList = waterService.selectAll();
+        
+        model.addAttribute("waterList",waterList);
+        
+        List<IndustryInfoDTO> industryInfoList= industryInfoService.selectIndustryInfoDTO(null);
+        model.addAttribute("industryInfoList",industryInfoList);
+        
+        Map<String, String> typeMap = new HashMap<String, String>();
+        
+        
+        for(IndustryInfoDTO industryInfoDTO: industryInfoList) {
+            typeMap.put(industryInfoDTO.getIndustryId(), industryInfoDTO.getIndustryName());
+        }
+        model.addAttribute("typeMap",typeMap);
+        
+        return "admin/water/show";
+    }*/
+    
+    @RequestMapping("show")
+    public String show() {
+        return "admin/water/show";
+    }
+    
+    @RequestMapping(value = "getPage", method = RequestMethod.POST)
+    @ResponseBody
+    public void getPage(Model model, @ModelAttribute("assist") Assist assist, HttpServletResponse response, int sEcho,
+            String columns, String iDisplayStart, String iDisplayLength, String sSearch) {
+        
+        assist.setRequires(Assist.andNeq("is_del", "1"));
+        assist.setOrder(Assist.order("update_time", false));
+        if(StringUtils.isEmpty(iDisplayLength)) {
+            iDisplayLength = "10";
+        }
+        assist.setRowSize(Integer.parseInt(iDisplayLength));
+        if(StringUtils.isEmpty(iDisplayStart)) {
+            iDisplayStart = "0";
+        }
+        if(StringUtils.isNotEmpty(sSearch)) {
+            assist.setRequires(Assist.customRequire("and name like concat('%',", sSearch, ",'%')"));
+        }
+        assist.setStartRow(Integer.parseInt(iDisplayStart));
+        List<WaterDTO> waterList = waterService.selectWaterDTO(assist);
+        List<IndustryInfoDTO> industryInfoList= industryInfoService.selectIndustryInfoDTO(null);
+        for(IndustryInfoDTO industryInfoDTO: industryInfoList) {
+            for(WaterDTO waterDTO : waterList) {
+                if(industryInfoDTO.getIndustryId().equals(waterDTO.getCategory())) {
+                    waterDTO.setCategory(industryInfoDTO.getIndustryName());
+                }
+            }
+        }
+        
+        long totalCount = waterService.getWaterDTORowCount(assist);
+        model.addAttribute("data", waterList);
+        PageVO<WaterDTO> mData = new PageVO<WaterDTO>();
+        mData.setAaData(waterList);
+        mData.setsEcho(sEcho);
+        mData.setiTotalRecords(totalCount);
+        mData.setiTotalDisplayRecords(totalCount);
+        
+        AjaxUtil.ajaxJsonSucMessage(response, mData);
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 后台添加工业产品取水定额
+     *
+     * @param response
+     * @param waterDTO
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("insert")
+    public void insert(HttpServletResponse response,WaterDTO waterDTO) {
+        int n = 0;
+        if(waterDTO.getId()>0) {
+            
+            waterDTO.setUpdateTime(new Date());
+            n= waterService.updateById(waterDTO);
+            
+        }else {
+        waterDTO.setIsDel("0");
+        waterDTO.setCreateTime(new Date());
+        waterDTO.setUpdateTime(new Date());
+        n = waterService.insert(waterDTO);
+        }  
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 修改信息
+     *
+     * @param response
+     * @param eliminationDTO
+     * @param id
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("update")
+    public void update(HttpServletResponse response,WaterDTO waterDTO,String id) {
+        int n = 0;
+        waterDTO.setId(Long.parseLong(id));
+        waterDTO.setUpdateTime(new Date());
+        n = waterService.updateById(waterDTO);
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    /**
+     * 
+     * 功能描述: <br>
+     * 删除
+     *
+     * @param response
+     * @param id
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("delete")
+    public void del(HttpServletResponse response,String id) {
+        int n = 0;
+        
+        n = waterService.del(Long.parseLong(id));
+        
+        AjaxUtil.ajaxJsonSucMessage(response, n);
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 查询取水定额
+     *
+     * @param model
+     * @param params
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping("queryWater")
+    public String queryWater(Model model,QueryConditions params) {
+        
+        params.setPageSize(Contant.NONMAL_PAGE_SIZE);
+        params.setStartIndex((params.getPageNumber() - 1) * Contant.NONMAL_PAGE_SIZE);
+        List<WaterDTO> waterList = waterService.selectByName(params);
+        int count = waterService.selectCountByName(params);
+        QueryResult<WaterDTO> result = new QueryResult<WaterDTO>(count, Contant.NONMAL_PAGE_SIZE, params.getPageNumber());
+        result.setDatas(waterList);
+        return "";
+    }
+    
+    /**
+     * 
+     * 功能描述: <br>
+     * 导出excel
+     *
+     * @param response
+     * @param model
+     * @return
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    @RequestMapping(value = "export", method=RequestMethod.POST)
+    public String exportFile(HttpServletResponse response, Model model) {
+        try {
+            String fileName = "取水定额"+(new Date()).getTime()+".xlsx";
+            List<WaterDTO> datas = waterService.selectWaterDTO(null);
+            for(WaterDTO WaterDTO : datas) {
+                if(WaterDTO.getIsDel().equals("1")) {
+                    WaterDTO.setIsDel("已删除");
+                } else {
+                    WaterDTO.setIsDel("未删除");
+                }
+                IndustryInfoDTO IndustryInfoDTO = industryInfoService.selectIndustryInfoDTOById(WaterDTO.getCategory());
+                WaterDTO.setCategory(IndustryInfoDTO.getIndustryName());
+            }
+            new ExportExcel("取水定额", WaterDTO.class).setDataList(datas).write(response, fileName).dispose();
+            return null; 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:show.htm";
+    }
+
+}
